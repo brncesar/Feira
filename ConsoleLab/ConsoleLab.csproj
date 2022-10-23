@@ -7,4 +7,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FeirasLivres.Infrastructure\FeirasLivres.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

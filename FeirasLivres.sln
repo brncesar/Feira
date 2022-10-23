@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32922.545
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Feira.Api", "Feira.API\Feira.Api.csproj", "{170DAB7B-8575-4C2C-A8DE-F01E2BAE929F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Api", "FeirasLivres.API\FeirasLivres.Api.csproj", "{170DAB7B-8575-4C2C-A8DE-F01E2BAE929F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Feira.Domain", "Feira.Domain\Feira.Domain.csproj", "{0ADB1D9B-5B3B-4F72-B1ED-1E170B5108C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Domain", "FeirasLivres.Domain\FeirasLivres.Domain.csproj", "{0ADB1D9B-5B3B-4F72-B1ED-1E170B5108C0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Feira.Api.Test", "Feira.Test\Feira.Api.Test.csproj", "{301F0E80-9E1D-427E-B794-9FE59E68260A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Api.Test", "FeirasLivres.Test\FeirasLivres.Api.Test.csproj", "{301F0E80-9E1D-427E-B794-9FE59E68260A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Feira.Infrastructure", "Feira.Infrastructure\Feira.Infrastructure.csproj", "{4747AD9E-0825-4E3A-A46D-4F40204F9978}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Infrastructure", "FeirasLivres.Infrastructure\FeirasLivres.Infrastructure.csproj", "{4747AD9E-0825-4E3A-A46D-4F40204F9978}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Feira.Application", "Feira.Application\Feira.Application.csproj", "{D6FEFD9F-DE35-4736-9230-6A26E6308DF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Domain.Test", "FeirasLivres.Domain.Test\FeirasLivres.Domain.Test.csproj", "{4E5838C3-C106-4B06-A084-E689E44DE189}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleLab", "ConsoleLab\ConsoleLab.csproj", "{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +37,14 @@ Global
 		{4747AD9E-0825-4E3A-A46D-4F40204F9978}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4747AD9E-0825-4E3A-A46D-4F40204F9978}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4747AD9E-0825-4E3A-A46D-4F40204F9978}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D6FEFD9F-DE35-4736-9230-6A26E6308DF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D6FEFD9F-DE35-4736-9230-6A26E6308DF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D6FEFD9F-DE35-4736-9230-6A26E6308DF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D6FEFD9F-DE35-4736-9230-6A26E6308DF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E5838C3-C106-4B06-A084-E689E44DE189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E5838C3-C106-4B06-A084-E689E44DE189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E5838C3-C106-4B06-A084-E689E44DE189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E5838C3-C106-4B06-A084-E689E44DE189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
