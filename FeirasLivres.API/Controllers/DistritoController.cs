@@ -6,20 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Feira.Api.Controllers
 {
-    public class FeiraController : BaseController
+    public class DistritoController : BaseController
     {
-        private readonly ILogger<FeiraController> _logger;
-        private readonly IFeiraRepository         _feiraRepository;
-        private readonly AddNewFeira              _addNewFeiraUseCase;
-        private readonly EditExistingFeiraParams  _editFeiraUseCase;
-        private readonly RemoveExistingFeira      _removeFeiraUseCase;
+        private readonly ILogger<DistritoController> _logger;
+        private readonly IFeiraRepository            _feiraRepository;
+        private readonly AddNewFeira                 _addNewFeiraUseCase;
+        private readonly EditExistingFeiraParams     _editFeiraUseCase;
+        private readonly RemoveExistingFeira         _removeFeiraUseCase;
 
-        public FeiraController(
-            ILogger<FeiraController> logger,
-            IFeiraRepository         feiraRepository,
-            AddNewFeira              addNewFeiraUseCase,
-            EditExistingFeiraParams  editFeiraUseCase,
-            RemoveExistingFeira      removeFeiraUseCase)
+        public DistritoController(
+            ILogger<DistritoController> logger,
+            IFeiraRepository            feiraRepository,
+            AddNewFeira                 addNewFeiraUseCase,
+            EditExistingFeiraParams     editFeiraUseCase,
+            RemoveExistingFeira         removeFeiraUseCase)
         {
             _logger             = logger;
             _feiraRepository    = feiraRepository;

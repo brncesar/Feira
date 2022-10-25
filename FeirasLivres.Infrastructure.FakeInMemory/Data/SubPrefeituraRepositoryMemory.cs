@@ -2,6 +2,8 @@
 using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
+using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
+using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 {
@@ -43,6 +45,26 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             return subPrefeitura is not null
                 ? domainRepositoryResult
                 : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontrada"));
+        }
+
+        public async Task<IDomainActionResult<List<FindSubPrefeituraResult>>> FindSubPrefeiturasAsync(FindSubPrefeituraParams findParams)
+        {
+            var domainActionResult = new DomainActionResult<List<FindSubPrefeituraResult>>();
+
+            var listResult = SubPrefeiturasMock;
+            var subPrefeiturasResult = new List<FindSubPrefeituraResult>();
+
+            if (findParams.Nome.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim())).ToList();
+
+            if (findParams.Codigo.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.Codigo == findParams.Codigo).ToList();
+
+            listResult.ForEach(feiraEntity => subPrefeiturasResult.Add(new(
+                Nome  : feiraEntity.Nome,
+                Codigo: feiraEntity.Codigo)));
+
+            return domainActionResult.SetValue(subPrefeiturasResult);
         }
     }
 }

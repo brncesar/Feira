@@ -77,12 +77,12 @@ namespace FeirasLivres.Infrastructure.Data.Repository
             }
         }
 
-        public async Task<IDomainActionResult<List<FindDistritoResult>>> FindFeirasAsync(FindFeiraParams findParams)
+        public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
         {
-            var domainActionResult = new DomainActionResult<List<FindDistritoResult>>();
+            var domainActionResult = new DomainActionResult<List<FindFeiraResult>>();
             try
             {
-                var feirasResult = new List<FindDistritoResult>();
+                var feirasResult = new List<FindFeiraResult>();
                 var listResult = _dbSet.AsQueryable().AsNoTracking();
 
                 if (findParams.Nome.IsNotNullOrNotEmpty())

@@ -1,4 +1,5 @@
 ﻿using FeirasLivres.Domain.Entities.Common;
+using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 
 namespace FeirasLivres.Domain.Entities.SubPrefeituraEntity
 {
@@ -7,5 +8,7 @@ namespace FeirasLivres.Domain.Entities.SubPrefeituraEntity
         IBaseEntityRepositoryGetById<SubPrefeitura>
     {
         Task<IDomainActionResult<SubPrefeitura>> GetByCodigoAsync(string codigo);
+
+        Task<IDomainActionResult<List<FindSubPrefeituraResult>>> FindSubPrefeiturasAsync(FindSubPrefeituraParams findParams);
     }
 }

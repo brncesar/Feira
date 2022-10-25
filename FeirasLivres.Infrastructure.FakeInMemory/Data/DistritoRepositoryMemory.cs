@@ -2,6 +2,8 @@
 using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
+using FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
+using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 {
@@ -43,6 +45,26 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             return distrito is not null
                 ? domainRepositoryResult
                 : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Distrito não encontrado"));
+        }
+
+        public async Task<IDomainActionResult<List<FindDistritoResult>>> FindDistritosAsync(FindDistritoParams findParams)
+        {
+            var domainActionResult = new DomainActionResult<List<FindDistritoResult>>();
+
+            var listResult = DistritosMock;
+            var distritosResult = new List<FindDistritoResult>();
+
+            if (findParams.Nome.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim())).ToList();
+
+            if (findParams.Codigo.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.Codigo == findParams.Codigo).ToList();
+
+            listResult.ForEach(feiraEntity => distritosResult.Add(new(
+                Nome  : feiraEntity.Nome,
+                Codigo: feiraEntity.Codigo)));
+
+            return domainActionResult.SetValue(distritosResult);
         }
     }
 }

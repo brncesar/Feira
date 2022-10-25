@@ -226,13 +226,13 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             return domainRepositoryResult.SetValue(true);
         }
 
-        public async Task<IDomainActionResult<List<FindDistritoResult>>> FindFeirasAsync(FindFeiraParams findParams)
+        public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
         {
-            var domainActionResult = new DomainActionResult<List<FindDistritoResult>>();
+            var domainActionResult = new DomainActionResult<List<FindFeiraResult>>();
             try
             {
                 var listResult = FeirasMock;
-                var feirasResult = new List<FindDistritoResult>();
+                var feirasResult = new List<FindFeiraResult>();
 
                 if (findParams.Nome.IsNotNullOrNotEmpty())
                     listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim())).ToList();

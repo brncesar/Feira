@@ -11,7 +11,7 @@ internal class DistritoDbMap : IEntityTypeConfiguration<Distrito>
         builder.ToTable("TS01_Distrito");
         builder.HasKey  (p => p.Id     );
         builder.Property(p => p.Id     ).HasColumnName("TS01_id_Distrito");
-        builder.Property(p => p.Nome   ).HasColumnName("no_Distrito"     ).HasMaxLength(25).IsRequired().HasColumnType("varchar");
+        builder.Property(p => p.Nome   ).HasColumnName("no_Distrito"     ).HasMaxLength(18).IsRequired().HasColumnType("varchar");
         builder.Property(p => p.Codigo ).HasColumnName("cd_Distrito"     ).HasMaxLength( 9).IsRequired().HasColumnType("varchar");
         builder.HasIndex(b => b.Codigo).IsUnique(true);
     }

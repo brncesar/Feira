@@ -12,10 +12,10 @@ public class FindFeira
     public FindFeira(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository)
         => (_feiraRepository, _distritoRepository) = (feiraRepsitory ,distritoRepository);
 
-    public async Task<IDomainActionResult<List<FindDistritoResult>>> Execute(FindFeiraParams findParameters)
+    public async Task<IDomainActionResult<List<FindFeiraResult>>> Execute(FindFeiraParams findParameters)
     {
         var paramsValidationResult = new FindFeiraParamsValidator().Validate(findParameters);
-        var findFeiraResult = new DomainActionResult<List<FindDistritoResult>>(paramsValidationResult.Errors);
+        var findFeiraResult = new DomainActionResult<List<FindFeiraResult>>(paramsValidationResult.Errors);
 
         if (paramsValidationResult.HasErrors())
             return findFeiraResult;
