@@ -22,7 +22,9 @@ namespace FeirasLivres.Infrastructure.Data.DbCtx
                .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<FeirasLivresDbContext>();
-            optionsBuilder.UseSqlite(Configuration.GetConnectionString("FeirasLivresConnection"));
+            optionsBuilder.UseSqlite(
+                Configuration.GetConnectionString("FeirasLivresConnection"),
+                x => x.MigrationsHistoryTable("TC00_EFMigrationsHistory"));
 
             return new FeirasLivresDbContext(optionsBuilder.Options);
         }

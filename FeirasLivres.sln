@@ -13,11 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Domain.Test", "FeirasLivres.Domain.Test\FeirasLivres.Domain.Test.csproj", "{4E5838C3-C106-4B06-A084-E689E44DE189}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleLab", "ConsoleLab\ConsoleLab.csproj", "{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleLab", "ConsoleLab\ConsoleLab.csproj", "{F33BA1D9-4A4B-4130-BA0F-E3D3C3852AF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeirasLivres.Infrastructure.FakeInMemory", "FeirasLivres.Infrastructure.FakeInMemory\FeirasLivres.Infrastructure.FakeInMemory.csproj", "{719A087A-1769-4DDB-80EC-B7B96BD5570D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Infrastructure.FakeInMemory", "FeirasLivres.Infrastructure.FakeInMemory\FeirasLivres.Infrastructure.FakeInMemory.csproj", "{719A087A-1769-4DDB-80EC-B7B96BD5570D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqliteDb", "SqliteDb", "{819FD049-C41F-4809-9945-B9C31D06DA99}"
+	ProjectSection(SolutionItems) = preProject
+		SqliteDb\feiras-livres.db = SqliteDb\feiras-livres.db
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
