@@ -6,9 +6,9 @@ namespace FeirasLivres.Infrastructure.Data.DbCtx
 {
     public class FeirasLivresDbContextFactory : IDesignTimeDbContextFactory<FeirasLivresDbContext>
     {
-        private readonly IConfiguration Configuration;
+        private readonly IConfiguration? _configuration;
 
-        public FeirasLivresDbContextFactory(IConfiguration configuration) => Configuration = configuration;
+        public FeirasLivresDbContextFactory(IConfiguration configuration) => _configuration = configuration;
 
         public FeirasLivresDbContextFactory(){}
 
