@@ -11,7 +11,6 @@ namespace FeirasLivres.Infrastructure.Data.Repository
     {
         public DistritoRepository(FeirasLivresDbContext dbCtx) : base(dbCtx) { }
 
-
         public async Task<IDomainActionResult<Distrito>> GetByCodigoAsync(string codigo)
         {
             var distrito = await _dbSet.FirstOrDefaultAsync(d => d.Codigo == codigo.Trim());

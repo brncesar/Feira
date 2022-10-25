@@ -28,7 +28,7 @@ namespace Feira.Api.Controllers
             _removeFeiraUseCase = removeFeiraUseCase;
         }
 
-        [HttpGet(Name = "GetFeira")]
+        [HttpGet(Name = "GetFeiraByCode")]
         public IActionResult Get()
         {
             return Ok();

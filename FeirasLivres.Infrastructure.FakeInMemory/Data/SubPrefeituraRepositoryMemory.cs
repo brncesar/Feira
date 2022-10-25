@@ -31,7 +31,18 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return subPrefeitura is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontratda"));
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontrada"));
+        }
+
+        public async Task<IDomainActionResult<SubPrefeitura>> GetByCodigoAsync(string codigo)
+        {
+            var subPrefeitura = SubPrefeiturasMock.SingleOrDefault(f => f.Codigo == codigo.Trim());
+
+            var domainRepositoryResult = new DomainActionResult<SubPrefeitura>(subPrefeitura);
+
+            return subPrefeitura is not null
+                ? domainRepositoryResult
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontrada"));
         }
     }
 }

@@ -2,35 +2,34 @@
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Misc;
 
-namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
+namespace FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
 
-public class FindFeira
+public class FindDistrito
 {
-    private readonly IFeiraRepository    _feiraRepository;
     private readonly IDistritoRepository _distritoRepository;
 
-    public FindFeira(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository)
-        => (_feiraRepository, _distritoRepository) = (feiraRepsitory ,distritoRepository);
+    public FindDistrito(IDistritoRepository distritoRepository)
+        => _distritoRepository = distritoRepository;
 
-    public async Task<IDomainActionResult<List<FindDistritoResult>>> Execute(FindFeiraParams findParameters)
+    public async Task<IDomainActionResult<List<FindDistritoResult>>> Execute(FindDistritoParams findParameters)
     {
-        var paramsValidationResult = new FindFeiraParamsValidator().Validate(findParameters);
+        var paramsValidationResult = new FindDistritoParamsValidator().Validate(findParameters);
         var findFeiraResult = new DomainActionResult<List<FindDistritoResult>>(paramsValidationResult.Errors);
 
-        if (paramsValidationResult.HasErrors())
-            return findFeiraResult;
+        // if (paramsValidationResult.HasErrors())
+            return findFeiraResult;/*
 
         if (findParameters.CodDistrito is not null && await DistritoNotFound(findParameters.CodDistrito))
-            return findFeiraResult.AddError(FindFeiraErrors.DistritoNotFound());
+            return findFeiraResult.AddError(FindDistritoErrors.DistritoNotFound());
 
-        var findFeirasRespositoryResult = await _feiraRepository.FindFeirasAsync(findParameters);
+        var findFeirasRespositoryResult = await _distritoRepository.FindFeirasAsync(findParameters);
 
         if (findFeirasRespositoryResult.HasErrors())
             return findFeiraResult.AddErrors(findFeirasRespositoryResult.Errors);
 
         return findFeirasRespositoryResult.Value is not null
             ? findFeiraResult.SetValue(findFeirasRespositoryResult.Value)
-            : findFeiraResult.SetValue(new());
+            : findFeiraResult.SetValue(new());*/
     }
 
     private async Task<bool> DistritoNotFound(string codDistrito)

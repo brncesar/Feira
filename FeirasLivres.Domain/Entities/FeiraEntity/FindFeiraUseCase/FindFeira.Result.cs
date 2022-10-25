@@ -1,6 +1,6 @@
 ﻿namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 
-public record FindFeiraResult(
+public record FindDistritoResult(
     string  Nome,
     string  NumeroRegistro,
     string  SetorCensitarioIBGE,

@@ -6,5 +6,6 @@ namespace FeirasLivres.Domain.Entities.SubPrefeituraEntity
         IBaseEntityRepositoryGetAll <SubPrefeitura>,
         IBaseEntityRepositoryGetById<SubPrefeitura>
     {
+        Task<IDomainActionResult<SubPrefeitura>> GetByCodigoAsync(string codigo);
     }
 }

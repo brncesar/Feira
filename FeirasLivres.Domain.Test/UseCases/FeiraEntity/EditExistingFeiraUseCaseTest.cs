@@ -25,8 +25,8 @@ namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
             EnderecoReferencia   : "CAMPO LARGO E MANAUS",
             Latitude             : 0,
             Longitude            : 0,
-            DistritoId           : new Guid("d2278ca3-597b-447c-b9de-b3e1d1b7e9fd"),
-            SubPrefeituraId      : new Guid("ab54e53a-0807-4d1e-8be9-412ae0cd7b2b")
+            CodDistrito          : "01",
+            CodSubPrefeitura     : "25"
         );
 
         public EditExistingFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
@@ -51,10 +51,10 @@ namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
         [Fact]
         public async Task MustReturnErrorWhenTryingToAddAFeiraWithNoExistentRelatedDistrito()
         {
-            var invalidDistritoId = new Guid("00000000-0000-0000-0000-000000000000");
+            var invalidCodDistrito = "00000";
             var useCaseParamObj = _useCaseParamObj with
             {
-                DistritoId = invalidDistritoId
+                CodDistrito = invalidCodDistrito
             };
 
             var editExistingFeiraUseCaseResult = await _testTarget.Execute(useCaseParamObj);
@@ -66,10 +66,10 @@ namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
         [Fact]
         public async Task MustReturnErrorWhenTryingToAddAFeiraWithNoExistentRelatedSubPrefeitura()
         {
-            var invalidSubPrefeituraId = new Guid("00000000-0000-0000-0000-000000000000");
+            var invalidCodSubPrefeitura = "ab";
             var useCaseParamObj = _useCaseParamObj with
             {
-                SubPrefeituraId = invalidSubPrefeituraId
+                CodSubPrefeitura = invalidCodSubPrefeitura
             };
 
             var editExistingFeiraUseCaseResult = await _testTarget.Execute(useCaseParamObj);

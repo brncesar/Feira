@@ -3,18 +3,18 @@
 namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
 {
     public record AddNewFeiraParams(
-        string Nome,
-        string NumeroRegistro,
-        string SetorCensitarioIBGE,
-        string AreaDePonderacaoIBGE,
-        Guid DistritoId,
-        Guid SubPrefeituraId,
+        string  Nome,
+        string  NumeroRegistro,
+        string  SetorCensitarioIBGE,
+        string  AreaDePonderacaoIBGE,
+        string  CodDistrito,
+        string  CodSubPrefeitura,
         Regiao5 Regiao5,
         Regiao8 Regiao8,
-        string EnderecoLogradouro,
+        string  EnderecoLogradouro,
         string? EnderecoNumero,
-        string EnderecoBairro,
+        string  EnderecoBairro,
         string? EnderecoReferencia,
-        double Latitude,
-        double Longitude);
+        double  Latitude,
+        double  Longitude);
 }

@@ -3,6 +3,7 @@ using System;
 using FeirasLivres.Infrastructure.Data.DbCtx;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeirasLivres.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FeirasLivresDbContext))]
-    partial class FeirasLivresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221025174914_ChangeIdforCodeInDistritoAndSubPrefeitura")]
+    partial class ChangeIdforCodeInDistritoAndSubPrefeitura
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.10");

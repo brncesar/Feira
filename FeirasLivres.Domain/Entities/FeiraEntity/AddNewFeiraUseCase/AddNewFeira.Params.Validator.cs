@@ -6,15 +6,15 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
     {
         public AddNewFeiraParamsValidator()
         {
-            RuleFor(p => p.DistritoId          ).NotEmpty     ();
             RuleFor(p => p.Regiao5             ).IsInEnum     ();
             RuleFor(p => p.Regiao8             ).IsInEnum     ();
-            RuleFor(p => p.SubPrefeituraId     ).NotEmpty     ();
             RuleFor(p => p.EnderecoNumero      ).MaximumLength(5);
             RuleFor(p => p.EnderecoReferencia  ).MaximumLength(24);
             RuleFor(p => p.AreaDePonderacaoIBGE).Length       (13);
             RuleFor(p => p.Nome                ).Length       (3, 30);
             RuleFor(p => p.EnderecoBairro      ).Length       (2, 30);
+            RuleFor(p => p.CodDistrito         ).NotEmpty     ().MaximumLength(9);
+            RuleFor(p => p.CodSubPrefeitura    ).NotEmpty     ().MaximumLength(2);
 
             RuleFor(p => p.NumeroRegistro).Matches("[0-9]{4}[-][0-9]")
                 .WithMessage(p =>

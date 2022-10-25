@@ -21,8 +21,8 @@ var addNewFeiraParams = new AddNewFeiraParams(
     EnderecoReferencia   : "CAMPO LARGO E MANAUS",
     Latitude             : 0,
     Longitude            : 0,
-    DistritoId           : new Guid("9a3a04aa-5069-4ec6-86ff-7572b24e8f22"),
-    SubPrefeituraId      : new Guid("2335194b-95e3-4ce1-9bc8-f9cc3c09943d")
+    CodDistrito          : "01",
+    CodSubPrefeitura     : "25"
 );
 
 var addNewFeiraUseCase = new AddNewFeira(feiraRepository, distritoRepository, subPrefeituraRepository);

@@ -12,6 +12,6 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity
 
         Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(EditExistingFeiraParams feira);
 
-        Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams);
+        Task<IDomainActionResult<List<FindDistritoResult>>> FindFeirasAsync(FindFeiraParams findParams);
     }
 }

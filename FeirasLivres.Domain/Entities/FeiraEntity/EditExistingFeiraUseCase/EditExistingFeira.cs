@@ -20,10 +20,10 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase
             var paramsValidationResult = new EditExistingFeiraParamsValidator().Validate(feiraInfosToEdit);
             var updateFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
 
-            if (await DistritoNotFound(feiraInfosToEdit.DistritoId))
+            if (await DistritoNotFound(feiraInfosToEdit.CodDistrito))
                 updateFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
 
-            if (await SubPrefeituraNotFound(feiraInfosToEdit.SubPrefeituraId))
+            if (await SubPrefeituraNotFound(feiraInfosToEdit.CodSubPrefeitura))
                 updateFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
 
             if (updateFeiraResult.HasErrors) return updateFeiraResult;
@@ -34,15 +34,15 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase
             return updateFeiraResult.SetValue(updateFeiraRepositoryResult.IsSuccess());
         }
 
-        private async Task<bool> DistritoNotFound(Guid distritoId)
+        private async Task<bool> DistritoNotFound(string codDistrito)
         {
-            var resultGetDistritoByIdRepository = await _distritoRepository.GetByIdAsync(distritoId);
+            var resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(codDistrito);
             return resultGetDistritoByIdRepository.HasErrors();
         }
 
-        private async Task<bool> SubPrefeituraNotFound(Guid subPrefeituraId)
+        private async Task<bool> SubPrefeituraNotFound(string codSubPrefeitura)
         {
-            var resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByIdAsync(subPrefeituraId);
+            var resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(codSubPrefeitura);
             return resultGetSubPrefeituraByIdRepository.HasErrors();
         }
     }
