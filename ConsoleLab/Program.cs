@@ -1,7 +1,8 @@
 ﻿using FeirasLivres.Domain.Entities.Enums;
 using ConsoleLab;
-using FeirasLivres.Infrastructure.Repository;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
+using FeirasLivres.Infrastructure.FakeInMemory.Data;
+using FeirasLivres.Domain.Entities.Common;
 
 var feiraRepository         = new FeiraRepositoryMemory();
 var distritoRepository      = new DistritoRepositoryMemory();
@@ -28,7 +29,7 @@ var addNewFeiraUseCase = new AddNewFeira(feiraRepository, distritoRepository, su
 
 var addNewFeiraResult = AsyncHelper.RunSync(() => addNewFeiraUseCase.Execute(addNewFeiraParams));
 
-if (addNewFeiraResult.HasErrors)
+if (addNewFeiraResult.HasErrors())
     addNewFeiraResult.Errors.ToList().ForEach( err => Console.WriteLine(err) );
 else
     Console.WriteLine($"Id nova feira cadastrada: {addNewFeiraResult.Value?.Id}");

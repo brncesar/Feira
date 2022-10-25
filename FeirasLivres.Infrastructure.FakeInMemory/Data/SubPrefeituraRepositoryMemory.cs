@@ -1,8 +1,9 @@
 ﻿using ErrorOr;
+using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 
-namespace FeirasLivres.Infrastructure.Repository
+namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 {
     public class SubPrefeituraRepositoryMemory : ISubPrefeituraRepository
     {
@@ -20,17 +21,17 @@ namespace FeirasLivres.Infrastructure.Repository
         }
 
         public async Task<IDomainActionResult<List<SubPrefeitura>>> GetAllAsync()
-            => new DomainRepositoryResult<List<SubPrefeitura>>(SubPrefeiturasMock);
+            => new DomainActionResult<List<SubPrefeitura>>(SubPrefeiturasMock);
 
         public async Task<IDomainActionResult<SubPrefeitura>> GetByIdAsync(Guid id)
         {
             var subPrefeitura = SubPrefeiturasMock.SingleOrDefault(f => f.Id == id);
 
-            var domainRepositoryResult = new DomainRepositoryResult<SubPrefeitura>(subPrefeitura);
+            var domainRepositoryResult = new DomainActionResult<SubPrefeitura>(subPrefeitura);
 
             return subPrefeitura is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorType.NotFound, "Sub-prefeitura não encontratda");
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontratda"));
         }
     }
 }

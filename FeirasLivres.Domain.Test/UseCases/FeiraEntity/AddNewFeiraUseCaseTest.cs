@@ -1,4 +1,5 @@
 using ErrorOr;
+using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.Enums;
 using FeirasLivres.Domain.Entities.FeiraEntity;
@@ -71,11 +72,11 @@ namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
 
             var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
 
-            Assert.True(addNewFeiraResult.IsSuccess);
+            Assert.True(addNewFeiraResult.IsSuccess());
 
             var anotherNewFeira = await _testTarget.Execute(useCaseParamObj);
 
-            Assert.True(anotherNewFeira.HasErrors);
+            Assert.True(anotherNewFeira.HasErrors());
         }
 
         [Fact]
@@ -89,7 +90,7 @@ namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
 
             var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
 
-            Assert.True(addNewFeiraResult.HasErrors);
+            Assert.True(addNewFeiraResult.HasErrors());
             Assert.Contains(addNewFeiraResult.Errors, err => err.Type == ErrorType.NotFound);
         }
 
@@ -104,7 +105,7 @@ namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
 
             var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
 
-            Assert.True(addNewFeiraResult.HasErrors);
+            Assert.True(addNewFeiraResult.HasErrors());
             Assert.Contains(addNewFeiraResult.Errors, err => err.Type == ErrorType.NotFound);
         }
     }

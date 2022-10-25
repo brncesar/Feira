@@ -1,7 +1,7 @@
 ﻿using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
-using FeirasLivres.Infrastructure.Repository;
+using FeirasLivres.Infrastructure.FakeInMemory.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FeirasLivres.Domain.Test

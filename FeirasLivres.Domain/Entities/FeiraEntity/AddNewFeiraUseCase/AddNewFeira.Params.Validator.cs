@@ -2,7 +2,7 @@
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
 {
-    public class AddNewFeiraParamsValidator : AbstractValidator<AddNewFeiraParams>
+    internal class AddNewFeiraParamsValidator : AbstractValidator<AddNewFeiraParams>
     {
         public AddNewFeiraParamsValidator()
         {

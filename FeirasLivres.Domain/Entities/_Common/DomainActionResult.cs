@@ -37,6 +37,7 @@ namespace FeirasLivres.Domain.Entities.Common
             serviceResult.Errors.Add(error);
             return serviceResult;
         }
+
         public static IDomainActionResult<T> AddErrors<T>(
             this IDomainActionResult<T> serviceResult,
             List<Error> errors)

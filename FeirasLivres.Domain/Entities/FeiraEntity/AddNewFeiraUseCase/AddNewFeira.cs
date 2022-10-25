@@ -16,7 +16,7 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
             =>  (_feiraRepository, _distritoRepository, _subPrefeituraRepository) =
                 ( feiraRepsitory ,  distritoRepository,  subPrefeituraRepsitory );
 
-        public async Task<DomainActionResult<AddNewFeiraResult>> Execute(AddNewFeiraParams newFeiraInfos)
+        public async Task<IDomainActionResult<AddNewFeiraResult>> Execute(AddNewFeiraParams newFeiraInfos)
         {
             var paramsValidationResult = new AddNewFeiraParamsValidator().Validate(newFeiraInfos);
             var addNewFeiraResult = new DomainActionResult<AddNewFeiraResult>(paramsValidationResult.Errors);
@@ -36,7 +36,7 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
             var addFeiraRepositoryResult = await _feiraRepository.AddAsync(feiraToSave);
 
             if (addFeiraRepositoryResult.IsSuccess())
-                return new AddNewFeiraResult(addFeiraRepositoryResult.Value);
+                return addNewFeiraResult.SetValue(new AddNewFeiraResult(addFeiraRepositoryResult.Value));
 
             addNewFeiraResult.AddErrors(addFeiraRepositoryResult.Errors);
 

@@ -1,8 +1,9 @@
 ﻿using ErrorOr;
+using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
 
-namespace FeirasLivres.Infrastructure.Repository
+namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 {
     public class DistritoRepositoryMemory : IDistritoRepository
     {
@@ -20,17 +21,17 @@ namespace FeirasLivres.Infrastructure.Repository
         }
 
         public async Task<IDomainActionResult<List<Distrito>>> GetAllAsync()
-            => new DomainRepositoryResult<List<Distrito>>(DistritosMock);
+            => new DomainActionResult<List<Distrito>>(DistritosMock);
 
         public async Task<IDomainActionResult<Distrito>> GetByIdAsync(Guid id)
         {
             var distrito = DistritosMock.SingleOrDefault(f => f.Id == id);
 
-            var domainRepositoryResult = new DomainRepositoryResult<Distrito>(distrito);
+            var domainRepositoryResult = new DomainActionResult<Distrito>(distrito);
 
             return distrito is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorType.NotFound, "Distrito não encontratdo");
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Distrito não encontratdo"));
         }
     }
 }

@@ -26,7 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FeirasLivres.Domain\FeirasLivres.Domain.csproj" />
-    <ProjectReference Include="..\FeirasLivres.Infrastructure\FeirasLivres.Infrastructure.csproj" />
+    <ProjectReference Include="..\FeirasLivres.Infrastructure.FakeInMemory\FeirasLivres.Infrastructure.FakeInMemory.csproj" />
   </ItemGroup>
 
 </Project>
