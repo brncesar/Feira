@@ -3,6 +3,7 @@ using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
+using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 using FeirasLivres.Domain.Misc;
 using FeirasLivres.Infrastructure.Data.DbCtx;
 using Microsoft.EntityFrameworkCore;
@@ -69,6 +70,57 @@ namespace FeirasLivres.Infrastructure.Data.Repository
                 await _dbCtx.SaveChangesAsync();
 
                 return domainActionResult.SetValue(true);
+            }
+            catch (Exception ex)
+            {
+                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
+            }
+        }
+
+        public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
+        {
+            var domainActionResult = new DomainActionResult<List<FindFeiraResult>>();
+            try
+            {
+                var feirasResult = new List<FindFeiraResult>();
+                var listResult = _dbSet.AsQueryable().AsNoTracking();
+
+                if (findParams.Nome.IsNotNullOrNotEmpty())
+                    listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim()));
+
+                if (findParams.Bairro.IsNotNullOrNotEmpty())
+                    listResult = listResult.Where(db => db.EnderecoBairro.Contains(findParams.Bairro.Trim()));
+
+                if (findParams.CodDistrito.IsNotNullOrNotEmpty())
+                    listResult = listResult.Where(db => db.Distrito.Codigo == findParams.CodDistrito);
+
+                if (findParams.Regiao5 is not null)
+                    listResult = listResult.Where(db => db.Regiao5 == findParams.Regiao5);
+
+                var feirasFound = await listResult
+                    .Include(f => f.Distrito)
+                    .Include(f => f.SubPrefeitura)
+                    .ToListAsync();
+
+                feirasFound.ForEach(feiraEntity => feirasResult.Add(new(
+                    Nome                : feiraEntity.Nome,
+                    NumeroRegistro      : feiraEntity.NumeroRegistro,
+                    SetorCensitarioIBGE : feiraEntity.SetorCensitarioIBGE,
+                    AreaDePonderacaoIBGE: feiraEntity.AreaDePonderacaoIBGE,
+                    CodDistrito         : feiraEntity.Distrito.Codigo,
+                    Distrito            : feiraEntity.Distrito.Nome,
+                    CodSubPrefeitura    : feiraEntity.SubPrefeitura.Codigo,
+                    SubPrefeitura       : feiraEntity.SubPrefeitura.Nome,
+                    Regiao5             : feiraEntity.Regiao5.ToDescription(),
+                    Regiao8             : feiraEntity.Regiao8.ToDescription(),
+                    EnderecoLogradouro  : feiraEntity.EnderecoLogradouro,
+                    EnderecoNumero      : feiraEntity.EnderecoNumero,
+                    EnderecoBairro      : feiraEntity.EnderecoBairro,
+                    EnderecoReferencia  : feiraEntity.EnderecoReferencia,
+                    Latitude            : feiraEntity.Latitude,
+                    Longitude           : feiraEntity.Longitude)));
+
+                return domainActionResult.SetValue(feirasResult);
             }
             catch (Exception ex)
             {

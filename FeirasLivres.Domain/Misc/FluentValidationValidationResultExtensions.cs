@@ -5,6 +5,8 @@ namespace FeirasLivres.Domain.Misc
 {
     public static class FluentValidationValidationResultExtensions
     {
+        public static bool HasErrors(this ValidationResult source) => !source.IsValid;
+
         public static bool IsPropInvalid(this ValidationResult source, string propName)
         {
             return source.Errors.Any(err => err.PropertyName == propName);

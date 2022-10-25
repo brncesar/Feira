@@ -6,5 +6,6 @@ namespace FeirasLivres.Domain.Entities.DistritoEntity
         IBaseEntityRepositoryGetAll<Distrito>,
         IBaseEntityRepositoryGetById<Distrito>
     {
+        Task<IDomainActionResult<Distrito>> GetByCodigoAsync(string codigo);
     }
 }

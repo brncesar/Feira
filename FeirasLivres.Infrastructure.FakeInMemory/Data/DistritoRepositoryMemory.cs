@@ -33,5 +33,16 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                 ? domainRepositoryResult
                 : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Distrito não encontratdo"));
         }
+
+        public async Task<IDomainActionResult<Distrito>> GetByCodigoAsync(string codigo)
+        {
+            var distrito = DistritosMock.SingleOrDefault(f => f.Codigo == codigo.Trim());
+
+            var domainRepositoryResult = new DomainActionResult<Distrito>(distrito);
+
+            return distrito is not null
+                ? domainRepositoryResult
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Distrito não encontratdo"));
+        }
     }
 }

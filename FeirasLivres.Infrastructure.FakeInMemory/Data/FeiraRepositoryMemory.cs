@@ -5,6 +5,7 @@ using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.Enums;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
+using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Misc;
 
@@ -17,7 +18,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
         public FeiraRepositoryMemory()
         {
             FeirasMock = new List<Feira>{
-                new Feira (){
+                new (){
                     Nome                 = "PIRASSUNUNGA",
                     NumeroRegistro       = "1013-8",
                     SetorCensitarioIBGE  = "355030801000054",
@@ -35,7 +36,25 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                     SubPrefeituraId      = new Guid("2335194b-95e3-4ce1-9bc8-f9cc3c09943d"),
                     SubPrefeitura        = new SubPrefeitura { Id = new Guid("2335194b-95e3-4ce1-9bc8-f9cc3c09943d"), Codigo = "25", Nome = "MOOCA"    },
                 },
-                new Feira (){
+                new (){
+                    Nome                 = "PIRASSUNUNGA NORTE",
+                    NumeroRegistro       = "1622-0",
+                    SetorCensitarioIBGE  = "355030801000091",
+                    AreaDePonderacaoIBGE = "3550308006121",
+                    Regiao5              = Regiao5.Leste,
+                    Regiao8              = Regiao8.Leste1,
+                    EnderecoLogradouro   = "RUA TEREZINA",
+                    EnderecoNumero       = "615",
+                    EnderecoBairro       = "ALTO DA MOOCA",
+                    EnderecoReferencia   = "CAMPO LARGO E MANAUS",
+                    Latitude             = -23564711,
+                    Longitude            = -23564711,
+                    DistritoId           = new Guid("9a3a04aa-5069-4ec6-86ff-7572b24e8f22"),
+                    Distrito             = new Distrito      { Id = new Guid("9a3a04aa-5069-4ec6-86ff-7572b24e8f22"), Codigo = "01", Nome = "AGUA RASA"},
+                    SubPrefeituraId      = new Guid("2335194b-95e3-4ce1-9bc8-f9cc3c09943d"),
+                    SubPrefeitura        = new SubPrefeitura { Id = new Guid("2335194b-95e3-4ce1-9bc8-f9cc3c09943d"), Codigo = "25", Nome = "MOOCA"    },
+                },
+                new (){
                     Nome                 = "ENGENHEIRO GOULART",
                     NumeroRegistro       = "5041-5",
                     SetorCensitarioIBGE  = "355030818000024",
@@ -53,7 +72,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                     SubPrefeituraId      = new Guid("f87ef259-70cd-417e-bab8-7fb404a811a0"),
                     SubPrefeitura        = new SubPrefeitura { Id = new Guid("f87ef259-70cd-417e-bab8-7fb404a811a0"), Codigo = "21", Nome = "PENHA"   },
                 },
-                new Feira (){
+                new (){
                     Nome                 = "VILA IDA",
                     NumeroRegistro       = "5060-1",
                     SetorCensitarioIBGE  = "355030802000009",
@@ -70,7 +89,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                     SubPrefeituraId      = new Guid("a5fb3e06-702b-43ce-8ff8-7bc70a00c810"),
                     SubPrefeitura        = new SubPrefeitura { Id = new Guid("a5fb3e06-702b-43ce-8ff8-7bc70a00c810"), Codigo = "11", Nome = "PINHEIROS"         },
                 },
-                new Feira (){
+                new (){
                     Nome                 = "JARDIM IVA",
                     NumeroRegistro       = "6108-5",
                     SetorCensitarioIBGE  = "355030804000110",
@@ -88,7 +107,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                     SubPrefeituraId      = new Guid("ab54e53a-0807-4d1e-8be9-412ae0cd7b2b"),
                     SubPrefeitura        = new SubPrefeitura { Id = new Guid("ab54e53a-0807-4d1e-8be9-412ae0cd7b2b"), Codigo = "26", Nome = "ARICANDUVA-FORMOSA-CARRAO" },
                 },
-                new Feira (){
+                new (){
                     Nome                 = "AGUA FUNDA",
                     NumeroRegistro       = "3036-8",
                     SetorCensitarioIBGE  = "355030827000059",
@@ -205,6 +224,52 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             FeirasMock[indexItemToUpdate] = repositoryFeiraToUpdate;
 
             return domainRepositoryResult.SetValue(true);
+        }
+
+        public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
+        {
+            var domainActionResult = new DomainActionResult<List<FindFeiraResult>>();
+            try
+            {
+                var listResult = FeirasMock;
+                var feirasResult = new List<FindFeiraResult>();
+
+                if (findParams.Nome.IsNotNullOrNotEmpty())
+                    listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim())).ToList();
+
+                if (findParams.Bairro.IsNotNullOrNotEmpty())
+                    listResult = listResult.Where(db => db.EnderecoBairro.Contains(findParams.Bairro.Trim())).ToList();
+
+                if (findParams.CodDistrito.IsNotNullOrNotEmpty())
+                    listResult = listResult.Where(db => db.Distrito.Codigo == findParams.CodDistrito).ToList();
+
+                if (findParams.Regiao5 is not null)
+                    listResult = listResult.Where(db => db.Regiao5 == findParams.Regiao5).ToList();
+
+                listResult.ForEach(feiraEntity => feirasResult.Add(new(
+                    Nome                : feiraEntity.Nome,
+                    NumeroRegistro      : feiraEntity.NumeroRegistro,
+                    SetorCensitarioIBGE : feiraEntity.SetorCensitarioIBGE,
+                    AreaDePonderacaoIBGE: feiraEntity.AreaDePonderacaoIBGE,
+                    CodDistrito         : feiraEntity.Distrito.Codigo,
+                    Distrito            : feiraEntity.Distrito.Nome,
+                    CodSubPrefeitura    : feiraEntity.SubPrefeitura.Codigo,
+                    SubPrefeitura       : feiraEntity.SubPrefeitura.Nome,
+                    Regiao5             : feiraEntity.Regiao5.ToDescription(),
+                    Regiao8             : feiraEntity.Regiao8.ToDescription(),
+                    EnderecoLogradouro  : feiraEntity.EnderecoLogradouro,
+                    EnderecoNumero      : feiraEntity.EnderecoNumero,
+                    EnderecoBairro      : feiraEntity.EnderecoBairro,
+                    EnderecoReferencia  : feiraEntity.EnderecoReferencia,
+                    Latitude            : feiraEntity.Latitude,
+                    Longitude           : feiraEntity.Longitude)));
+
+                return domainActionResult.SetValue(feirasResult);
+            }
+            catch (Exception ex)
+            {
+                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
+            }
         }
 
         private Feira? GetFeiraByNumeroRegistro(string numeroRegistro)
