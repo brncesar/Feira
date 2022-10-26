@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FeirasLivres.Infrastructure.FakeInMemory\FeirasLivres.Infrastructure.FakeInMemory.csproj" />
+    <ProjectReference Include="..\FeirasLivres.Infrastructure\FeirasLivres.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

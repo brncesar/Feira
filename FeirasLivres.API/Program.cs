@@ -1,9 +1,13 @@
+using FeirasLivres.Api.Misc;
 using FeirasLivres.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     // Add services to the container.
     builder.Services.AddControllers();
+
+    builder.Services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();

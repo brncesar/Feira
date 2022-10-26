@@ -1,0 +1,14 @@
+@hostname = localhost
+@port = 7200
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+POST https://{{host}}/auth/register
+Content-Type: {{contentType}}
+
+{
+	"firstName": "Bruno",
+	"lastName" : "Souza",
+	"email"    : "bruno@souza.br",
+	"password" : "eyJbh..hbbQ"
+}

@@ -19,7 +19,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FeirasLivres.Infrastructure
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqliteDb", "SqliteDb", "{819FD049-C41F-4809-9945-B9C31D06DA99}"
 	ProjectSection(SolutionItems) = preProject
+		SqliteDb\DEINFO_AB_FEIRASLIVRES_2014.csv = SqliteDb\DEINFO_AB_FEIRASLIVRES_2014.csv
 		SqliteDb\feiras-livres.db = SqliteDb\feiras-livres.db
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Requests", "Requests", "{C82E8E3A-92F4-4E79-89C1-B950DF2302D4}"
+	ProjectSection(SolutionItems) = preProject
+		Requests\Distrito.http = Requests\Distrito.http
+		Requests\Feira.http = Requests\Feira.http
+		Requests\SubPrefeitura.http = Requests\SubPrefeitura.http
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6BB97A7D-7352-4BD1-AC1E-AB1CE79B10BC}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Api.md = Docs\Api.md
+		Docs\DomainModels.md = Docs\DomainModels.md
 	EndProjectSection
 EndProject
 Global

@@ -2,6 +2,7 @@
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
+using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase
 {
@@ -20,10 +21,10 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase
             var paramsValidationResult = new EditExistingFeiraParamsValidator().Validate(feiraInfosToEdit);
             var updateFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
 
-            if (await DistritoNotFound(feiraInfosToEdit.CodDistrito))
+            if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodDistrito) && await DistritoNotFound(feiraInfosToEdit.CodDistrito))
                 updateFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
 
-            if (await SubPrefeituraNotFound(feiraInfosToEdit.CodSubPrefeitura))
+            if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodSubPrefeitura) && await SubPrefeituraNotFound(feiraInfosToEdit.CodSubPrefeitura))
                 updateFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
 
             if (updateFeiraResult.HasErrors) return updateFeiraResult;

@@ -1,7 +1,6 @@
 using FeirasLivres.Api.Controllers;
-using FeirasLivres.Domain.Entities.FeiraEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
-using FeirasLivres.Domain.Entities.FeiraEntity.RemoveExistingFeiraUseCase;
+using FeirasLivres.Domain.Entities.Common;
+using FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feira.Api.Controllers
@@ -9,29 +8,22 @@ namespace Feira.Api.Controllers
     public class DistritoController : BaseController
     {
         private readonly ILogger<DistritoController> _logger;
-        private readonly IFeiraRepository            _feiraRepository;
-        private readonly AddNewFeira                 _addNewFeiraUseCase;
-        private readonly EditExistingFeiraParams     _editFeiraUseCase;
-        private readonly RemoveExistingFeira         _removeFeiraUseCase;
+        private readonly FindDistrito _findDistritoUseCase;
 
-        public DistritoController(
-            ILogger<DistritoController> logger,
-            IFeiraRepository            feiraRepository,
-            AddNewFeira                 addNewFeiraUseCase,
-            EditExistingFeiraParams     editFeiraUseCase,
-            RemoveExistingFeira         removeFeiraUseCase)
+        public DistritoController(ILogger<DistritoController> logger, FindDistrito findDistritoUseCase)
         {
-            _logger             = logger;
-            _feiraRepository    = feiraRepository;
-            _addNewFeiraUseCase = addNewFeiraUseCase;
-            _editFeiraUseCase   = editFeiraUseCase;
-            _removeFeiraUseCase = removeFeiraUseCase;
+            _logger              = logger;
+            _findDistritoUseCase = findDistritoUseCase;
         }
 
-        [HttpGet(Name = "GetFeiraByCode")]
-        public IActionResult Get()
+        [HttpGet(Name = "Find")]
+        public async Task<ActionResult> Get(FindDistritoParams findParam)
         {
-            return Ok();
+            var findResult = await _findDistritoUseCase.Execute(findParam);
+
+            return findResult.IsSuccess()
+                ? Ok(findResult.Value)
+                : Error(findResult);
         }
     }
 }

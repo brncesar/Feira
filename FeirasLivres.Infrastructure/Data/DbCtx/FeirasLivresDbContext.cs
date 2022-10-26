@@ -2,13 +2,12 @@
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace FeirasLivres.Infrastructure.Data.DbCtx;
 
 public class FeirasLivresDbContext : DbContext
 {
-    public FeirasLivresDbContext(DbContextOptions<FeirasLivresDbContext> options) : base(options) {}
+    public FeirasLivresDbContext(DbContextOptions<FeirasLivresDbContext> options) : base(options) { }
 
     public DbSet<Feira        > Feira         { get; set; } = null!;
     public DbSet<Distrito     > Distrito      { get; set; } = null!;

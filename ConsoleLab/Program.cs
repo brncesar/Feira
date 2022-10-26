@@ -1,93 +1,171 @@
-﻿using FeirasLivres.Domain.Entities.Enums;
-using ConsoleLab;
-using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
-using FeirasLivres.Infrastructure.FakeInMemory.Data;
-using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Entities.DistritoEntity;
+using FeirasLivres.Domain.Entities.Enums;
+using FeirasLivres.Domain.Entities.FeiraEntity;
+using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
+using FeirasLivres.Infrastructure.Data.DbCtx;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic.FileIO;
 
-var feiraRepository         = new FeiraRepositoryMemory();
-var distritoRepository      = new DistritoRepositoryMemory();
-var subPrefeituraRepository = new SubPrefeituraRepositoryMemory();
+var ctxDbOpts  = new DbContextOptionsBuilder<FeirasLivresDbContext>().UseSqlite(@$"Data Source={getSqliteDbFilePath()}").Options;
+var ctx        = new FeirasLivresDbContext(ctxDbOpts);
 
-var addNewFeiraParams = new AddNewFeiraParams(
-    Nome                 : "PIRASSUNUNGA",
-    NumeroRegistro       : "0000-0",
-    SetorCensitarioIBGE  : "355030801000054",
-    AreaDePonderacaoIBGE : "3550308005039",
-    Regiao5              : Regiao5.Leste,
-    Regiao8              : Regiao8.Leste1,
-    EnderecoLogradouro   : "RUA TEREZINA",
-    EnderecoNumero       : "615",
-    EnderecoBairro       : "ALTO DA MOOCA",
-    EnderecoReferencia   : "CAMPO LARGO E MANAUS",
-    Latitude             : 0,
-    Longitude            : 0,
-    CodDistrito          : "01",
-    CodSubPrefeitura     : "25"
-);
+var linhasCsv      = GetLinhasCsv();
+var feiras         = new List<Feira        >();
+var distritos      = new List<Distrito     >();
+var subPrefeituras = new List<SubPrefeitura>();
 
-var addNewFeiraUseCase = new AddNewFeira(feiraRepository, distritoRepository, subPrefeituraRepository);
+clearAllTables();
+foreach (var linhaCsv in linhasCsv)
+{
+    AddDistrito(linhaCsv);
+    AddSubPrefeitura(linhaCsv);
+    AddFeira(linhaCsv);
+}
+ctx.SaveChanges();
 
-var addNewFeiraResult = AsyncHelper.RunSync(() => addNewFeiraUseCase.Execute(addNewFeiraParams));
+Console.WriteLine("Distritos:");
+distritos.ForEach(x => Console.WriteLine($"\t({x.Codigo}) {x.Nome}"));
 
-if (addNewFeiraResult.HasErrors())
-    addNewFeiraResult.Errors.ToList().ForEach( err => Console.WriteLine(err) );
-else
-    Console.WriteLine($"Id nova feira cadastrada: {addNewFeiraResult.Value?.Id}");
+Console.WriteLine("\n\nSubPrefeituras:");
+subPrefeituras.ForEach(x => Console.WriteLine($"\t({x.Codigo}) {x.Nome}"));
 
-Console.ReadKey();
+Console.WriteLine("\n\nFeiras da zona Centro:");
+feiras.Where(x => x.Regiao5 == Regiao5.Centro).ToList()
+    .ForEach(x => Console.WriteLine($"\t({x.NumeroRegistro}) {x.Nome}"));
 
 
-/*
-// Execute the validator
-ValidationResult results = new AddNewFeiraParamsValidator().Validate(addNewFeiraParams);
+void clearAllTables()
+{
+    ctx.Database.ExecuteSqlRaw("DELETE FROM [TP01_Feira]"        );
+    ctx.Database.ExecuteSqlRaw("DELETE FROM [TS01_Distrito]"     );
+    ctx.Database.ExecuteSqlRaw("DELETE FROM [TS02_SubPrefeitura]");
+}
 
-// Inspect any validation failures.
-bool success = results.IsValid;
-List<ValidationFailure> failures = results.Errors;
+void AddDistrito(LinhaCsv linhaCsv) {
+    if (distritos.Any(x => x.Codigo == linhaCsv.CODDIST)) return;
 
+    distritos.Add(new Distrito{
+        Codigo = linhaCsv.CODDIST,
+        Nome   = linhaCsv.DISTRITO,
+    });
 
-Feira f = addNewFeiraParams.CopyValuesTo<Feira>();
-*/
+    ctx.Set<Distrito>().Add(distritos.Last());
+}
 
-//async Task<DomainServiceResult<AddNewFeiraResult>> AddNovaFeira(AddNewFeiraParams newFeiraInfos)
-//{
-//    var _feiraRepository = new FeiraRepositoryMemory();
+void AddSubPrefeitura(LinhaCsv linhaCsv)
+{
+    if (subPrefeituras.Any(x => x.Codigo == linhaCsv.CODSUBPREF)) return;
 
-//    var paramsValidationResult = new AddNewFeiraParamsValidator().Validate(newFeiraInfos);
-//    var AddNewFeiraResult = new DomainServiceResult<AddNewFeiraResult>(paramsValidationResult.Errors);
+    subPrefeituras.Add(new SubPrefeitura
+    {
+        Codigo = linhaCsv.CODSUBPREF,
+        Nome   = linhaCsv.SUBPREFE,
+    });
 
-//    var strNamePropNumeroRegistro = nameof(newFeiraInfos.NumeroRegistro);
-//    var isParamNumeroRegistroValid = paramsValidationResult.IsParamValid(strNamePropNumeroRegistro);
-//    if (isParamNumeroRegistroValid)
-//    {
-//        var getFeiraRepositoryResult = await _feiraRepository.GetByNumeroRegistroAsync(newFeiraInfos.NumeroRegistro);
+    ctx.Set<SubPrefeitura>().Add(subPrefeituras.Last());
+}
 
-//        if (getFeiraRepositoryResult.IsSuccess())
-//        {
-//            var existingFeiraReceivedFromRepository = getFeiraRepositoryResult.Value;
+void AddFeira(LinhaCsv linhaCsv)
+{
+    feiras.Add(new Feira
+    {
+        Nome                 = linhaCsv.NOME_FEIRA,
+        NumeroRegistro       = linhaCsv.REGISTRO,
+        SetorCensitarioIBGE  = linhaCsv.SETCENS,
+        AreaDePonderacaoIBGE = linhaCsv.AREAP,
+        DistritoId           = GetIdDistrito(linhaCsv.CODDIST),
+        SubPrefeituraId      = GetIdSubPrefeitura(linhaCsv.CODSUBPREF),
+        Regiao5              = GetRegiao5(linhaCsv.REGIAO5),
+        Regiao8              = GetRegiao8(linhaCsv.REGIAO8),
+        EnderecoLogradouro   = linhaCsv.LOGRADOURO,
+        EnderecoNumero       = linhaCsv.NUMERO,
+        EnderecoBairro       = linhaCsv.BAIRRO,
+        EnderecoReferencia   = linhaCsv.REFERENCIA,
+        Latitude             = GetCoordenada(linhaCsv.LAT),
+        Longitude            = GetCoordenada(linhaCsv.LONG),
+    });
 
-//            if (existingFeiraReceivedFromRepository is not null)
-//                AddNewFeiraResult.AddError(AddNewFeiraErrors.DuplicateFeira(
-//                    $"Já existe uma outra feira cadastrada com este mesmo número de registro: " +
-//                    $"{existingFeiraReceivedFromRepository.Nome} - {existingFeiraReceivedFromRepository.NumeroRegistro}"));
-//        }
-//        else
-//        {
-//            getFeiraRepositoryResult.Errors.ToList().ForEach(err =>
-//                AddNewFeiraResult.AddError(AddNewFeiraErrors.RepositoryError(err)));
-//        }
-//    }
+    ctx.Set<Feira>().Add(feiras.Last());
+}
 
-//    if (AddNewFeiraResult.HasErrors) return AddNewFeiraResult;
+Guid GetIdDistrito     (string cod) => distritos     .First(x => x.Codigo == cod).Id;
+Guid GetIdSubPrefeitura(string cod) => subPrefeituras.First(x => x.Codigo == cod).Id;
 
-//    var feiraToSave = newFeiraInfos.MapValuesTo<Feira>();
-//    var addFeiraRepositoryResult = await _feiraRepository.AddAsync(feiraToSave);
+double GetCoordenada(string coord) => Convert.ToDouble($"{coord.Substring(0, 3)}.{coord.Substring(3)}");
 
-//    if (addFeiraRepositoryResult.IsSuccess())
-//        return new AddNewFeiraResult(addFeiraRepositoryResult.Value);
+Regiao5 GetRegiao5(string regiao5) => regiao5 switch {
+    "Norte"  => Regiao5.Norte,
+    "Leste"  => Regiao5.Leste,
+    "Sul"    => Regiao5.Sul,
+    "Oeste"  => Regiao5.Oeste,
+    "Centro" => Regiao5.Centro,
+    _        => Regiao5.Norte,
+};
 
-//    addFeiraRepositoryResult.Errors.ToList().ForEach(err =>
-//        AddNewFeiraResult.AddError(AddNewFeiraErrors.RepositoryError(err)));
+Regiao8 GetRegiao8(string regiao8) => regiao8 switch {
+    "Norte1" => Regiao8.Norte1,
+    "Norte2" => Regiao8.Norte2,
+    "Leste1" => Regiao8.Leste1,
+    "Leste2" => Regiao8.Leste2,
+    "Sul1"   => Regiao8.Sul1,
+    "Sul2"   => Regiao8.Sul2,
+    "Oeste"  => Regiao8.Oeste,
+    "Centro" => Regiao8.Centro,
+    _        => Regiao8.Norte1,
+};
 
-//    return AddNewFeiraResult;
-//}
+List<LinhaCsv> GetLinhasCsv(){
+    List<LinhaCsv> linhasCsv = new List<LinhaCsv>();
+    using (TextFieldParser parser = new TextFieldParser(getCsvFilePath()))
+    {
+        parser.TextFieldType = FieldType.Delimited;
+        parser.SetDelimiters(",");
+        while (!parser.EndOfData)
+            linhasCsv.Add(GetNewLinhaCsvFromCsvRow(parser.ReadFields()));
+    }
+    linhasCsv.RemoveAt(0);
+
+    return linhasCsv;
+}
+
+string getCsvFilePath()
+{
+    var currentPath = Directory.GetCurrentDirectory();
+    var csvFilePath = currentPath.Substring(0, currentPath.IndexOf(@"ConsoleLab\")) + @"SqliteDb\DEINFO_AB_FEIRASLIVRES_2014.csv";
+    return csvFilePath;
+}
+
+string getSqliteDbFilePath()
+{
+    var currentPath = Directory.GetCurrentDirectory();
+    var csvFilePath = currentPath.Substring(0, currentPath.IndexOf(@"ConsoleLab\")) + @"SqliteDb\feiras-livres.db";
+    return csvFilePath;
+}
+
+LinhaCsv GetNewLinhaCsvFromCsvRow(string[] fields)
+{
+    return new(
+        fields[ 0], fields[ 1], fields[ 2], fields[ 3], fields[ 4], fields[ 5],
+        fields[ 6], fields[ 7], fields[ 8], fields[ 9], fields[10], fields[11],
+        fields[12], fields[13], fields[14], fields[15],
+        fields.Length == 17  ?  fields[16] : "");
+}
+
+record LinhaCsv(
+    string ID,
+    string LONG,
+    string LAT,
+    string SETCENS,
+    string AREAP,
+    string CODDIST,
+    string DISTRITO,
+    string CODSUBPREF,
+    string SUBPREFE,
+    string REGIAO5,
+    string REGIAO8,
+    string NOME_FEIRA,
+    string REGISTRO,
+    string LOGRADOURO,
+    string NUMERO,
+    string BAIRRO,
+    string REFERENCIA);

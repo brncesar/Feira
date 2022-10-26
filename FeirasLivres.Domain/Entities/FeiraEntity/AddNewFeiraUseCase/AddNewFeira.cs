@@ -24,10 +24,10 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
             if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.NumeroRegistro))
                 await CheckIfTheFeiraDoesntExistAndAddErrorIfItExists(addNewFeiraResult, newFeiraInfos.NumeroRegistro);
 
-            if (await DistritoNotFound(newFeiraInfos.CodDistrito))
+            if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.CodDistrito) && await DistritoNotFound(newFeiraInfos.CodDistrito))
                 addNewFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
 
-            if (await SubPrefeituraNotFound(newFeiraInfos.CodSubPrefeitura))
+            if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.CodSubPrefeitura) && await SubPrefeituraNotFound(newFeiraInfos.CodSubPrefeitura))
                 addNewFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
 
             if (addNewFeiraResult.HasErrors) return addNewFeiraResult;

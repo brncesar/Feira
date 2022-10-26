@@ -1,0 +1,30 @@
+@hostname = localhost
+@port = 7257
+@host = {{hostname}}:{{port}}
+@contentType = application/json
+
+### Find - Empty result
+POST https://{{host}}/api/distrito/Find
+Content-Type: {{contentType}}
+
+{
+	"nome" : "não deve encontrar nada"
+}
+
+
+### Find - One result
+POST https://{{host}}/auth/login
+Content-Type: {{contentType}}
+
+{
+	"nome" : "CANGAIBA"
+}
+
+
+### Find - Many results
+POST https://{{host}}/auth/login
+Content-Type: {{contentType}}
+
+{
+	"nome" : "CAMPO"
+}
