@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FeirasLivres.Domain\FeirasLivres.Domain.csproj" />
     <ProjectReference Include="..\FeirasLivres.Infrastructure\FeirasLivres.Infrastructure.csproj" />
   </ItemGroup>
 

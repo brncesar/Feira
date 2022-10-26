@@ -33,7 +33,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return subPrefeitura is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontrada"));
+                : domainRepositoryResult.AddNotFoundError($"{nameof(SubPrefeituraRepositoryMemory)}.{nameof(GetByIdAsync)}", "Subprefeitura não encontrada");
         }
 
         public async Task<IDomainActionResult<SubPrefeitura>> GetByCodigoAsync(string codigo)
@@ -44,7 +44,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return subPrefeitura is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontrada"));
+                : domainRepositoryResult.AddNotFoundError($"{nameof(SubPrefeituraRepositoryMemory)}.{nameof(GetByCodigoAsync)}", "Subprefeitura não encontrada");
         }
 
         public async Task<IDomainActionResult<List<FindSubPrefeituraResult>>> FindSubPrefeiturasAsync(FindSubPrefeituraParams findParams)

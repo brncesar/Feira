@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-using FeirasLivres.Domain.Common;
-using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 using FeirasLivres.Domain.Misc;
@@ -30,26 +28,32 @@ namespace FeirasLivres.Infrastructure.Data.Repository
                 var subPrefeiturasFound = await listResult.ToListAsync();
 
                 subPrefeiturasFound.ForEach(subPrefeituraEntity => subPrefeiturasResult.Add(new(
-                    Nome: subPrefeituraEntity.Nome,
+                    Nome  : subPrefeituraEntity.Nome,
                     Codigo: subPrefeituraEntity.Codigo)));
 
                 return domainActionResult.SetValue(subPrefeiturasResult);
             }
             catch (Exception ex)
             {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
+                return domainActionResult.ReturnRepositoryError(ex);
             }
         }
 
         public async Task<IDomainActionResult<SubPrefeitura>> GetByCodigoAsync(string codigo)
         {
-            var subPrefeitura = await _dbSet.FirstOrDefaultAsync(d => d.Codigo == codigo.Trim());
+            var domainRepositoryResult = new DomainActionResult<SubPrefeitura>();
+            try
+            {
+                var subPrefeitura = await _dbSet.FirstOrDefaultAsync(d => d.Codigo == codigo.Trim());
 
-            var domainRepositoryResult = new DomainActionResult<SubPrefeitura>(subPrefeitura);
-
-            return subPrefeitura is not null
-                ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Sub-prefeitura não encontrada"));
+                return subPrefeitura is not null
+                    ? domainRepositoryResult.SetValue(subPrefeitura)
+                    : domainRepositoryResult.NotFound();
+            }
+            catch (Exception ex)
+            {
+                return domainRepositoryResult.ReturnRepositoryError(ex);
+            }
         }
     }
 }

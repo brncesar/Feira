@@ -86,7 +86,7 @@ namespace FeirasLivres.Api.Misc
             var applicationErrors = httpContext?.Items[HttpContextApplicationErrorsKey] as List<Error>;
 
             if (applicationErrors is not null)
-                problemDetails.Extensions.Add("errorCodes", applicationErrors.Select(e => e.Code));
+                problemDetails.Extensions.Add("errorCodes", applicationErrors.Select(e => $"{e.Code} » {e.Description} ({e.Type})"));
         }
 
         public const string HttpContextApplicationErrorsKey = "Errors";

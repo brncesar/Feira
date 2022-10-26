@@ -11,7 +11,7 @@ internal class FindDistritoParamsValidator : AbstractValidator<FindDistritoParam
         RuleFor(p => p.Nome  ).Length(3,18);
 
         RuleFor(p => new { p.Nome, p.Codigo })
-            .Must(x => x.Codigo.IsNotNullOrNotEmpty() && x.Nome  .IsNotNullOrNotEmpty())
-            .WithMessage("É necessário informar pelo menos um parâmetro para busca do Distrito [ Nome | Código ]");
+            .Must(x => x.Codigo.IsNotNullOrNotEmpty() || x.Nome.IsNotNullOrNotEmpty())
+            .WithMessage(z => $"É necessário informar pelo menos um parâmetro para busca do Distrito [ Nome | Código ]");
     }
 }

@@ -1,14 +1,30 @@
 @hostname = localhost
-@port = 7200
+@port = 7257
 @host = {{hostname}}:{{port}}
 @contentType = application/json
 
-POST https://{{host}}/auth/register
+### Find - Empty result
+POST https://{{host}}/api/Feira/Find
 Content-Type: {{contentType}}
 
 {
-	"firstName": "Bruno",
-	"lastName" : "Souza",
-	"email"    : "bruno@souza.br",
-	"password" : "eyJbh..hbbQ"
+	"nome" : "naoDeveAcharNada"
+}
+
+
+### Find - One result
+POST https://{{host}}/api/Feira/Find
+Content-Type: {{contentType}}
+
+{
+	"nome" : "CANGAIBA"
+}
+
+
+### Find - Many results
+POST https://{{host}}/api/Feira/Find
+Content-Type: {{contentType}}
+
+{
+	"nome" : "CAMPO"
 }

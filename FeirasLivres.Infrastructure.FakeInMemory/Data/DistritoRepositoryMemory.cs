@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-using FeirasLivres.Domain.Common;
-using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
 using FeirasLivres.Domain.Misc;
@@ -33,7 +31,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return distrito is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Distrito não encontrado"));
+                : domainRepositoryResult.AddNotFoundError($"{nameof(DistritoRepositoryMemory)}.{nameof(GetByIdAsync)}", "Distrito não encontrado");
         }
 
         public async Task<IDomainActionResult<Distrito>> GetByCodigoAsync(string codigo)
@@ -44,7 +42,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return distrito is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Distrito não encontrado"));
+                : domainRepositoryResult.AddNotFoundError($"{nameof(DistritoRepositoryMemory)}.{nameof(GetByIdAsync)}", "Distrito não encontrado");
         }
 
         public async Task<IDomainActionResult<List<FindDistritoResult>>> FindDistritosAsync(FindDistritoParams findParams)

@@ -1,6 +1,4 @@
-﻿using ErrorOr;
-using FeirasLivres.Domain.Common;
-using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
@@ -8,124 +6,121 @@ using FeirasLivres.Domain.Misc;
 using FeirasLivres.Infrastructure.Data.DbCtx;
 using Microsoft.EntityFrameworkCore;
 
-namespace FeirasLivres.Infrastructure.Data.Repository
+namespace FeirasLivres.Infrastructure.Data.Repository;
+
+public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFeiraRepository
 {
-    public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFeiraRepository
+    public FeiraRepository(FeirasLivresDbContext dbCtx) : base(dbCtx) {}
+
+    private async Task<Feira?> GetFeiraByNumeroRegistroAsync(string numeroRegistro)
+        => await _dbSet.SingleOrDefaultAsync(x => x.NumeroRegistro == numeroRegistro.Trim());
+
+    public async Task<IDomainActionResult<Feira>> GetByNumeroRegistroAsync(string numeroRegistro)
     {
-        public FeiraRepository(FeirasLivresDbContext dbCtx) : base(dbCtx) {}
-
-        private async Task<Feira?> GetFeiraByNumeroRegistroAsync(string numeroRegistro)
-            => await _dbSet.SingleOrDefaultAsync(x => x.NumeroRegistro == numeroRegistro.Trim());
-
-        public async Task<IDomainActionResult<Feira>> GetByNumeroRegistroAsync(string numeroRegistro)
+        var domainActionResult = new DomainActionResult<Feira>();
+        try
         {
-            var domainActionResult = new DomainActionResult<Feira>();
-            try
-            {
-                var feira = await GetFeiraByNumeroRegistroAsync(numeroRegistro);
+            var feira = await GetFeiraByNumeroRegistroAsync(numeroRegistro);
 
-                return feira is not null
-                    ? domainActionResult.SetValue(feira)
-                    : domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira not found"));
-            }
-            catch (Exception ex)
-            {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
-            }
+            return feira is not null
+                ? domainActionResult.SetValue(feira)
+                : domainActionResult.NotFound();
         }
-
-        public async Task<IDomainActionResult<bool>> RemoveByNumeroRegistroAsync(string numeroRegistro)
+        catch (Exception ex)
         {
-            var domainActionResult = new DomainActionResult<bool>();
-            try
-            {
-                var feira = await GetFeiraByNumeroRegistroAsync(numeroRegistro);
-
-                if (feira is null)
-                    return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira not found"));
-
-                _dbSet.Remove(feira);
-                await _dbCtx.SaveChangesAsync();
-
-                return domainActionResult.SetValue(true);
-            }
-            catch (Exception ex)
-            {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
-            }
+            return domainActionResult.ReturnRepositoryError(ex);
         }
+    }
 
-        public async Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(EditExistingFeiraParams paramFeiraToUpdate)
+    public async Task<IDomainActionResult<bool>> RemoveByNumeroRegistroAsync(string numeroRegistro)
+    {
+        var domainActionResult = new DomainActionResult<bool>();
+        try
         {
-            var domainActionResult = new DomainActionResult<bool>(false);
+            var feira = await GetFeiraByNumeroRegistroAsync(numeroRegistro);
 
-            try
-            {
-                var repositoryFeiraToUpdate = await GetFeiraByNumeroRegistroAsync(paramFeiraToUpdate.NumeroRegistro);
+            if (feira is null) return domainActionResult.NotFound();
 
-                if (repositoryFeiraToUpdate is null)
-                    return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira not found"));
+            _dbSet.Remove(feira);
+            await _dbCtx.SaveChangesAsync();
 
-                paramFeiraToUpdate.MapValuesTo(ref repositoryFeiraToUpdate);
-                await _dbCtx.SaveChangesAsync();
-
-                return domainActionResult.SetValue(true);
-            }
-            catch (Exception ex)
-            {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
-            }
+            return domainActionResult.SetValue(true);
         }
-
-        public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
+        catch (Exception ex)
         {
-            var domainActionResult = new DomainActionResult<List<FindFeiraResult>>();
-            try
-            {
-                var feirasResult = new List<FindFeiraResult>();
-                var listResult = _dbSet.AsQueryable().AsNoTracking();
+            return domainActionResult.ReturnRepositoryError(ex);
+        }
+    }
 
-                if (findParams.Nome.IsNotNullOrNotEmpty())
-                    listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim()));
+    public async Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(EditExistingFeiraParams paramFeiraToUpdate)
+    {
+        var domainActionResult = new DomainActionResult<bool>(false);
 
-                if (findParams.Bairro.IsNotNullOrNotEmpty())
-                    listResult = listResult.Where(db => db.EnderecoBairro.Contains(findParams.Bairro.Trim()));
+        try
+        {
+            var repositoryFeiraToUpdate = await GetFeiraByNumeroRegistroAsync(paramFeiraToUpdate.NumeroRegistro);
 
-                if (findParams.CodDistrito.IsNotNullOrNotEmpty())
-                    listResult = listResult.Where(db => db.Distrito.Codigo == findParams.CodDistrito);
+            if (repositoryFeiraToUpdate is null) return domainActionResult.NotFound();
 
-                if (findParams.Regiao5 is not null)
-                    listResult = listResult.Where(db => db.Regiao5 == findParams.Regiao5);
+            paramFeiraToUpdate.MapValuesTo(ref repositoryFeiraToUpdate);
+            await _dbCtx.SaveChangesAsync();
 
-                var feirasFound = await listResult
-                    .Include(f => f.Distrito)
-                    .Include(f => f.SubPrefeitura)
-                    .ToListAsync();
+            return domainActionResult.SetValue(true);
+        }
+        catch (Exception ex)
+        {
+            return domainActionResult.ReturnRepositoryError(ex);
+        }
+    }
 
-                feirasFound.ForEach(feiraEntity => feirasResult.Add(new(
-                    Nome                : feiraEntity.Nome,
-                    NumeroRegistro      : feiraEntity.NumeroRegistro,
-                    SetorCensitarioIBGE : feiraEntity.SetorCensitarioIBGE,
-                    AreaDePonderacaoIBGE: feiraEntity.AreaDePonderacaoIBGE,
-                    CodDistrito         : feiraEntity.Distrito.Codigo,
-                    Distrito            : feiraEntity.Distrito.Nome,
-                    CodSubPrefeitura    : feiraEntity.SubPrefeitura.Codigo,
-                    SubPrefeitura       : feiraEntity.SubPrefeitura.Nome,
-                    Regiao5             : feiraEntity.Regiao5.ToDescription(),
-                    Regiao8             : feiraEntity.Regiao8.ToDescription(),
-                    EnderecoLogradouro  : feiraEntity.EnderecoLogradouro,
-                    EnderecoNumero      : feiraEntity.EnderecoNumero,
-                    EnderecoBairro      : feiraEntity.EnderecoBairro,
-                    EnderecoReferencia  : feiraEntity.EnderecoReferencia,
-                    Latitude            : feiraEntity.Latitude,
-                    Longitude           : feiraEntity.Longitude)));
+    public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
+    {
+        var domainRepositoryResult = new DomainActionResult<List<FindFeiraResult>>();
+        try
+        {
+            var feirasResult = new List<FindFeiraResult>();
+            var listResult = _dbSet.AsQueryable().AsNoTracking();
 
-                return domainActionResult.SetValue(feirasResult);
-            }
-            catch (Exception ex)
-            {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
-            }
+            if (findParams.Nome.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim()));
+
+            if (findParams.Bairro.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.EnderecoBairro.Contains(findParams.Bairro.Trim()));
+
+            if (findParams.CodDistrito.IsNotNullOrNotEmpty())
+                listResult = listResult.Where(db => db.Distrito.Codigo == findParams.CodDistrito);
+
+            if (findParams.Regiao5 is not null)
+                listResult = listResult.Where(db => db.Regiao5 == findParams.Regiao5);
+
+            var feirasFound = await listResult
+                .Include(f => f.Distrito)
+                .Include(f => f.SubPrefeitura)
+                .ToListAsync();
+
+            feirasFound.ForEach(feiraEntity => feirasResult.Add(new(
+                Nome                : feiraEntity.Nome,
+                NumeroRegistro      : feiraEntity.NumeroRegistro,
+                SetorCensitarioIBGE : feiraEntity.SetorCensitarioIBGE,
+                AreaDePonderacaoIBGE: feiraEntity.AreaDePonderacaoIBGE,
+                CodDistrito         : feiraEntity.Distrito.Codigo,
+                Distrito            : feiraEntity.Distrito.Nome,
+                CodSubPrefeitura    : feiraEntity.SubPrefeitura.Codigo,
+                SubPrefeitura       : feiraEntity.SubPrefeitura.Nome,
+                Regiao5             : feiraEntity.Regiao5.ToDescription(),
+                Regiao8             : feiraEntity.Regiao8.ToDescription(),
+                EnderecoLogradouro  : feiraEntity.EnderecoLogradouro,
+                EnderecoNumero      : feiraEntity.EnderecoNumero,
+                EnderecoBairro      : feiraEntity.EnderecoBairro,
+                EnderecoReferencia  : feiraEntity.EnderecoReferencia,
+                Latitude            : feiraEntity.Latitude,
+                Longitude           : feiraEntity.Longitude)));
+
+            return domainRepositoryResult.SetValue(feirasResult);
+        }
+        catch (Exception ex)
+        {
+            return domainRepositoryResult.ReturnRepositoryError(ex);
         }
     }
 }

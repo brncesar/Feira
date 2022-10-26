@@ -136,7 +136,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return feira is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira não encontrada"));
+                : domainRepositoryResult.AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(GetByIdAsync)}", "Feira não encontrada");
         }
 
         public async Task<IDomainActionResult<bool>> UpdateAsync(Feira feiraToUpdate)
@@ -145,7 +145,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             if (indexItemToUpdate != -1)
                 return new DomainActionResult<bool>(false)
-                    .AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira não encontrada"));
+                    .AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(UpdateAsync)}", "Feira não encontrada");
 
             FeirasMock[indexItemToUpdate] = feiraToUpdate;
 
@@ -158,14 +158,14 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             if (feiraToDelete is null)
                 return new DomainActionResult<bool>(false)
-                    .AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira não encontrada"));
+                    .AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(DeleteAsync)}", "Feira não encontrada");
 
             var successOnDelete = FeirasMock.Remove(feiraToDelete);
 
             return successOnDelete
                 ? new DomainActionResult<bool>(true)
                 : new DomainActionResult<bool>(false)
-                    .AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira"));
+                    .AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira"/*, $"{nameof(FeiraRepositoryMemory)}.{nameof(DeleteAsync)}"*/));
         }
 
         public async Task<IDomainActionResult<Feira>> GetByNumeroRegistroAsync(string numeroRegistro)
@@ -176,7 +176,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return feira is not null
                 ? domainRepositoryResult
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira não encontrada"));
+                : domainRepositoryResult.AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(GetByNumeroRegistroAsync)}", "Feira não encontrada");
         }
 
         public async Task<IDomainActionResult<bool>> RemoveByNumeroRegistroAsync(string numeroRegistro)
@@ -186,13 +186,13 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             var domainRepositoryResult = new DomainActionResult<bool>(false);
 
             if (feiraToDelete is null)
-                return domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira não encontrada"));
+                return domainRepositoryResult.AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(RemoveByNumeroRegistroAsync)}", "Feira não encontrada");
 
             var successOnDelete = FeirasMock.Remove(feiraToDelete);
 
             return successOnDelete
                 ? domainRepositoryResult.SetValue(true)
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira"));
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira"/*, $"{nameof(FeiraRepositoryMemory)}.{nameof(RemoveByNumeroRegistroAsync)}"*/));
         }
 
         public async Task<IDomainActionResult<Guid>> AddAsync(Feira feira)
@@ -216,7 +216,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             var repositoryFeiraToUpdate = GetFeiraByNumeroRegistro(paramFeiraToUpdate.NumeroRegistro);
 
             if (repositoryFeiraToUpdate is null)
-                return domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.NotFound, "Feira não encontrada"));
+                return domainRepositoryResult.AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(UpdateByNumeroRegistroAsync)}", "Feira não encontrada");
 
             paramFeiraToUpdate.MapValuesTo(ref repositoryFeiraToUpdate);
 
@@ -268,7 +268,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             }
             catch (Exception ex)
             {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message));
+                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message/*, $"{nameof(FeiraRepositoryMemory)}.{nameof(FindFeirasAsync)}"*/));
             }
         }
 

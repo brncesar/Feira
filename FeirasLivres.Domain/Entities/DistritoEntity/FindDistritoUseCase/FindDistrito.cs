@@ -27,10 +27,4 @@ public class FindDistrito
             ? findDistritoResult.SetValue(findDistritosRespositoryResult.Value)
             : findDistritoResult.SetValue(new());
     }
-
-    private async Task<bool> DistritoNotFound(string codDistrito)
-    {
-        var resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(codDistrito);
-        return resultGetDistritoByIdRepository.HasErrors();
-    }
 }

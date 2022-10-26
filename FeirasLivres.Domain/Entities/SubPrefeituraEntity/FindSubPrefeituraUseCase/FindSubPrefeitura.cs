@@ -27,10 +27,4 @@ public class FindSubPrefeitura
             ? findSubPrefeituraResult.SetValue(findSubPrefeiturasRespositoryResult.Value)
             : findSubPrefeituraResult.SetValue(new());
     }
-
-    private async Task<bool> SubPrefeituraNotFound(string codSubPrefeitura)
-    {
-        var resultGetSubPrefeituraByIdRepository = await _distritoRepository.GetByCodigoAsync(codSubPrefeitura);
-        return resultGetSubPrefeituraByIdRepository.HasErrors();
-    }
 }

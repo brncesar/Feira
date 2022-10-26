@@ -1,4 +1,5 @@
 using FeirasLivres.Api.Misc;
+using FeirasLivres.Domain;
 using FeirasLivres.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddEndpointsApiExplorer();
 
     builder.Services.AddSwaggerGen();
+    builder.Services.AddDomain();
     builder.Services.AddInfrastructure(builder.Configuration);
 
 }

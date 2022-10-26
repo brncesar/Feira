@@ -4,47 +4,46 @@ using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Misc;
 
-namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase
+namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
+
+public class EditExistingFeira
 {
-    public class EditExistingFeira
+    private readonly IFeiraRepository         _feiraRepository;
+    private readonly IDistritoRepository      _distritoRepository;
+    private readonly ISubPrefeituraRepository _subPrefeituraRepository;
+
+    public EditExistingFeira(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepsitory)
+        =>  (_feiraRepository, _distritoRepository, _subPrefeituraRepository) =
+            ( feiraRepsitory ,  distritoRepository,  subPrefeituraRepsitory );
+
+    public async Task<IDomainActionResult<bool>> Execute(EditExistingFeiraParams feiraInfosToEdit)
     {
-        private readonly IFeiraRepository         _feiraRepository;
-        private readonly IDistritoRepository      _distritoRepository;
-        private readonly ISubPrefeituraRepository _subPrefeituraRepository;
+        var paramsValidationResult = new EditExistingFeiraParamsValidator().Validate(feiraInfosToEdit);
+        var updateFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
 
-        public EditExistingFeira(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepsitory)
-            =>  (_feiraRepository, _distritoRepository, _subPrefeituraRepository) =
-                ( feiraRepsitory ,  distritoRepository,  subPrefeituraRepsitory );
+        if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodDistrito) && await DistritoNotFound(feiraInfosToEdit.CodDistrito))
+            updateFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
 
-        public async Task<IDomainActionResult<bool>> Execute(EditExistingFeiraParams feiraInfosToEdit)
-        {
-            var paramsValidationResult = new EditExistingFeiraParamsValidator().Validate(feiraInfosToEdit);
-            var updateFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
+        if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodSubPrefeitura) && await SubPrefeituraNotFound(feiraInfosToEdit.CodSubPrefeitura))
+            updateFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
 
-            if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodDistrito) && await DistritoNotFound(feiraInfosToEdit.CodDistrito))
-                updateFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
+        if (updateFeiraResult.HasErrors) return updateFeiraResult;
 
-            if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodSubPrefeitura) && await SubPrefeituraNotFound(feiraInfosToEdit.CodSubPrefeitura))
-                updateFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
+        var updateFeiraRepositoryResult = await _feiraRepository.UpdateByNumeroRegistroAsync(feiraInfosToEdit);
+        updateFeiraResult.AddErrorsFrom(updateFeiraRepositoryResult);
 
-            if (updateFeiraResult.HasErrors) return updateFeiraResult;
+        return updateFeiraResult.SetValue(updateFeiraRepositoryResult.IsSuccess());
+    }
 
-            var updateFeiraRepositoryResult = await _feiraRepository.UpdateByNumeroRegistroAsync(feiraInfosToEdit);
-            updateFeiraResult.AddErrorsFrom(updateFeiraRepositoryResult);
+    private async Task<bool> DistritoNotFound(string codDistrito)
+    {
+        var resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(codDistrito);
+        return resultGetDistritoByIdRepository.HasErrors();
+    }
 
-            return updateFeiraResult.SetValue(updateFeiraRepositoryResult.IsSuccess());
-        }
-
-        private async Task<bool> DistritoNotFound(string codDistrito)
-        {
-            var resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(codDistrito);
-            return resultGetDistritoByIdRepository.HasErrors();
-        }
-
-        private async Task<bool> SubPrefeituraNotFound(string codSubPrefeitura)
-        {
-            var resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(codSubPrefeitura);
-            return resultGetSubPrefeituraByIdRepository.HasErrors();
-        }
+    private async Task<bool> SubPrefeituraNotFound(string codSubPrefeitura)
+    {
+        var resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(codSubPrefeitura);
+        return resultGetSubPrefeituraByIdRepository.HasErrors();
     }
 }

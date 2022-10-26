@@ -1,17 +1,29 @@
 ﻿using ErrorOr;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 
 namespace FeirasLivres.Domain.Common
 {
     public static class ErrorHelpers
     {
-        public static Error GetError(ErrorType errorType, string description, [CallerMemberName] string callerName = "")
+        public static Error GetError(ErrorType errorType, string description, string callerClass, string callerMethod)
         {
-            var callerClass = new StackFrame(1)?.GetMethod()?.ReflectedType?.Name ?? "";
-            var codeError = $"{callerClass}.{callerName}";
+            var codeError = $"{callerClass}.{callerMethod}";
+            return GetError(errorType, description, codeError);
+        }
 
-            return errorType switch
+        public static Error GetError(ErrorType errorType, string description)
+        {
+            var callerFullName = new StackFrame(1)?.GetMethod()?.ReflectedType?.FullName ?? "";
+            var methodName = Regex.Match(callerFullName, ".*<(.*)>(.*)").Groups[1].Value;
+            var className = Regex.Match(callerFullName, @".*\.(.*)\+<(.*)").Groups[1].Value;
+
+            var codeError = $"{className}.{methodName}";
+            return GetError(errorType, description, codeError);
+        }
+
+        public static Error GetError(ErrorType errorType, string description, string codeError)
+            => errorType switch
             {
                 ErrorType.Conflict   => Error.Conflict  (codeError, description),
                 ErrorType.Failure    => Error.Failure   (codeError, description),
@@ -20,6 +32,5 @@ namespace FeirasLivres.Domain.Common
                 ErrorType.Validation => Error.Validation(codeError, description),
                 _                    => Error.Validation(codeError, description)
             };
-        }
     }
 }

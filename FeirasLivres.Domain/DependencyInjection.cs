@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
+using FeirasLivres.Domain.Entities.DistritoEntity.GetDistritoByCodigoUseCase;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FeirasLivres.Domain
 {
@@ -6,7 +8,8 @@ namespace FeirasLivres.Domain
     {
         public static IServiceCollection AddDomain(this IServiceCollection services)
         {
-            // services.Services.AddScoped<IFeiraRepsitory, AutenticationService>();
+            services.AddScoped<FindDistrito>();
+            services.AddScoped<GetDistritoByCodigo>();
 
             return services;
         }
