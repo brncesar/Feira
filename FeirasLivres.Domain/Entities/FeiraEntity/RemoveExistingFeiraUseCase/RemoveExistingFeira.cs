@@ -1,26 +1,25 @@
 ﻿using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Misc;
 
-namespace FeirasLivres.Domain.Entities.FeiraEntity.RemoveExistingFeiraUseCase
+namespace FeirasLivres.Domain.Entities.FeiraEntity.RemoveExistingFeiraUseCase;
+
+public class RemoveExistingFeira
 {
-    public class RemoveExistingFeira
+    private readonly IFeiraRepository _feiraRepository;
+
+    public RemoveExistingFeira(IFeiraRepository feiraRepsitory) => _feiraRepository = feiraRepsitory;
+
+    public async Task<IDomainActionResult<bool>> Execute(RemoveExistingFeiraParams removeExistingFeiraParams)
     {
-        private readonly IFeiraRepository _feiraRepository;
+        var paramsValidationResult = new RemoveExistingFeiraParamsValidator().Validate(removeExistingFeiraParams);
+        var removeExistingFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
 
-        public RemoveExistingFeira(IFeiraRepository feiraRepsitory) => _feiraRepository = feiraRepsitory;
+        if (paramsValidationResult.IsPropInvalid(removeExistingFeiraParams, p => p.NumeroRegistro))
+            return removeExistingFeiraResult.SetValue(false);
 
-        public async Task<IDomainActionResult<bool>> Execute(RemoveExistingFeiraParams removeExistingFeiraParams)
-        {
-            var paramsValidationResult = new RemoveExistingFeiraParamsValidator().Validate(removeExistingFeiraParams);
-            var removeExistingFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
+        var removeFeiraRepositoryResult = await _feiraRepository.RemoveByNumeroRegistroAsync(removeExistingFeiraParams.NumeroRegistro);
+        removeExistingFeiraResult.AddErrors(removeFeiraRepositoryResult.Errors);
 
-            if (paramsValidationResult.IsPropInvalid(removeExistingFeiraParams, p => p.NumeroRegistro))
-                return removeExistingFeiraResult.SetValue(false);
-
-            var removeFeiraRepositoryResult = await _feiraRepository.RemoveByNumeroRegistroAsync(removeExistingFeiraParams.NumeroRegistro);
-            removeExistingFeiraResult.AddErrors(removeFeiraRepositoryResult.Errors);
-
-            return removeExistingFeiraResult.SetValue(removeFeiraRepositoryResult.IsSuccess());
-        }
+        return removeExistingFeiraResult.SetValue(removeFeiraRepositoryResult.IsSuccess());
     }
 }

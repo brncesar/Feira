@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Misc;
 using FluentValidation.Results;
 
 namespace FeirasLivres.Domain.Entities.Common;
@@ -72,7 +73,11 @@ public static class DomainServiceResultExtensionMethods
     {
         fluentValidationFailures.ForEach(
             fvf => serviceResult.Errors.Add(
-                ErrorHelpers.GetError(ErrorType.Validation, fvf.ErrorMessage, fvf.PropertyName, "ValidationError")));
+                ErrorHelpers.GetError(
+                    ErrorType.Validation,
+                    fvf.ErrorMessage,
+                    fvf.PropertyName.IfIsNullOrEmptyThen("Properties"),
+                    "ValidationError")));
 
         return serviceResult;
     }

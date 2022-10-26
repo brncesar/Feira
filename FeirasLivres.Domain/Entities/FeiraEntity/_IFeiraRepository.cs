@@ -1,5 +1,5 @@
 ﻿using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
+using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity

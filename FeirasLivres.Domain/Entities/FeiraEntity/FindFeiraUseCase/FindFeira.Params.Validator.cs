@@ -14,9 +14,9 @@ internal class FindFeiraParamsValidator : AbstractValidator<FindFeiraParams>
 
         RuleFor(p => new { p.Bairro, p.Nome, p.Regiao5, p.CodDistrito })
             .Must(x =>
-                x.Bairro     .IsNotNullOrNotEmpty() &&
-                x.Nome       .IsNotNullOrNotEmpty() &&
-                x.CodDistrito.IsNotNullOrNotEmpty() &&
+                x.Bairro     .IsNotNullOrNotEmpty() ||
+                x.Nome       .IsNotNullOrNotEmpty() ||
+                x.CodDistrito.IsNotNullOrNotEmpty() ||
                 x.Regiao5 is not null)
             .WithMessage("É necessário informar pelo menos um parâmetro para busca da feira [ Distrito | Regiao5 | Nome da feira | Bairro ]");
     }

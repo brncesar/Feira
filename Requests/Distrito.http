@@ -8,7 +8,7 @@ POST https://{{host}}/api/Distrito/Find
 Content-Type: {{contentType}}
 
 {
-	"nome" : "naoDeveAcharNada"
+	"codigo" : "00"
 }
 
 

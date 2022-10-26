@@ -1,6 +1,6 @@
 ﻿using FeirasLivres.Domain.Entities.Enums;
 
-namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
+namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase
 {
     public record EditExistingFeiraParams(
         string  Nome,

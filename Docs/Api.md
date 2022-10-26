@@ -29,7 +29,7 @@
 
 ### Find Distrito - endpoint
 ```json
-GET {{host}}/distrito/find
+POST {{host}}/api/distrito/find
 ```
 
 #### Find Distrito - request parameters
@@ -64,7 +64,7 @@ GET {{host}}/distrito/find
 
 ### Find SubPrefeitura - endpoint
 ```json
-GET {{host}}/subprefeitura/find
+POST {{host}}/api/subprefeitura/find
 ```
 
 #### Find SubPrefeitura - request parameters
@@ -100,7 +100,7 @@ GET {{host}}/subprefeitura/find
 
 ### Add Feira - endpoint
 ```json
-POST {{host}}/feira/add
+POST {{host}}/api/feira/add
 ```
 
 #### Add Feira - request parameters
@@ -151,7 +151,7 @@ POST {{host}}/feira/add
 
 ### Edit Feira - endpoint
 ```json
-PUT {{host}}/feira/edit
+PUT {{host}}/api/feira/edit
 ```
 
 #### Edit Feira - request parameters
@@ -203,7 +203,7 @@ true
 
 ### Find Feira - endpoint
 ```json
-GET {{host}}/feira/find
+POST {{host}}/api/api/feira/find
 ```
 
 #### Find Feira - request parameters
@@ -253,7 +253,7 @@ GET {{host}}/feira/find
 
 ### Remove Feira - endpoint
 ```json
-DELETE {{host}}/feira/remove
+DELETE {{host}}/api/feira/remove
 ```
 
 #### Remove Feira - request parameters
