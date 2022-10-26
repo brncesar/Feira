@@ -14,7 +14,6 @@ Content-Type: {{contentType}}
 	"bairro"      : "MOOCA"
 }
 
-
 ### Find - One result
 POST {{host}}/api/Feira/Find
 Content-Type: {{contentType}}
@@ -23,7 +22,6 @@ Content-Type: {{contentType}}
 	"nome" : "AGUA BRANCA"
 }
 
-
 ### Find - Many results
 POST {{host}}/api/Feira/Find
 Content-Type: {{contentType}}
@@ -31,4 +29,67 @@ Content-Type: {{contentType}}
 {
 	"nome"        : "VILA",
 	"codDistrito" : "04"
+}
+
+
+
+
+
+
+
+
+### Add - Empty new feira
+POST {{host}}/api/Feira/Add
+Content-Type: {{contentType}}
+
+{	"nome"                 : "Nova Feira Teste",
+	"numeroRegistro"       : "9999-1",
+	"setorCensitarioIBGE"  : "355030801000054",
+	"areaDePonderacaoIBGE" : "3550308005039",
+	"codDistrito"          : "01",
+	"codSubPrefeitura"     : "25",
+	"regiao5"              : 2,
+	"regiao8"              : 21,
+	"enderecoLogradouro"   : "Avenida Clark Kent",
+	"enderecoNumero"       : "5",
+	"enderecoBairro"       : "Metrópolis",
+	"enderecoReferencia"   : "Ao lado do Clarim Diário",
+	"latitude"             : -23.564711,
+	"longitude"            : -46.564711
+}
+
+### Add - Find new feira added
+POST {{host}}/api/Feira/Find
+Content-Type: {{contentType}}
+
+{
+	"nome" : "Nova Feira Teste"
+}
+
+### Edit - Edit new feira
+PUT {{host}}/api/Feira/Edit
+Content-Type: {{contentType}}
+
+{	"nome"                 : "Feira dos Kent",
+	"numeroRegistro"       : "9999-1",
+	"setorCensitarioIBGE"  : "355030801000054",
+	"areaDePonderacaoIBGE" : "3550308005039",
+	"codDistrito"          : "01",
+	"codSubPrefeitura"     : "25",
+	"regiao5"              : 3,
+	"regiao8"              : 11,
+	"enderecoLogradouro"   : "Avenida Kent",
+	"enderecoNumero"       : "5",
+	"enderecoBairro"       : "Metrópolis",
+	"enderecoReferencia"   : "Ao lado do Clarim Diário",
+	"latitude"             : -23.012345,
+	"longitude"            : -46.012345
+}
+
+### Add - Find new feira edited
+POST {{host}}/api/Feira/Find
+Content-Type: {{contentType}}
+
+{
+	"nome" : "Feira dos Kent"
 }

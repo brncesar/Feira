@@ -43,5 +43,35 @@ namespace Feira.Api.Controllers
                 ? Ok(findResult.Value)
                 : Error(findResult);
         }
+
+        [HttpPost("Add")]
+        public async Task<ActionResult> Add(AddNewFeiraParams addParams)
+        {
+            var domainResult = await _addNewFeiraUseCase.Execute(addParams);
+
+            return domainResult.IsSuccess()
+                ? Ok(domainResult.Value)
+                : Error(domainResult);
+        }
+
+        [HttpPut("Edit")]
+        public async Task<ActionResult> Edit(EditExistingFeiraParams editParams)
+        {
+            var domainResult = await _editFeiraUseCase.Execute(editParams);
+
+            return domainResult.IsSuccess()
+                ? Ok(domainResult.Value)
+                : Error(domainResult);
+        }
+
+        [HttpDelete("Remove")]
+        public async Task<ActionResult> Remove(RemoveExistingFeiraParams remParams)
+        {
+            var domainResult = await _removeFeiraUseCase.Execute(remParams);
+
+            return domainResult.IsSuccess()
+                ? Ok(domainResult.Value)
+                : Error(domainResult);
+        }
     }
 }

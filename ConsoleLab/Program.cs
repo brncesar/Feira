@@ -91,7 +91,7 @@ void AddFeira(LinhaCsv linhaCsv)
 Guid GetIdDistrito     (string cod) => distritos     .First(x => x.Codigo == cod).Id;
 Guid GetIdSubPrefeitura(string cod) => subPrefeituras.First(x => x.Codigo == cod).Id;
 
-double GetCoordenada(string coord) => Convert.ToDouble($"{coord.Substring(0, 3)}.{coord.Substring(3)}");
+double GetCoordenada(string coord) => Convert.ToDouble($"{coord.Substring(0, 3)}.{coord.Substring(3)}", System.Globalization.CultureInfo.InvariantCulture);
 
 Regiao5 GetRegiao5(string regiao5) => regiao5 switch {
     "Norte"  => Regiao5.Norte,

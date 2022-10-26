@@ -18,14 +18,31 @@ public class EditExistingFeira
 
     public async Task<IDomainActionResult<bool>> Execute(EditExistingFeiraParams feiraInfosToEdit)
     {
+        var feiraToSave = new Feira();
+        IDomainActionResult<Distrito> resultGetDistritoByIdRepository;
+        IDomainActionResult<SubPrefeitura> resultGetSubPrefeituraByIdRepository;
         var paramsValidationResult = new EditExistingFeiraParamsValidator().Validate(feiraInfosToEdit);
         var updateFeiraResult = new DomainActionResult<bool>(paramsValidationResult.Errors);
 
-        if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodDistrito) && await DistritoNotFound(feiraInfosToEdit.CodDistrito))
-            updateFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
+        if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodDistrito))
+        {
+            resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(feiraInfosToEdit.CodDistrito);
 
-        if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodSubPrefeitura) && await SubPrefeituraNotFound(feiraInfosToEdit.CodSubPrefeitura))
-            updateFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
+            if (resultGetDistritoByIdRepository.HasErrors())
+                updateFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
+            else
+                feiraToSave.DistritoId = resultGetDistritoByIdRepository.Value.Id;
+        }
+
+        if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.CodSubPrefeitura))
+        {
+            resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(feiraInfosToEdit.CodSubPrefeitura);
+
+            if (resultGetSubPrefeituraByIdRepository.HasErrors())
+                updateFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
+            else
+                feiraToSave.SubPrefeituraId = resultGetSubPrefeituraByIdRepository.Value.Id;
+        }
 
         if (updateFeiraResult.HasErrors) return updateFeiraResult;
 
@@ -33,17 +50,5 @@ public class EditExistingFeira
         updateFeiraResult.AddErrorsFrom(updateFeiraRepositoryResult);
 
         return updateFeiraResult.SetValue(updateFeiraRepositoryResult.IsSuccess());
-    }
-
-    private async Task<bool> DistritoNotFound(string codDistrito)
-    {
-        var resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(codDistrito);
-        return resultGetDistritoByIdRepository.HasErrors();
-    }
-
-    private async Task<bool> SubPrefeituraNotFound(string codSubPrefeitura)
-    {
-        var resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(codSubPrefeitura);
-        return resultGetSubPrefeituraByIdRepository.HasErrors();
     }
 }

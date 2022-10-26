@@ -18,21 +18,38 @@ public class AddNewFeira
 
     public async Task<IDomainActionResult<AddNewFeiraResult>> Execute(AddNewFeiraParams newFeiraInfos)
     {
+        var feiraToSave = new Feira();
+        IDomainActionResult<Distrito> resultGetDistritoByIdRepository;
+        IDomainActionResult<SubPrefeitura> resultGetSubPrefeituraByIdRepository;
         var paramsValidationResult = new AddNewFeiraParamsValidator().Validate(newFeiraInfos);
         var addNewFeiraResult = new DomainActionResult<AddNewFeiraResult>(paramsValidationResult.Errors);
 
         if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.NumeroRegistro))
             await CheckIfTheFeiraDoesntExistAndAddErrorIfItExists(addNewFeiraResult, newFeiraInfos.NumeroRegistro);
 
-        if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.CodDistrito) && await DistritoNotFound(newFeiraInfos.CodDistrito))
-            addNewFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
+        if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.CodDistrito))
+        {
+            resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(newFeiraInfos.CodDistrito);
 
-        if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.CodSubPrefeitura) && await SubPrefeituraNotFound(newFeiraInfos.CodSubPrefeitura))
-            addNewFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
+            if (resultGetDistritoByIdRepository.HasErrors())
+                addNewFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
+            else
+                feiraToSave.DistritoId = resultGetDistritoByIdRepository.Value.Id;
+        }
+
+        if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.CodSubPrefeitura))
+        {
+            resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(newFeiraInfos.CodSubPrefeitura);
+
+            if(resultGetSubPrefeituraByIdRepository.HasErrors())
+                addNewFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
+            else
+                feiraToSave.SubPrefeituraId = resultGetSubPrefeituraByIdRepository.Value.Id;
+        }
 
         if (addNewFeiraResult.HasErrors) return addNewFeiraResult;
 
-        var feiraToSave = newFeiraInfos.MapValuesTo<Feira>();
+        newFeiraInfos.MapValuesTo(ref feiraToSave);
         var addFeiraRepositoryResult = await _feiraRepository.AddAsync(feiraToSave);
 
         if (addFeiraRepositoryResult.IsSuccess())
@@ -63,17 +80,5 @@ public class AddNewFeira
         else if (unexpectedErrorHasReturned)
             getFeiraRepositoryResult.Errors.Where(err => err.Type is not ErrorType.NotFound).ToList().ForEach(err =>
                 addNewFeiraResult.AddError(AddNewFeiraErrors.RepositoryError(err.Description)));
-    }
-
-    private async Task<bool> DistritoNotFound(string codDistrito)
-    {
-        var resultGetDistritoByIdRepository = await _distritoRepository.GetByCodigoAsync(codDistrito);
-        return resultGetDistritoByIdRepository.HasErrors();
-    }
-
-    private async Task<bool> SubPrefeituraNotFound(string codSubPrefeitura)
-    {
-        var resultGetSubPrefeituraByIdRepository = await _subPrefeituraRepository.GetByCodigoAsync(codSubPrefeitura);
-        return resultGetSubPrefeituraByIdRepository.HasErrors();
     }
 }
