@@ -93,3 +93,15 @@ Content-Type: {{contentType}}
 {
 	"nome" : "Feira dos Kent"
 }
+
+
+
+
+
+### Add - Remove new feira edited
+DELETE {{host}}/api/Feira/Remove
+Content-Type: {{contentType}}
+
+{
+	"numeroRegistro": "9999-1"
+}
