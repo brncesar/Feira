@@ -4,33 +4,18 @@
 @contentType = application/json
 
 ### Find - Empty result
-POST https://{{host}}/api/Distrito/Find
+GET https://{{host}}/api/Distrito/Find?codigo=00
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "00"
-}
 
 
 ### Find - One result
-POST https://{{host}}/api/Distrito/Find
+GET https://{{host}}/api/Distrito/Find?nome=GRANDE&codigo=16
 Content-Type: {{contentType}}
-
-{
-	"nome" : "GRANDE",
-	"codigo" : "16"
-}
 
 
 ### Find - Many results
-POST https://{{host}}/api/Distrito/Find
+GET https://{{host}}/api/Distrito/Find?nome=CAMPO
 Content-Type: {{contentType}}
-
-{
-	"nome" : "CAMPO"
-}
-
-
 
 
 
@@ -38,27 +23,15 @@ Content-Type: {{contentType}}
 
 
 ### GetByCodigo - Result Ok
-POST https://{{host}}/api/Distrito/GetByCodigo
+GET https://{{host}}/api/Distrito/GetByCodigo/17
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "17"
-}
 
 
 ### GetByCodigo - Error result (not found)
-POST https://{{host}}/api/Distrito/GetByCodigo
+GET https://{{host}}/api/Distrito/GetByCodigo/00
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "00"
-}
 
 
 ### GetByCodigo - Error result (wrong parameter)
-POST https://{{host}}/api/Distrito/GetByCodigo
+GET https://{{host}}/api/Distrito/GetByCodigo/0123456789
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "0058858585858585747474"
-}

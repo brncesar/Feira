@@ -4,61 +4,33 @@
 @contentType = application/json
 
 ### Find - Empty result
-POST https://{{host}}/api/SubPrefeitura/Find
+GET https://{{host}}/api/SubPrefeitura/Find?codigo=00
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "00"
-}
 
 
 ### Find - One result
-POST https://{{host}}/api/SubPrefeitura/Find
+GET https://{{host}}/api/SubPrefeitura/Find?nome=MOOCA&codigo=25
 Content-Type: {{contentType}}
-
-{
-	"nome" : "MOOCA",
-	"codigo" : "25"
-}
 
 
 ### Find - Many results
-POST https://{{host}}/api/SubPrefeitura/Find
+GET https://{{host}}/api/SubPrefeitura/Find?nome=VILA
 Content-Type: {{contentType}}
-
-{
-	"nome" : "VILA"
-}
-
-
-
 
 
 
 
 
 ### GetByCodigo - Result Ok
-POST https://{{host}}/api/SubPrefeitura/GetByCodigo
+GET https://{{host}}/api/SubPrefeitura/GetByCodigo/17
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "17"
-}
 
 
 ### GetByCodigo - Error result (not found)
-POST https://{{host}}/api/SubPrefeitura/GetByCodigo
+GET https://{{host}}/api/SubPrefeitura/GetByCodigo/00
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "00"
-}
 
 
 ### GetByCodigo - Error result (wrong parameter)
-POST https://{{host}}/api/SubPrefeitura/GetByCodigo
+GET https://{{host}}/api/SubPrefeitura/GetByCodigo/0123456789
 Content-Type: {{contentType}}
-
-{
-	"codigo" : "0058858585858585747474"
-}

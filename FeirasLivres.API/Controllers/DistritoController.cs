@@ -19,8 +19,8 @@ namespace Feira.Api.Controllers
             _getDistritoByCodigo = getDistritoByCodigo;
         }
 
-        [HttpPost("Find")]
-        public async Task<ActionResult> Find(FindDistritoParams findParam)
+        [HttpGet("Find")]
+        public async Task<ActionResult> Find([FromQuery] FindDistritoParams findParam)
         {
             var findResult = await _findDistritoUseCase.Execute(findParam);
 
@@ -29,10 +29,10 @@ namespace Feira.Api.Controllers
                 : Error(findResult);
         }
 
-        [HttpPost("GetByCodigo")]
-        public async Task<ActionResult> GetByCodigo(GetDistritoByCodigoParams codigo)
+        [HttpGet("GetByCodigo/{codigo}")]
+        public async Task<ActionResult> GetByCodigo(string codigo)
         {
-            var domainResult = await _getDistritoByCodigo.Execute(codigo);
+            var domainResult = await _getDistritoByCodigo.Execute(new(codigo));
 
             return domainResult.IsSuccess()
                 ? Ok(domainResult.Value)
