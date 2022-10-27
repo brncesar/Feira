@@ -1,6 +1,6 @@
-﻿namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
+﻿namespace FeirasLivres.Domain.Entities.FeiraEntity.Common;
 
-public record FindFeiraResult(
+public record FeiraResult(
     string  Nome,
     string  NumeroRegistro,
     string  SetorCensitarioIBGE,

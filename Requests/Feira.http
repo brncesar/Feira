@@ -29,7 +29,8 @@ GET {{host}}/api/Feira/Find?nome=nome+muito+muuuito+muito+grande&regiao5=sudoest
 POST {{host}}/api/Feira/Add
 Content-Type: {{contentType}}
 
-{	"nome"                 : "Nova Feira Teste",
+{
+	"nome"                 : "Nova Feira Teste",
 	"numeroRegistro"       : "9999-1",
 	"setorCensitarioIBGE"  : "355030801000054",
 	"areaDePonderacaoIBGE" : "3550308005039",
@@ -53,20 +54,11 @@ Content-Type: {{contentType}}
 PUT {{host}}/api/Feira/Edit
 Content-Type: {{contentType}}
 
-{	"nome"                 : "Feira dos Kent",
+{
+	"nome"                 : "Feira dos Kent",
 	"numeroRegistro"       : "9999-1",
-	"setorCensitarioIBGE"  : "355030801000054",
-	"areaDePonderacaoIBGE" : "3550308005039",
-	"codDistrito"          : "01",
-	"codSubPrefeitura"     : "25",
 	"regiao5"              : "oeste",
-	"regiao8"              : "oeste",
-	"enderecoLogradouro"   : "Avenida Kent",
-	"enderecoNumero"       : "5",
-	"enderecoBairro"       : "Metrópolis",
-	"enderecoReferencia"   : "Ao lado do Clarim Diário",
-	"latitude"             : -23.012345,
-	"longitude"            : -46.012345
+	"regiao8"              : "oeste"
 }
 
 ### Find agin new feira added (and edited)
@@ -85,8 +77,8 @@ Content-Type: {{contentType}}
 	"areaDePonderacaoIBGE" : "3550308005039",
 	"codDistrito"          : "01",
 	"codSubPrefeitura"     : "25",
-	"regiao5"              : "LESTE33",
-	"regiao8"              : "leste133",
+	"regiao5"              : "Sudoeste",
+	"regiao8"              : "Noroeste",
 	"enderecoLogradouro"   : "Avenida Clark Kent",
 	"enderecoNumero"       : "123456",
 	"enderecoBairro"       : "Metrópolis",

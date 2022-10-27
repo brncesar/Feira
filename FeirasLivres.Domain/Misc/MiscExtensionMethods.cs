@@ -45,10 +45,12 @@ public static class MiscExtensionMethods
     #endregion
 
     #region Object properties map
-    private static void TrySetSourcePropertyValueOnTargetObject<TTarget>(object source, PropertyInfo sourceProperty, TTarget targetObject, PropertyInfo targetProperty)
+    private static void TrySetSourcePropertyValueOnTargetObject<TTarget>(object source, PropertyInfo sourceProperty, TTarget targetObject, PropertyInfo targetProperty, bool ignoreNullValues = false)
     {
         var sourceType = source.GetType();
         var targetType = typeof(TTarget);
+
+        if (ignoreNullValues && source.GetType().GetProperty(sourceProperty.Name).GetValue(source, null) is null) return;
 
         var isSourcePropertyNullable = sourceProperty.PropertyType.IsGenericType;
         var isTargetPropertyNullable = targetProperty.PropertyType.IsGenericType && targetProperty.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>);
@@ -68,7 +70,7 @@ public static class MiscExtensionMethods
         }
     }
 
-    public static TTarget MapValuesTo<TTarget>(this object source)
+    public static TTarget MapValuesTo<TTarget>(this object source, bool ignoreNullValues = false)
     {
         try
         {
@@ -90,7 +92,7 @@ public static class MiscExtensionMethods
 
                     if (targetProperty is null) continue;
 
-                    TrySetSourcePropertyValueOnTargetObject<TTarget>(source, sourceProperty, targetObject, targetProperty);
+                    TrySetSourcePropertyValueOnTargetObject<TTarget>(source, sourceProperty, targetObject, targetProperty, ignoreNullValues);
                 }
             }
             else
@@ -101,7 +103,7 @@ public static class MiscExtensionMethods
 
                     if (sourceProperty is null) continue;
 
-                    TrySetSourcePropertyValueOnTargetObject<TTarget>(source, sourceProperty, targetObject, targetProperty);
+                    TrySetSourcePropertyValueOnTargetObject<TTarget>(source, sourceProperty, targetObject, targetProperty, ignoreNullValues);
                 }
             }
 
@@ -113,7 +115,7 @@ public static class MiscExtensionMethods
         }
     }
 
-    public static void MapValuesTo<TTarget>(this object source, ref TTarget targetObject)
+    public static void MapValuesTo<TTarget>(this object source, ref TTarget targetObject, bool ignoreNullValues = false)
     {
         try
         {
@@ -125,14 +127,13 @@ public static class MiscExtensionMethods
 
             if (arrSourceProperties.Length < arrTargetProperties.Length)
             {
-
                 foreach (var sourceProperty in arrSourceProperties)
                 {
                     var targetProperty = arrTargetProperties.FirstOrDefault(p => p.Name == sourceProperty.Name);
 
                     if (targetProperty is null) continue;
 
-                    TrySetSourcePropertyValueOnTargetObject(source, sourceProperty, targetObject, targetProperty);
+                    TrySetSourcePropertyValueOnTargetObject(source, sourceProperty, targetObject, targetProperty, ignoreNullValues);
                 }
             }
             else
@@ -143,7 +144,7 @@ public static class MiscExtensionMethods
 
                     if (sourceProperty is null) continue;
 
-                    TrySetSourcePropertyValueOnTargetObject(source, sourceProperty, targetObject, targetProperty);
+                    TrySetSourcePropertyValueOnTargetObject(source, sourceProperty, targetObject, targetProperty, ignoreNullValues);
                 }
             }
         }

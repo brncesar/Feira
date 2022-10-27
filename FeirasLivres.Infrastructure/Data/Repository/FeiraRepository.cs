@@ -2,7 +2,7 @@
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.Enums;
 using FeirasLivres.Domain.Entities.FeiraEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
+using FeirasLivres.Domain.Entities.FeiraEntity.Common;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 using FeirasLivres.Domain.Misc;
 using FeirasLivres.Infrastructure.Data.DbCtx;
@@ -54,18 +54,13 @@ public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFe
         }
     }
 
-    public async Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(EditExistingFeiraParams paramFeiraToUpdate)
+    public async Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(Feira feira)
     {
         var domainActionResult = new DomainActionResult<bool>(false);
 
         try
         {
-            var repositoryFeiraToUpdate = await GetFeiraByNumeroRegistroAsync(paramFeiraToUpdate.NumeroRegistro);
-
-            if (repositoryFeiraToUpdate is null) return domainActionResult.NotFound();
-
-            paramFeiraToUpdate.MapValuesTo(ref repositoryFeiraToUpdate);
-            await _dbCtx.SaveChangesAsync();
+            await UpdateAsync(feira);
 
             return domainActionResult.SetValue(true);
         }
@@ -75,12 +70,12 @@ public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFe
         }
     }
 
-    public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
+    public async Task<IDomainActionResult<List<FeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
     {
-        var domainRepositoryResult = new DomainActionResult<List<FindFeiraResult>>();
+        var domainRepositoryResult = new DomainActionResult<List<FeiraResult>>();
         try
         {
-            var feirasResult = new List<FindFeiraResult>();
+            var feirasResult = new List<FeiraResult>();
             var listResult = _dbSet.AsQueryable().AsNoTracking();
 
             if (findParams.Nome.IsNotNullOrNotEmpty())
@@ -113,23 +108,7 @@ public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFe
                 .Include(f => f.SubPrefeitura)
                 .ToListAsync();
 
-            feirasFound.ForEach(feiraEntity => feirasResult.Add(new(
-                Nome                : feiraEntity.Nome,
-                NumeroRegistro      : feiraEntity.NumeroRegistro,
-                SetorCensitarioIBGE : feiraEntity.SetorCensitarioIBGE,
-                AreaDePonderacaoIBGE: feiraEntity.AreaDePonderacaoIBGE,
-                CodDistrito         : feiraEntity.Distrito.Codigo,
-                Distrito            : feiraEntity.Distrito.Nome,
-                CodSubPrefeitura    : feiraEntity.SubPrefeitura.Codigo,
-                SubPrefeitura       : feiraEntity.SubPrefeitura.Nome,
-                Regiao5             : feiraEntity.Regiao5.ToDescription(),
-                Regiao8             : feiraEntity.Regiao8.ToDescription(),
-                EnderecoLogradouro  : feiraEntity.EnderecoLogradouro,
-                EnderecoNumero      : feiraEntity.EnderecoNumero,
-                EnderecoBairro      : feiraEntity.EnderecoBairro,
-                EnderecoReferencia  : feiraEntity.EnderecoReferencia,
-                Latitude            : feiraEntity.Latitude,
-                Longitude           : feiraEntity.Longitude)));
+            feirasFound.ForEach(feiraEntity => feirasResult.Add(feiraEntity.ToFeiraResult()));
 
             return domainRepositoryResult.SetValue(feirasResult);
         }

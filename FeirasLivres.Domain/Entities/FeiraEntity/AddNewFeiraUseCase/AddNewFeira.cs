@@ -2,6 +2,7 @@
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.Enums;
+using FeirasLivres.Domain.Entities.FeiraEntity.Common;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Misc;
 using FluentValidation.Results;
@@ -18,11 +19,11 @@ public class AddNewFeira
         =>  (_feiraRepository, _distritoRepository, _subPrefeituraRepository) =
             ( feiraRepsitory ,  distritoRepository,  subPrefeituraRepsitory );
 
-    public async Task<IDomainActionResult<AddNewFeiraResult>> Execute(AddNewFeiraParams newFeiraInfos)
+    public async Task<IDomainActionResult<FeiraResult>> Execute(AddNewFeiraParams newFeiraInfos)
     {
         var feiraToSave = new Feira();
         var paramsValidationResult = new AddNewFeiraParamsValidator().Validate(newFeiraInfos);
-        var addNewFeiraResult = new DomainActionResult<AddNewFeiraResult>(paramsValidationResult.Errors);
+        var addNewFeiraResult = new DomainActionResult<FeiraResult>(paramsValidationResult.Errors);
 
         if (paramsValidationResult.IsPropValid(newFeiraInfos, p => p.NumeroRegistro))
             await CheckIfTheFeiraDoesntExistAndAddErrorIfItExists(addNewFeiraResult, newFeiraInfos.NumeroRegistro);
@@ -45,17 +46,14 @@ public class AddNewFeira
 
         var addFeiraRepositoryResult = await _feiraRepository.AddAsync(feiraToSave);
 
-        if (addFeiraRepositoryResult.IsSuccess())
-            return addNewFeiraResult.SetValue(new AddNewFeiraResult(addFeiraRepositoryResult.Value));
-
-        addNewFeiraResult.AddErrors(addFeiraRepositoryResult.Errors);
-
-        return addNewFeiraResult;
+        return addFeiraRepositoryResult.IsSuccess()
+            ? addNewFeiraResult.SetValue (feiraToSave.ToFeiraResult())
+            : addNewFeiraResult.AddErrors(addFeiraRepositoryResult.Errors);
     }
 
     private async Task TrySetRelatedDistritoIdOnFeiraObjOrAddDistritoNotFoundToDomainResult(
         Feira feiraToSave,
-        DomainActionResult<AddNewFeiraResult> addNewFeiraResult,
+        DomainActionResult<FeiraResult> addNewFeiraResult,
         ValidationResult paramsValidationResult,
         AddNewFeiraParams newFeiraInfos)
     {
@@ -66,12 +64,15 @@ public class AddNewFeira
         if (resultGetDistritoByCodRepository.HasErrors())
             addNewFeiraResult.AddError(AddNewFeiraErrors.DistritoNotFound());
         else
+        {
+            feiraToSave.Distrito   = resultGetDistritoByCodRepository.Value;
             feiraToSave.DistritoId = resultGetDistritoByCodRepository.Value.Id;
+        }
     }
 
     private async Task TrySetRelatedSubPrefeituraIdOnFeiraObjOrAddSubPrefeituraNotFoundToDomainResult(
         Feira feiraToSave,
-        DomainActionResult<AddNewFeiraResult> addNewFeiraResult,
+        DomainActionResult<FeiraResult> addNewFeiraResult,
         ValidationResult paramsValidationResult,
         AddNewFeiraParams newFeiraInfos)
     {
@@ -82,7 +83,10 @@ public class AddNewFeira
         if (resultGetSubPrefeituraByCodRepository.HasErrors())
             addNewFeiraResult.AddError(AddNewFeiraErrors.SubPrefeituraNotFound());
         else
+        {
+            feiraToSave.SubPrefeitura   = resultGetSubPrefeituraByCodRepository.Value;
             feiraToSave.SubPrefeituraId = resultGetSubPrefeituraByCodRepository.Value.Id;
+        }
     }
 
     private void MapValuesFormInParamsToFeiraObj(AddNewFeiraParams newFeiraInfos, Feira feiraToSave) {
@@ -96,7 +100,7 @@ public class AddNewFeira
     }
 
     private async Task CheckIfTheFeiraDoesntExistAndAddErrorIfItExists(
-        DomainActionResult<AddNewFeiraResult> addNewFeiraResult,
+        DomainActionResult<FeiraResult> addNewFeiraResult,
         string numeroRegistro)
     {
         var getFeiraRepositoryResult = await _feiraRepository.GetByNumeroRegistroAsync(numeroRegistro);

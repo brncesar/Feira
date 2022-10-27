@@ -1,5 +1,6 @@
 ﻿using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
+using FeirasLivres.Domain.Entities.FeiraEntity.Common;
 using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
@@ -12,10 +13,10 @@ public class FindFeira
     public FindFeira(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository)
         => (_feiraRepository, _distritoRepository) = (feiraRepsitory ,distritoRepository);
 
-    public async Task<IDomainActionResult<List<FindFeiraResult>>> Execute(FindFeiraParams findParameters)
+    public async Task<IDomainActionResult<List<FeiraResult>>> Execute(FindFeiraParams findParameters)
     {
         var paramsValidationResult = new FindFeiraParamsValidator().Validate(findParameters);
-        var findFeiraResult = new DomainActionResult<List<FindFeiraResult>>(paramsValidationResult.Errors);
+        var findFeiraResult = new DomainActionResult<List<FeiraResult>>(paramsValidationResult.Errors);
 
         if (paramsValidationResult.HasErrors())
             return findFeiraResult;

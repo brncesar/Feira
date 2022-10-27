@@ -24,8 +24,7 @@ public class EditExistingFeiraUseCaseTest
         Latitude             : 0,
         Longitude            : 0,
         CodDistrito          : "01",
-        CodSubPrefeitura     : "25"
-    );
+        CodSubPrefeitura     : "25");
 
     public EditExistingFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
     {
@@ -42,7 +41,6 @@ public class EditExistingFeiraUseCaseTest
 
         var editExistingFeiraUseCaseResult = await _testTarget.Execute(useCaseParamObj);
 
-        Assert.False(editExistingFeiraUseCaseResult.Value);
         Assert.Contains(editExistingFeiraUseCaseResult.Errors, err => err.Type == ErrorType.NotFound);
     }
 

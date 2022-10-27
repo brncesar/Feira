@@ -7,13 +7,12 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
     {
         public AddNewFeiraParamsValidator()
         {
-            RuleFor(p => p.EnderecoNumero      ).MaximumLength(5);
-            RuleFor(p => p.EnderecoReferencia  ).MaximumLength(24);
-            RuleFor(p => p.AreaDePonderacaoIBGE).Length       (13);
+            RuleFor(p => p.EnderecoNumero      ).MaximumLength( 5).WithName("Número do endereço");
+            RuleFor(p => p.EnderecoReferencia  ).MaximumLength(24).WithName("Referência do endereço");
             RuleFor(p => p.Nome                ).Length       (3, 30);
-            RuleFor(p => p.EnderecoBairro      ).Length       (2, 30);
-            RuleFor(p => p.CodDistrito         ).NotEmpty     ().MaximumLength(9);
-            RuleFor(p => p.CodSubPrefeitura    ).NotEmpty     ().MaximumLength(2);
+            RuleFor(p => p.EnderecoBairro      ).Length       (2, 30).WithName("Bairro do endereço");
+            RuleFor(p => p.CodDistrito         ).NotEmpty     ().MaximumLength(9).WithName("Código do distrito conforme IBGE");
+            RuleFor(p => p.CodSubPrefeitura    ).NotEmpty     ().MaximumLength(2).WithName("Código da SubPrefeitura");
 
             RuleFor(p => p.Regiao5)
                 .IsEnumName(typeof(Regiao5), caseSensitive: false)
@@ -28,7 +27,14 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
                     $"O número do registro da feira deve ser informado no formato ####-#. " +
                     $"O valor informado foi: {p.NumeroRegistro}");
 
+            RuleFor(p => p.AreaDePonderacaoIBGE).Length(13)
+                .WithName("Área de ponderaçao IBGE")
+                .WithMessage(p =>
+                    $"O setor censitário deve ser informado com exatamente 13 caracteres. " +
+                    $"O valor informado foi: {p.AreaDePonderacaoIBGE} ({p.AreaDePonderacaoIBGE.Length} caracteres)");
+
             RuleFor(p => p.SetorCensitarioIBGE).Length(15)
+                .WithName("Setor censitário conforme IBGE")
                 .WithMessage(p =>
                     $"O setor censitário deve ser informado com exatamente 15 caracteres. " +
                     $"O valor informado foi: {p.SetorCensitarioIBGE} ({p.SetorCensitarioIBGE.Length} caracteres)");

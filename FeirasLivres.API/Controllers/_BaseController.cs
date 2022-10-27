@@ -15,6 +15,14 @@ namespace FeirasLivres.Api.Controllers
             var firstError = domainActionResultWithError.Errors.First();
 
             var title = firstError.Description;
+
+            var qtdErros = domainActionResultWithError.Errors.Count;
+            if (qtdErros > 1)
+                title = $"{title} Além de mais {qtdErros-1} " +
+                    $"erro{      (qtdErros == 2 ? "" : "s")} " +
+                    $"encontrado{(qtdErros == 2 ? "" : "s")}. " +
+                    $"Verifique 'errorCodes' para mais detalhes.";
+
             var statusCode = firstError.Type switch {
                 ErrorType.Conflict   => StatusCodes.Status409Conflict,
                 ErrorType.NotFound   => StatusCodes.Status404NotFound,

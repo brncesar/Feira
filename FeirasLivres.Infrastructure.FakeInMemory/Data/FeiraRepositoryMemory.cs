@@ -4,7 +4,7 @@ using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.Enums;
 using FeirasLivres.Domain.Entities.FeiraEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
+using FeirasLivres.Domain.Entities.FeiraEntity.Common;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Misc;
@@ -209,16 +209,16 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             return new DomainActionResult<List<Feira>>(FeirasMock);
         }
 
-        public async Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(EditExistingFeiraParams paramFeiraToUpdate)
+        public async Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(Feira feiraToUpdate)
         {
             var domainRepositoryResult = new DomainActionResult<bool>(false);
 
-            var repositoryFeiraToUpdate = GetFeiraByNumeroRegistro(paramFeiraToUpdate.NumeroRegistro);
+            var repositoryFeiraToUpdate = GetFeiraByNumeroRegistro(feiraToUpdate.NumeroRegistro);
 
             if (repositoryFeiraToUpdate is null)
                 return domainRepositoryResult.AddNotFoundError($"{nameof(FeiraRepositoryMemory)}.{nameof(UpdateByNumeroRegistroAsync)}", "Feira não encontrada");
 
-            paramFeiraToUpdate.MapValuesTo(ref repositoryFeiraToUpdate);
+            feiraToUpdate.MapValuesTo(ref repositoryFeiraToUpdate);
 
             int indexItemToUpdate = FeirasMock.FindIndex(f => f.Id == repositoryFeiraToUpdate.Id);
             FeirasMock[indexItemToUpdate] = repositoryFeiraToUpdate;
@@ -226,13 +226,13 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             return domainRepositoryResult.SetValue(true);
         }
 
-        public async Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
+        public async Task<IDomainActionResult<List<FeiraResult>>> FindFeirasAsync(FindFeiraParams findParams)
         {
-            var domainActionResult = new DomainActionResult<List<FindFeiraResult>>();
+            var domainActionResult = new DomainActionResult<List<FeiraResult>>();
             try
             {
                 var listResult = FeirasMock;
-                var feirasResult = new List<FindFeiraResult>();
+                var feirasResult = new List<FeiraResult>();
 
                 if (findParams.Nome.IsNotNullOrNotEmpty())
                     listResult = listResult.Where(db => db.Nome.Contains(findParams.Nome.Trim())).ToList();
@@ -259,23 +259,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                     }
                 }
 
-                listResult.ForEach(feiraEntity => feirasResult.Add(new(
-                    Nome                : feiraEntity.Nome,
-                    NumeroRegistro      : feiraEntity.NumeroRegistro,
-                    SetorCensitarioIBGE : feiraEntity.SetorCensitarioIBGE,
-                    AreaDePonderacaoIBGE: feiraEntity.AreaDePonderacaoIBGE,
-                    CodDistrito         : feiraEntity.Distrito.Codigo,
-                    Distrito            : feiraEntity.Distrito.Nome,
-                    CodSubPrefeitura    : feiraEntity.SubPrefeitura.Codigo,
-                    SubPrefeitura       : feiraEntity.SubPrefeitura.Nome,
-                    Regiao5             : feiraEntity.Regiao5.ToDescription(),
-                    Regiao8             : feiraEntity.Regiao8.ToDescription(),
-                    EnderecoLogradouro  : feiraEntity.EnderecoLogradouro,
-                    EnderecoNumero      : feiraEntity.EnderecoNumero,
-                    EnderecoBairro      : feiraEntity.EnderecoBairro,
-                    EnderecoReferencia  : feiraEntity.EnderecoReferencia,
-                    Latitude            : feiraEntity.Latitude,
-                    Longitude           : feiraEntity.Longitude)));
+                listResult.ForEach(feiraEntity => feirasResult.Add(feiraEntity.ToFeiraResult()));
 
                 return domainActionResult.SetValue(feirasResult);
             }

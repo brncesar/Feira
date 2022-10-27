@@ -1,5 +1,5 @@
 ﻿using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
+using FeirasLivres.Domain.Entities.FeiraEntity.Common;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity
@@ -10,8 +10,8 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity
 
         Task<IDomainActionResult<bool>> RemoveByNumeroRegistroAsync(string numeroRegistro);
 
-        Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(EditExistingFeiraParams feira);
+        Task<IDomainActionResult<bool>> UpdateByNumeroRegistroAsync(Feira feira);
 
-        Task<IDomainActionResult<List<FindFeiraResult>>> FindFeirasAsync(FindFeiraParams findParams);
+        Task<IDomainActionResult<List<FeiraResult>>> FindFeirasAsync(FindFeiraParams findParams);
     }
 }
