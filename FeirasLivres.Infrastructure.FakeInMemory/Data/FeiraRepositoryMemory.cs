@@ -165,7 +165,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             return successOnDelete
                 ? new DomainActionResult<bool>(true)
                 : new DomainActionResult<bool>(false)
-                    .AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira"/*, $"{nameof(FeiraRepositoryMemory)}.{nameof(DeleteAsync)}"*/));
+                    .AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira", $"{nameof(FeiraRepositoryMemory)}.{nameof(DeleteAsync)}"));
         }
 
         public async Task<IDomainActionResult<Feira>> GetByNumeroRegistroAsync(string numeroRegistro)
@@ -192,7 +192,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
 
             return successOnDelete
                 ? domainRepositoryResult.SetValue(true)
-                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira"/*, $"{nameof(FeiraRepositoryMemory)}.{nameof(RemoveByNumeroRegistroAsync)}"*/));
+                : domainRepositoryResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, "Erro inesperado. Não foi possível excluir a feira", $"{nameof(FeiraRepositoryMemory)}.{nameof(RemoveByNumeroRegistroAsync)}"));
         }
 
         public async Task<IDomainActionResult<Guid>> AddAsync(Feira feira)
@@ -244,7 +244,20 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
                     listResult = listResult.Where(db => db.Distrito.Codigo == findParams.CodDistrito).ToList();
 
                 if (findParams.Regiao5 is not null)
-                    listResult = listResult.Where(db => db.Regiao5 == findParams.Regiao5).ToList();
+                {
+                    var isRegiao5Parsed = Enum.TryParse(findParams.Regiao5, true, out Regiao5 enumRegiao5FromString);
+
+                    if (isRegiao5Parsed)
+                        listResult = listResult.Where(db => db.Regiao5 == enumRegiao5FromString).ToList();
+                    else
+                    {
+                        var validRegions5 = Enum.GetValues(typeof(Regiao5)).Cast<Regiao5>();
+                        return domainActionResult.AddError(ErrorHelpers.GetError(
+                            ErrorType.Validation,
+                            $"Regiao5 invalid: {findParams.Regiao5}. Possible values are: {validRegions5}",
+                            "Feira.Regiao5"));
+                    }
+                }
 
                 listResult.ForEach(feiraEntity => feirasResult.Add(new(
                     Nome                : feiraEntity.Nome,
@@ -268,7 +281,7 @@ namespace FeirasLivres.Infrastructure.FakeInMemory.Data
             }
             catch (Exception ex)
             {
-                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message/*, $"{nameof(FeiraRepositoryMemory)}.{nameof(FindFeirasAsync)}"*/));
+                return domainActionResult.AddError(ErrorHelpers.GetError(ErrorType.Unexpected, ex.Message, $"{nameof(FeiraRepositoryMemory)}.{nameof(FindFeirasAsync)}"));
             }
         }
 

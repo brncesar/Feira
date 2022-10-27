@@ -1,6 +1,4 @@
-﻿using FeirasLivres.Domain.Entities.Enums;
-
-namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
+﻿namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
 {
     public record AddNewFeiraParams(
         string  Nome,
@@ -9,8 +7,8 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
         string  AreaDePonderacaoIBGE,
         string  CodDistrito,
         string  CodSubPrefeitura,
-        Regiao5 Regiao5,
-        Regiao8 Regiao8,
+        string  Regiao5,
+        string  Regiao8,
         string  EnderecoLogradouro,
         string? EnderecoNumero,
         string  EnderecoBairro,

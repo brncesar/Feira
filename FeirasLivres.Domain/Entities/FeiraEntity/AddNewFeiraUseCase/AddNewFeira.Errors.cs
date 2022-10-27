@@ -7,7 +7,7 @@ public sealed class AddNewFeiraErrors
 {
     private static string className = nameof(AddNewFeiraErrors).Replace("Errors", "");
 
-    public static Error DuplicateFeira(string? description) => ErrorHelpers.GetError(ErrorType.Conflict, description ?? "Feira already exists"/*, className, "DuplicateFeira"*/);
+    public static Error DuplicateFeira(string? description, string errorCode) => ErrorHelpers.GetError(ErrorType.Conflict, description ?? "Feira already exists", errorCode);
 
     public static Error DistritoNotFound() => ErrorHelpers.GetError(ErrorType.NotFound, "The related Distrito informed was not found"/*, className, "DistritoNotFound"*/);
 

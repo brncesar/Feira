@@ -34,8 +34,8 @@ namespace Feira.Api.Controllers
             _removeFeiraUseCase = removeFeiraUseCase;
         }
 
-        [HttpPost("Find")]
-        public async Task<ActionResult> Find(FindFeiraParams findParams)
+        [HttpGet("Find")]
+        public async Task<ActionResult> Find([FromQuery] FindFeiraParams findParams)
         {
             var findResult = await _findFeiraUseCase.Execute(findParams);
 
@@ -64,10 +64,10 @@ namespace Feira.Api.Controllers
                 : Error(domainResult);
         }
 
-        [HttpDelete("Remove")]
-        public async Task<ActionResult> Remove(RemoveExistingFeiraParams remParams)
+        [HttpDelete("Remove/{numeroRegistro}")]
+        public async Task<ActionResult> Remove(string numeroRegistro)
         {
-            var domainResult = await _removeFeiraUseCase.Execute(remParams);
+            var domainResult = await _removeFeiraUseCase.Execute(new(numeroRegistro));
 
             return domainResult.IsSuccess()
                 ? Ok(domainResult.Value)

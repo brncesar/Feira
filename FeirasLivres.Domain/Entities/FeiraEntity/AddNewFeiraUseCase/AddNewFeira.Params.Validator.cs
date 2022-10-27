@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using FeirasLivres.Domain.Entities.Enums;
+using FluentValidation;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
 {
@@ -6,8 +7,6 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
     {
         public AddNewFeiraParamsValidator()
         {
-            RuleFor(p => p.Regiao5             ).IsInEnum     ();
-            RuleFor(p => p.Regiao8             ).IsInEnum     ();
             RuleFor(p => p.EnderecoNumero      ).MaximumLength(5);
             RuleFor(p => p.EnderecoReferencia  ).MaximumLength(24);
             RuleFor(p => p.AreaDePonderacaoIBGE).Length       (13);
@@ -15,6 +14,14 @@ namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase
             RuleFor(p => p.EnderecoBairro      ).Length       (2, 30);
             RuleFor(p => p.CodDistrito         ).NotEmpty     ().MaximumLength(9);
             RuleFor(p => p.CodSubPrefeitura    ).NotEmpty     ().MaximumLength(2);
+
+            RuleFor(p => p.Regiao5)
+                .IsEnumName(typeof(Regiao5), caseSensitive: false)
+                .WithMessage(p => $"Regiao5 '{p.Regiao5}' inválida. Os valores possíveis são: {string.Join(", ", Enum.GetValues(typeof(Regiao5)).Cast<Regiao5>())}"); ;
+
+            RuleFor(p => p.Regiao8)
+                .IsEnumName(typeof(Regiao8), caseSensitive: false)
+                .WithMessage(p => $"Regiao8 '{p.Regiao8}' inválida. Os valores possíveis são: {string.Join(", ", Enum.GetValues(typeof(Regiao8)).Cast<Regiao8>())}"); ;
 
             RuleFor(p => p.NumeroRegistro).Matches("[0-9]{4}[-][0-9]")
                 .WithMessage(p =>

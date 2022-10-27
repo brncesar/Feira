@@ -7,106 +7,105 @@ using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Misc;
 
-namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity
+namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity;
+
+public class AddNewFeiraUseCaseTest
 {
-    public class AddNewFeiraUseCaseTest
+    private AddNewFeira _testTarget;
+    private AddNewFeiraParams _useCaseParamObj = new AddNewFeiraParams(
+        Nome                 : "PIRASSUNUNGA",
+        NumeroRegistro       : "1234-5",
+        SetorCensitarioIBGE  : "355030801000054",
+        AreaDePonderacaoIBGE : "3550308005039",
+        Regiao5              : "Leste",
+        Regiao8              : "Leste1",
+        EnderecoLogradouro   : "RUA TEREZINA",
+        EnderecoNumero       : "615",
+        EnderecoBairro       : "ALTO DA MOOCA",
+        EnderecoReferencia   : "CAMPO LARGO E MANAUS",
+        Latitude             : 0,
+        Longitude            : 0,
+        CodDistrito          : "01",
+        CodSubPrefeitura     : "25"
+    );
+
+    public AddNewFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
     {
-        private AddNewFeira _testTarget;
-        private AddNewFeiraParams _useCaseParamObj = new AddNewFeiraParams(
-            Nome                 : "PIRASSUNUNGA",
-            NumeroRegistro       : "1234-5",
-            SetorCensitarioIBGE  : "355030801000054",
-            AreaDePonderacaoIBGE : "3550308005039",
-            Regiao5              : Regiao5.Leste,
-            Regiao8              : Regiao8.Leste1,
-            EnderecoLogradouro   : "RUA TEREZINA",
-            EnderecoNumero       : "615",
-            EnderecoBairro       : "ALTO DA MOOCA",
-            EnderecoReferencia   : "CAMPO LARGO E MANAUS",
-            Latitude             : 0,
-            Longitude            : 0,
-            CodDistrito          : "01",
-            CodSubPrefeitura     : "25"
-        );
+        _testTarget = new AddNewFeira(feiraRepsitory, distritoRepository, subPrefeituraRepository);
+    }
 
-        public AddNewFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
+    [Theory]
+    [InlineData(-91,    0, false)]
+    [InlineData(-85,  181, false)]
+    [InlineData(-98,  274, false)]
+    [InlineData(-90, -180, true )]
+    [InlineData( 90,  180, true )]
+    [InlineData( 45,   90, true )]
+    public async Task MustReturnErrorWhenTheCoordinatesArentValids(double latitude, double longitude, bool isValid)
+    {
+        var useCaseParamObj = _useCaseParamObj with
         {
-            _testTarget = new AddNewFeira(feiraRepsitory, distritoRepository, subPrefeituraRepository);
-        }
+            Latitude  = latitude,
+            Longitude = longitude
+        };
 
-        [Theory]
-        [InlineData(-91,    0, false)]
-        [InlineData(-85,  181, false)]
-        [InlineData(-98,  274, false)]
-        [InlineData(-90, -180, true )]
-        [InlineData( 90,  180, true )]
-        [InlineData( 45,   90, true )]
-        public async Task MustReturnErrorWhenTheCoordinatesArentValids(double latitude, double longitude, bool isValid)
+        var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
+
+        var errs = addNewFeiraResult.Errors;
+
+        var isLatitudeValid  = addNewFeiraResult.Errors.None( errs => errs.Description.Contains(nameof(useCaseParamObj.Latitude )) );
+        var isLongitudeValid = addNewFeiraResult.Errors.None( errs => errs.Description.Contains(nameof(useCaseParamObj.Longitude)) );
+
+        var isCoordinatesValids = isLatitudeValid && isLongitudeValid;
+
+        Assert.Equal(expected: isValid, actual: isCoordinatesValids);
+    }
+
+    [Fact]
+    public async Task MustReturnErrorWhenTryingToAddAFeiraThatAlreadyHaveTheSameNumeroRegistro()
+    {
+        var numeroRegistro = "0000-0";
+        var useCaseParamObj = _useCaseParamObj with
         {
-            var useCaseParamObj = _useCaseParamObj with
-            {
-                Latitude  = latitude,
-                Longitude = longitude
-            };
+            NumeroRegistro = numeroRegistro
+        };
 
-            var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
+        var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
 
-            var errs = addNewFeiraResult.Errors;
+        Assert.True(addNewFeiraResult.IsSuccess());
 
-            var isLatitudeValid  = addNewFeiraResult.Errors.None( errs => errs.Description.Contains(nameof(useCaseParamObj.Latitude )) );
-            var isLongitudeValid = addNewFeiraResult.Errors.None( errs => errs.Description.Contains(nameof(useCaseParamObj.Longitude)) );
+        var anotherNewFeira = await _testTarget.Execute(useCaseParamObj);
 
-            var isCoordinatesValids = isLatitudeValid && isLongitudeValid;
+        Assert.True(anotherNewFeira.HasErrors());
+    }
 
-            Assert.Equal(expected: isValid, actual: isCoordinatesValids);
-        }
-
-        [Fact]
-        public async Task MustReturnErrorWhenTryingToAddAFeiraThatAlreadyHaveTheSameNumeroRegistro()
+    [Fact]
+    public async Task MustReturnErrorWhenTryingToAddAFeiraWithNoExistentRelatedDistrito()
+    {
+        var invalidCodDistrito = "00000";
+        var useCaseParamObj = _useCaseParamObj with
         {
-            var numeroRegistro = "0000-0";
-            var useCaseParamObj = _useCaseParamObj with
-            {
-                NumeroRegistro = numeroRegistro
-            };
+            CodDistrito = invalidCodDistrito
+        };
 
-            var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
+        var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
 
-            Assert.True(addNewFeiraResult.IsSuccess());
+        Assert.True(addNewFeiraResult.HasErrors());
+        Assert.Contains(addNewFeiraResult.Errors, err => err.Type == ErrorType.NotFound);
+    }
 
-            var anotherNewFeira = await _testTarget.Execute(useCaseParamObj);
-
-            Assert.True(anotherNewFeira.HasErrors());
-        }
-
-        [Fact]
-        public async Task MustReturnErrorWhenTryingToAddAFeiraWithNoExistentRelatedDistrito()
+    [Fact]
+    public async Task MustReturnErrorWhenTryingToAddAFeiraWithNoExistentRelatedSubPrefeitura()
+    {
+        var invalidCodSubPrefeitura = "ab";
+        var useCaseParamObj = _useCaseParamObj with
         {
-            var invalidCodDistrito = "00000";
-            var useCaseParamObj = _useCaseParamObj with
-            {
-                CodDistrito = invalidCodDistrito
-            };
+            CodSubPrefeitura = invalidCodSubPrefeitura
+        };
 
-            var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
+        var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
 
-            Assert.True(addNewFeiraResult.HasErrors());
-            Assert.Contains(addNewFeiraResult.Errors, err => err.Type == ErrorType.NotFound);
-        }
-
-        [Fact]
-        public async Task MustReturnErrorWhenTryingToAddAFeiraWithNoExistentRelatedSubPrefeitura()
-        {
-            var invalidCodSubPrefeitura = "ab";
-            var useCaseParamObj = _useCaseParamObj with
-            {
-                CodSubPrefeitura = invalidCodSubPrefeitura
-            };
-
-            var addNewFeiraResult = await _testTarget.Execute(useCaseParamObj);
-
-            Assert.True(addNewFeiraResult.HasErrors());
-            Assert.Contains(addNewFeiraResult.Errors, err => err.Type == ErrorType.NotFound);
-        }
+        Assert.True(addNewFeiraResult.HasErrors());
+        Assert.Contains(addNewFeiraResult.Errors, err => err.Type == ErrorType.NotFound);
     }
 }

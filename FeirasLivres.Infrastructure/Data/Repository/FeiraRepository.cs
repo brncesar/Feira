@@ -1,4 +1,6 @@
-﻿using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Entities.Common;
+using FeirasLivres.Domain.Entities.Enums;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
@@ -91,7 +93,20 @@ public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFe
                 listResult = listResult.Where(db => db.Distrito.Codigo == findParams.CodDistrito);
 
             if (findParams.Regiao5 is not null)
-                listResult = listResult.Where(db => db.Regiao5 == findParams.Regiao5);
+            {
+                var isRegiao5Parsed = Enum.TryParse(findParams.Regiao5, true, out Regiao5 enumRegiao5FromString);
+
+                if(isRegiao5Parsed)
+                    listResult = listResult.Where(db => db.Regiao5 == enumRegiao5FromString);
+                else
+                {
+                    var validRegions5 = Enum.GetValues(typeof(Regiao5)).Cast<Regiao5>();
+                    return domainRepositoryResult.AddError(ErrorHelpers.GetError(
+                        ErrorOr.ErrorType.Validation,
+                        $"Regiao5 invalid: {findParams.Regiao5}. Possible values are: {string.Join(", ", validRegions5)}",
+                        "Feira.Regiao5"));
+                }
+            }
 
             var feirasFound = await listResult
                 .Include(f => f.Distrito)
@@ -123,5 +138,4 @@ public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFe
             return domainRepositoryResult.ReturnRepositoryError(ex);
         }
     }
-
 }
