@@ -114,7 +114,7 @@ public class AddNewFeira
 
             addNewFeiraResult.AddError(AddNewFeiraErrors.DuplicateFeira(
                 $"Já existe uma outra feira cadastrada com este mesmo número de registro: " +
-                $"{existingFeiraReceivedFromRepository?.Nome} - {existingFeiraReceivedFromRepository?.NumeroRegistro}",
+                $"({existingFeiraReceivedFromRepository?.NumeroRegistro}) {existingFeiraReceivedFromRepository?.Nome}",
                 $"{nameof(AddNewFeira)}.Execute"));
         }
         else if (unexpectedErrorHasReturned)

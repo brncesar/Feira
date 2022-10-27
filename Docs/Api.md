@@ -257,7 +257,22 @@ POST {{host}}/api/Feira/Add
 #### Feira: Add - server response
 ```json
 {
-	"id" : "fa7e6176-cf00-4656-9779-ac4567c6845b"
+	"nome"                 : "PIRASSUNUNGA",
+	"numeroRegistro"       : "1013-8",
+	"setorCensitarioIBGE"  : "355030801000054",
+	"areaDePonderacaoIBGE" : "3550308005039",
+	"codDistrito"          : "01",
+	"Distrito"             : "AGUA RASA",
+	"codSubPrefeitura"     : "25",
+	"SubPrefeitura"        : "MOOCA",
+	"regiao5"              : "Leste",
+	"regiao8"              : "Leste1",
+	"enderecoLogradouro"   : "RUA TEREZINA",
+	"enderecoNumero"       : "615",
+	"enderecoBairro"       : "ALTO DA MOOCA",
+	"enderecoReferencia"   : "CAMPO LARGO E MANAUS",
+	"latitude"             : -23.564711,
+	"longitude"            : -46.564711
 }
 ```
 
@@ -310,7 +325,24 @@ PUT {{host}}/api/feira/edit
 
 #### Edit Feira - server response
 ```json
-true
+{
+	"nome"                 : "PIRASSUNUNGA",
+	"numeroRegistro"       : "1013-8",
+	"setorCensitarioIBGE"  : "355030801000054",
+	"areaDePonderacaoIBGE" : "3550308005039",
+	"codDistrito"          : "01",
+	"Distrito"             : "AGUA RASA",
+	"codSubPrefeitura"     : "25",
+	"SubPrefeitura"        : "MOOCA",
+	"regiao5"              : "Leste",
+	"regiao8"              : "Leste1",
+	"enderecoLogradouro"   : "RUA TEREZINA",
+	"enderecoNumero"       : "615",
+	"enderecoBairro"       : "ALTO DA MOOCA",
+	"enderecoReferencia"   : "CAMPO LARGO E MANAUS",
+	"latitude"             : -23.564711,
+	"longitude"            : -46.564711
+}
 ```
 
 
@@ -381,6 +413,5 @@ DELETE {{host}}/api/feira/remove
 ```json
 true
 ```
-
 
 ---

@@ -30,6 +30,8 @@ public class EditExistingFeira
         if (paramsValidationResult.IsPropValid(feiraInfosToEdit, p => p.NumeroRegistro))
             feiraToSave = await GetExistingFeiraOrAddErrorIfDontExist(updateFeiraResult, feiraInfosToEdit.NumeroRegistro);
 
+        if (updateFeiraResult.HasErrors) return updateFeiraResult;
+
         await TrySetRelatedDistritoIdOnFeiraObjOrAddDistritoNotFoundToDomainResult(
             feiraToSave,
             updateFeiraResult,

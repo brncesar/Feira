@@ -86,3 +86,14 @@ Content-Type: {{contentType}}
 	"latitude"             : -23564711,
 	"longitude"            : -46.564711
 }
+
+
+### Error: Try edit without numeroRegistro
+PUT {{host}}/api/Feira/Edit
+Content-Type: {{contentType}}
+
+{
+	"nome"    : "Feira dos Kent",
+	"regiao5" : "oeste",
+	"regiao8" : "oeste"
+}
