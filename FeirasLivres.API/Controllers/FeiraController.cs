@@ -1,5 +1,4 @@
 using FeirasLivres.Api.Controllers;
-using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
@@ -37,11 +36,9 @@ namespace Feira.Api.Controllers
         [HttpGet("Find")]
         public async Task<ActionResult> Find([FromQuery] FindFeiraParams findParams)
         {
-            var findResult = await _findFeiraUseCase.Execute(findParams);
+            var domainResult = await _findFeiraUseCase.Execute(findParams);
 
-            return findResult.IsSuccess()
-                ? Ok(findResult.Value)
-                : Error(findResult);
+            return DomainResult(domainResult);
         }
 
         [HttpPost("Add")]
@@ -49,9 +46,7 @@ namespace Feira.Api.Controllers
         {
             var domainResult = await _addNewFeiraUseCase.Execute(addParams);
 
-            return domainResult.IsSuccess()
-                ? Ok(domainResult.Value)
-                : Error(domainResult);
+            return DomainResult(domainResult);
         }
 
         [HttpPut("Edit")]
@@ -59,9 +54,7 @@ namespace Feira.Api.Controllers
         {
             var domainResult = await _editFeiraUseCase.Execute(editParams);
 
-            return domainResult.IsSuccess()
-                ? Ok(domainResult.Value)
-                : Error(domainResult);
+            return DomainResult(domainResult);
         }
 
         [HttpDelete("Remove/{numeroRegistro}")]
@@ -69,9 +62,7 @@ namespace Feira.Api.Controllers
         {
             var domainResult = await _removeFeiraUseCase.Execute(new(numeroRegistro));
 
-            return domainResult.IsSuccess()
-                ? Ok(domainResult.Value)
-                : Error(domainResult);
+            return DomainResult(domainResult);
         }
     }
 }
