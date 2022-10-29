@@ -97,7 +97,7 @@ public class FeiraRepository : BaseRepository<FeirasLivresDbContext, Feira>, IFe
                 {
                     var validRegions5 = Enum.GetValues(typeof(Regiao5)).Cast<Regiao5>();
                     return domainRepositoryResult.AddError(ErrorHelpers.GetError(
-                        ErrorOr.ErrorType.Validation,
+                        ErrorType.Validation,
                         $"Regiao5 invalid: {findParams.Regiao5}. Possible values are: {string.Join(", ", validRegions5)}",
                         "Feira.Regiao5"));
                 }

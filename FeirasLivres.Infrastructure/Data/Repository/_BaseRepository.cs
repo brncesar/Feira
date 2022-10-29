@@ -1,5 +1,4 @@
-﻿using ErrorOr;
-using FeirasLivres.Domain.Common;
+﻿using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using FeirasLivres.Domain.Misc;

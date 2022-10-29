@@ -1,4 +1,4 @@
-using ErrorOr;
+using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity;

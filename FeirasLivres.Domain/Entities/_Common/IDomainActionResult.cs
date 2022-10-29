@@ -1,4 +1,4 @@
-﻿using ErrorOr;
+﻿using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.Common

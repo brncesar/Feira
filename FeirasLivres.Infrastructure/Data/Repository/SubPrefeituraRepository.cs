@@ -1,4 +1,5 @@
-﻿using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 using FeirasLivres.Domain.Misc;

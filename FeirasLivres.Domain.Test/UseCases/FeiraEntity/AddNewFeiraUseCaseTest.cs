@@ -1,7 +1,6 @@
-using ErrorOr;
+using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity;
-using FeirasLivres.Domain.Entities.Enums;
 using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity;

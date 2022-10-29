@@ -1,9 +1,8 @@
-﻿using ErrorOr;
-using FeirasLivres.Domain.Common;
+﻿using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Misc;
 using FluentValidation.Results;
 
-namespace FeirasLivres.Domain.Entities.Common;
+namespace FeirasLivres.Domain.Common;
 
 public class DomainActionResult<T> : IDomainActionResult<T>
 {

@@ -1,4 +1,5 @@
-﻿using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.DistritoEntity.GetDistritoByCodigoUseCase;
@@ -25,6 +26,6 @@ public class GetDistritoByCodigo
         else
             getDistritoByCodigoResult.AddNotFoundError($"{nameof(GetDistritoByCodigo)}.{nameof(Execute)}", "Distrito not found");
 
-        return getDistritoByCodigoResult.AddErrors(respositoryResult.Errors.Where(err => err.Type != ErrorOr.ErrorType.NotFound).ToList());
+        return getDistritoByCodigoResult.AddErrors(respositoryResult.Errors.Where(err => err.Type != ErrorType.NotFound).ToList());
     }
 }

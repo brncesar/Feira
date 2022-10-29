@@ -1,4 +1,5 @@
-﻿using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.SubPrefeituraEntity.GetSubPrefeituraByCodigoUseCase;
@@ -25,6 +26,6 @@ public class GetSubPrefeituraByCodigo
         else
             getSubPrefeituraByCodigoResult.AddNotFoundError($"{nameof(GetSubPrefeituraByCodigo)}.{nameof(Execute)}", "SubPrefeitura not found");
 
-        return getSubPrefeituraByCodigoResult.AddErrors(respositoryResult.Errors.Where(err => err.Type != ErrorOr.ErrorType.NotFound).ToList());
+        return getSubPrefeituraByCodigoResult.AddErrors(respositoryResult.Errors.Where(err => err.Type != ErrorType.NotFound).ToList());
     }
 }

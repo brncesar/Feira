@@ -1,4 +1,5 @@
-﻿using FeirasLivres.Domain.Entities.Common;
+﻿using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.RemoveExistingFeiraUseCase;

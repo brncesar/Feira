@@ -1,5 +1,4 @@
-﻿using ErrorOr;
-using FeirasLivres.Domain.Common;
+﻿using FeirasLivres.Domain.Common;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 

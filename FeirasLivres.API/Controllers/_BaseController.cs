@@ -1,5 +1,5 @@
-﻿using ErrorOr;
-using FeirasLivres.Api.Misc;
+﻿using FeirasLivres.Api.Misc;
+using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
 using Microsoft.AspNetCore.Mvc;
 
