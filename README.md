@@ -39,4 +39,5 @@ Para rodar o projeto, basta executá-lo no Visual Studio. O projeto **FeirasLivr
 
 #### 2.1.1 - Resetando os dados iniciais das feiras (ou carregando novos)<a name="ImportandoOsDados"></a>
 O projeto já disponibiliza na pasta SqliteDb o arquivo `feiras-livres.db` carregado com as feiras provenientes do arquivo CSV já citado. Entretanto é possível a qualquer momento *"resetar"* as informações do banco de dados com aquelas originalmente contidas no arquivo CSV bastando para isso executar o projeto **ConsoleLab** que, por padrão, apagará todos os dados das tabelas e populará novamente com as informações contidas no arquivo CSV.
+
 ![definir-consolelab-como-startup](https://user-images.githubusercontent.com/3535044/198825259-0890b1b6-2c63-4838-b750-46bd0be907d2.png)
