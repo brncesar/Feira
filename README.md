@@ -15,7 +15,7 @@
 Este projeto é um laboratório de uma *Clean Architecture* usando .NET 6.0, expondo o domínio por meio de uma API. 
 
 O domínio é completamente desacoplado e independente de forma que qualquer interface de apresentação ou infraestrutura (banco de dados) possam ser nele plugados sem necessidade de ajustes e/ou adaptações.
-![image](https://user-images.githubusercontent.com/3535044/198698338-ae41014a-cfa6-4699-8df5-1a2657c7f9a1.png)
+![image](https://user-images.githubusercontent.com/3535044/198698338-ae41014a-cfa6-4699-8df5-1a2657c7f9a1.png)     
 [*Clean Architecture; horizontal layer view*](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)
 
 Pela característica de laboratório, para facilitar a configuração local, optei pelo uso do SQLite para armazenamento das informações de forma a simplificar a execução local do projeto para aqueles que desejarem rodar localmente em seus próprios ambientes.
