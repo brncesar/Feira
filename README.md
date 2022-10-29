@@ -6,8 +6,8 @@
 3. [Domain](#Domain)
 	1.	[Entidades/Casos de uso/DTO's](#EntidadesCasosDeUsoDtos)
 4. [API Endpoints](#ApiEndpoints)
-5. [Testes](#Testes)
-6. [Log's](#Logs)
+5. [Log's](#Logs)
+6. [Testes](#Testes)
 
 
 
@@ -18,7 +18,6 @@ O domínio é completamente desacoplado e independente de forma que qualquer int
 ![clean-arch](https://user-images.githubusercontent.com/3535044/198844956-253c6b5d-06c1-48d2-80fb-c8504d6f2b4c.png)
 
 > *Fonte da imagem: [*Clean Architecture; horizontal layer view*](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)*
-
 
 Pela característica de laboratório, para facilitar a configuração local, optei pelo uso do SQLite para armazenamento das informações de forma a simplificar a execução local do projeto para aqueles que desejarem rodar localmente em seus próprios ambientes.
 
@@ -88,7 +87,14 @@ Na definição de seus métodos de negócio
 A API deste projeto fornece métodos de consulta e recuperação de Distritos e Sub-Prefeituras por nome e código, além de permitir consultar, edita, adicionar e excluir Feiras.
 A documentação detalhada de cada um dos endpoints pode ser encontrada no arquivo [Api.md](https://github.com/brncesar/Feira/blob/master/Docs/Api.md) na pasta **Docs** deste projeto.
 
-## 5 - Testes<a name="Testes"></a>
+## 5 - Logs<a name="Logs"></a>
 
+## 6 - Testes<a name="Testes"></a>
+Para executar os testes basta clicar com o botão direito do mouse no projeto **FeirasLivres.Domain.Test**, depois na opção *"Open in Terminal"*, escrever o nome do ShellScript `generate-test-cover-report.ps1` no terminal e apertar a tecla ENTER para executá-lo.
 
-## 6 - Logs<a name="Logs"></a>
+![executar-os-testes](https://user-images.githubusercontent.com/3535044/198849189-f503b066-f441-485a-8345-273a5bb7066a.png)
+
+A execução desse ShellScript irá:
+1. Executar os testes que ao final geram o arquivo xml contendo os resultados analíticos.
+2. Gerar o relatório de abrangência de cobertura dos testes
+3. Abrir no browser a página do relatório
