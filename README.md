@@ -16,7 +16,9 @@ Este projeto é um laboratório de uma *Clean Architecture* usando .NET 6.0, exp
 
 O domínio é completamente desacoplado e independente de forma que qualquer interface de apresentação ou infraestrutura (banco de dados) possam ser nele plugados sem necessidade de ajustes e/ou adaptações.
 ![clean-arch](https://user-images.githubusercontent.com/3535044/198844956-253c6b5d-06c1-48d2-80fb-c8504d6f2b4c.png)
+
 [*Clean Architecture; horizontal layer view*](https://learn.microsoft.com/en-us/dotnet/architecture/modern-web-apps-azure/common-web-application-architectures)
+
 
 Pela característica de laboratório, para facilitar a configuração local, optei pelo uso do SQLite para armazenamento das informações de forma a simplificar a execução local do projeto para aqueles que desejarem rodar localmente em seus próprios ambientes.
 
@@ -45,6 +47,7 @@ Para rodar o projeto, basta executá-lo no Visual Studio. O projeto **FeirasLivr
 
 #### 2.1.1 - Resetando os dados iniciais das feiras (ou carregando novos)<a name="ImportandoOsDados"></a>
 O projeto já disponibiliza na pasta SqliteDb o arquivo `feiras-livres.db` carregado com as feiras provenientes do arquivo CSV já citado. Entretanto é possível a qualquer momento *"resetar"* as informações do banco de dados com aquelas originalmente contidas no arquivo CSV bastando para isso executar o projeto **ConsoleLab** que, por padrão, apagará todos os dados das tabelas e populará novamente com as informações contidas no arquivo CSV.
+
 ![definir-consolelab-como-startup](https://user-images.githubusercontent.com/3535044/198825259-0890b1b6-2c63-4838-b750-46bd0be907d2.png)
 
 ## 3 - Domain<a name="Domain"></a>
