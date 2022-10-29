@@ -1,8 +1,8 @@
 # .NET 6.0 Clean Architecture lab
 1. [Contextualização](#Contextualização)
 2. [Solution Visual Studio](#SolutionVS)
-	2.1. [Rodando o projeto localmente](#RodandoOProjeto)
-		2.1.1 [Resetando os dados iniciais das feiras (ou carregando novos)](#ImportandoOsDados)
+	1. [Rodando o projeto localmente](#RodandoOProjeto)
+		1. [Resetando os dados iniciais das feiras (ou carregando novos)](#ImportandoOsDados)
 
 
 
