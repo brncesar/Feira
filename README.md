@@ -43,7 +43,7 @@ Para rodar o projeto, basta executá-lo no Visual Studio. O projeto **FeirasLivr
 ⚠ Entretanto, eu **aconselho fortemente** a instalação da instalação da extensão [Rest Client for Visual Studio](https://github.com/madskristensen/RestClientVS) que permite executar e verificar as respostas das requisições REST diretamente do ambiente do Visual Studio, permitindo assim o uso dos arquivos `Distrito.http`, `Feira.http` e `SubPrefeitura.http` que já trazem prontas consultas para teste de todas as operações disponíveis na API.
 Com a extensão Rest Client instalada, para executar as consultas já disponíveis nos arquivos `.http` basta clicar na setinha verde ao lado do endpoint que se quer testar e o resultado é carregado dentro da própria IDE.
 
-![rest-client](https://user-images.githubusercontent.com/3535044/198826247-982ffdd7-b3fd-4798-b03d-49e9f50dbdc5.png)
+![rest-client](https://user-images.githubusercontent.com/3535044/198875783-7bbbe073-b269-4ec4-9617-c3e558b2a194.png)
 
 #### 2.1.1 - Resetando os dados iniciais das feiras (ou carregando novos)<a name="ImportandoOsDados"></a>
 O projeto já disponibiliza na pasta SqliteDb o arquivo `feiras-livres.db` carregado com as feiras provenientes do arquivo CSV já citado. Entretanto é possível a qualquer momento *"resetar"* as informações do banco de dados com aquelas originalmente contidas no arquivo CSV bastando para isso executar o projeto **ConsoleLab** que, por padrão, apagará todos os dados das tabelas e populará novamente com as informações contidas no arquivo CSV.
@@ -93,7 +93,7 @@ A documentação detalhada de cada um dos endpoints pode ser encontrada no arqui
 ## 6 - Testes<a name="Testes"></a>
 Para executar os testes basta clicar com o botão direito do mouse no projeto **FeirasLivres.Domain.Test**, depois na opção *"Open in Terminal"*, escrever o nome do ShellScript `generate-test-cover-report.ps1` no terminal e apertar a tecla ENTER para executá-lo.
 
-![executar-os-testes](https://user-images.githubusercontent.com/3535044/198849189-f503b066-f441-485a-8345-273a5bb7066a.png)
+![executar-os-testes](https://user-images.githubusercontent.com/3535044/198875814-5688fda0-8d97-4479-a398-73a60c1da038.png)
 
 A execução desse ShellScript irá:
 1. Executar os testes que ao final geram o arquivo xml contendo os resultados analíticos.
