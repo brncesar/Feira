@@ -28,7 +28,7 @@ A **pesquisa das feiras** deve ser feita por meio das seguintes informações:
 - Região 5
 - Nome da feira
 - Bairro
-> 👆 Essas informações podem ser usada em qualquer combinação na pesquisa, inclusive fazendo a pesquisa usando somente uma delas, duas ou três.
+> 👆 Essas informações podem ser usadas em qualquer combinação na pesquisa, inclusive fazendo a pesquisa usando somente uma delas, duas ou três.
 
 Os dados iniciais usados neste laboratório foram obtidos a partir do arquivo `DEINFO_AB_FEIRASLIVRES_2014.csv` contido [nesse ZIP](http://www.prefeitura.sp.gov.br/cidade/secretarias/upload/chamadas/feiras_livres_1429113213.zip) disponibilizado pela prefeitura de São Paulo. 
 
@@ -41,6 +41,7 @@ Essa é a estrutura de projetos e pastas principais:
 Para rodar o projeto, basta executá-lo no Visual Studio. O projeto **FeirasLivres.Api** já vem definido como *Startup Project*, que inicia o projeto web da API abrindo o browser apontando para o Swagger.
 
 ⚠ Entretanto, eu **aconselho fortemente** a instalação da instalação da extensão [Rest Client for Visual Studio](https://github.com/madskristensen/RestClientVS) que permite executar e verificar as respostas das requisições REST diretamente do ambiente do Visual Studio, permitindo assim o uso dos arquivos `Distrito.http`, `Feira.http` e `SubPrefeitura.http` que já trazem prontas consultas para teste de todas as operações disponíveis na API.
+Com a extensão Rest Client instalada, para executar as consultas já disponíveis nos arquivos `.http` basta clicar na setinha verde ao lado do endpoint que se quer testar e o resultado é carregado dentro da própria IDE.
 
 ![rest-client](https://user-images.githubusercontent.com/3535044/198826247-982ffdd7-b3fd-4798-b03d-49e9f50dbdc5.png)
 
@@ -51,7 +52,7 @@ O projeto já disponibiliza na pasta SqliteDb o arquivo `feiras-livres.db` carre
 
 ## 3 - Domain<a name="Domain"></a>
 Visando a completa abstração do mundo externo a partir da perspectiva do domínio, a interface `IDomainActionResult` é a responsável por padronizar a forma como o mundo externo responde as requisições do domínio, também sendo usada pelo domínio para responder solicitações ao mundo externo.
-Na definição de seus métodos de negócio 
+Na definição de seus métodos de negócio expostos ao mundo externo o domínio pode receber as informações diretamente por meio de DTO's.
 ![comunicacao](https://user-images.githubusercontent.com/3535044/198842361-07492d31-7f63-4e68-9e36-c2bd69869b37.png)
 
 ### 3.1 - ![entity!](https://p.yusukekamiyamane.com/icons/search/fugue/icons/document-list.png)  Entidades / ![useCase!](https://p.yusukekamiyamane.com/icons/search/fugue/icons/lightning.png) Casos de uso / ![dto!](https://p.yusukekamiyamane.com/icons/search/fugue/icons/envelope-share.png) DTO's<a name="EntidadesCasosDeUsoDtos"></a>
@@ -84,10 +85,10 @@ Na definição de seus métodos de negócio
 
 
 ## 4 - Endpoints<a name="EndPoints"></a>
-A API deste projeto fornece métodos de consulta e recuperação de Distritos e Sub-Prefeituras por nome e código, além de permitir consultar, edita, adicionar e excluir Feiras.
+A API deste projeto fornece métodos de consulta e recuperação de Distritos e Sub-Prefeituras por nome e código, além de permitir consultar, editar, adicionar e excluir Feiras.
 A documentação detalhada de cada um dos endpoints pode ser encontrada no arquivo [Api.md](https://github.com/brncesar/Feira/blob/master/Docs/Api.md) na pasta **Docs** deste projeto.
 
-## 5 - Logs<a name="Logs"></a>
+## 5 - Log's<a name="Logs"></a>
 
 ## 6 - Testes<a name="Testes"></a>
 Para executar os testes basta clicar com o botão direito do mouse no projeto **FeirasLivres.Domain.Test**, depois na opção *"Open in Terminal"*, escrever o nome do ShellScript `generate-test-cover-report.ps1` no terminal e apertar a tecla ENTER para executá-lo.
