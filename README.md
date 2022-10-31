@@ -89,7 +89,7 @@ A API deste projeto fornece métodos de consulta e recuperação de Distritos e 
 A documentação detalhada de cada um dos endpoints pode ser encontrada no arquivo [Api.md](https://github.com/brncesar/Feira/blob/master/Docs/Api.md) na pasta **Docs** deste projeto.
 
 ## 5 - Log's<a name="Logs"></a>
-Para executar os testes basta clicar com o botão direito do mouse no projeto **FeirasLivres.Domain.Test**, depois na opção *"Open in Terminal"*, escrever o nome do ShellScript `generate-test-cover-report.ps1` no terminal e apertar a tecla ENTER para executá-lo.
+Os logs da aplicação são geridos por meio do [Serilog](https://serilog.net/), que gera dois novos arquivos a cada dia. Um para armazenamento do log em formato de texto puro e outro em formato JSON.
 
 ## 6 - Testes<a name="Testes"></a>
 Para executar os testes basta clicar com o botão direito do mouse no projeto **FeirasLivres.Domain.Test**, depois na opção *"Open in Terminal"*, escrever o nome do ShellScript `generate-test-cover-report.ps1` no terminal e apertar a tecla ENTER para executá-lo.
