@@ -97,10 +97,10 @@ internal sealed class CustomProblemDetailsFactory : ProblemDetailsFactory
         var firstError = applicationErrors.First();
         Log.Error($"{firstError.Type} » {firstError.Code} - {firstError.Description}");
 
-        foreach (var error in applicationErrors.Skip(1)) {
-            Log.Error($"{error.Type} » {error.Code} - {error.Description}");
-            problemDetails.Extensions.Add("errorCodes", $"{error.Code} » {error.Description} ({error.Type})");
-        }
+        var otherErrors = applicationErrors.Skip(1).ToList();
+
+        problemDetails.Extensions.Add("errorCodes", otherErrors.Select(e => $"{e.Code} » {e.Description} ({e.Type})"));
+        otherErrors.ForEach( error => Log.Error($"{error.Type} » {error.Code} - {error.Description}"));
     }
 
     public const string HttpContextApplicationErrorsKey = "Errors";

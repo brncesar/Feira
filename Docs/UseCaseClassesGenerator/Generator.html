@@ -1,0 +1,360 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BaseDomain - Gerador de classes</title>
+    <link rel="stylesheet" href="bulma.min.css">
+    <!--<link href="prism/prism.css" rel="stylesheet" />-->
+    <script src="jquery-3.3.1.min.js"></script>
+    <script src="vue.js"></script>
+    <!--<script src="prism/prism.js"></script>-->
+    <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="FileSaver.js"></script>
+    <style>
+        pre {
+            padding: 8px !important;
+        }
+
+        code, pre {
+            font-size: 12px !important;
+        }
+
+        div.code-block {
+            background-color: #f5f5f5;
+            white-space: pre;
+            font-family: monospace;
+            padding: 5px 10px 6px;
+            font-size: 12px;
+        }
+
+        .mar-t-medium {
+            margin-top: 25px !important;
+        }
+    </style>
+</head>
+<body>
+    <section class="section">
+        <div class="container" id="app">
+            <div class="columns">
+                <div class="column is-one-third">
+                    <div class="field">
+                        <label class="label">Namespace</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Namespace" v-model="namespace">
+                        </div>
+                        <p class="help">O mesmo que você está usando no seu projeto</p>
+                    </div>
+                    <div class="field">
+                        <label class="label">Classe</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Nome da classe" v-model="className">
+                        </div>
+                        <p class="help">Preferencialmente usando UpperCamelCase</p>
+                    </div>
+                    <div class="field">
+                        <label class="label">DbContext</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Nome da sua classe de contexto" v-model="contextName">
+                        </div>
+                        <p class="help">Preferencialmente usando UpperCamelCase</p>
+                    </div>
+                    <div class="field">
+                        <label class="label">Tipo do Id</label>
+                        <div class="control">
+                            <label class="radio"><input type="radio" name="answer" v-model="tipoId" value="Int" /> Int </label>
+                            <label class="radio"><input type="radio" name="answer" v-model="tipoId" value="Long" /> Long</label>
+                            <label class="radio"><input type="radio" name="answer" v-model="tipoId" value="Guid" /> Guid</label>
+                        </div>
+                    </div>
+                    <p class="label" style="margin-bottom: 15px;">
+                        Propriedades
+                        <a class="button is-rounded is-link is-small" style="float: right; padding-top: 1px;" @click="addProp">Adicionar nova</a>
+                    </p>
+                    <div class="columns is-variable is-1" v-for="(prop, index) in propriedades" style="margin-bottom: 0;">
+                        <div class="column is-one-third">
+                            <input class="input" type="text" placeholder="Tipo" v-model="prop.tipo" ref="tipo">
+                        </div>
+                        <div class="column">
+                            <div class="field has-addons">
+                                <p class="control">
+                                    <input class="input" type="text" placeholder="Propriedade" v-model="prop.nome" v-on:keyup.enter="addProp">
+                                </p>
+                                <a class="button" @click="delProp(index)">
+                                    <span class="icon">
+                                        <i class="fas fa-backspace"></i>
+                                    </span>
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                    <textarea class="textarea" v-model="propsPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="10"></textarea>
+                    <a class="button is-link is-fullwidth" @click="processarProps()">Processar propriedades</a>
+                </div>
+                <div class="column">
+                    <label class="label">{{ className }}.cs
+                    <a class="button is-small" @click="downloadFile('ClassePrincipal', className)">
+                        <span class="icon is-small">
+                            <i class="fas fa-file-download"></i>
+                        </span>
+                        <span>baixar este arquivo</span>
+                    </a>
+                    <a class="button is-small" @click="copyToClipboard('ClassePrincipal')">
+                        <span class="icon is-small">
+                            <i class="fas fa-copy"></i>
+                        </span>
+                        <span>copiar este código</span>
+                    </a></label>
+                    <div class="code-block" id="ClassePrincipal">using System;
+using System.Collections.Generic;
+using BaseDomain.BaseEntities;
+
+namespace {{ namespace }}
+{
+    public class {{ className }} : BaseEntity&lt;{{tipoId}}>
+    {
+        <span v-for="prop in propriedades">public {{ prop.tipo }} {{ prop.nome }} { get; set; }
+        </span>
+    }
+}                    </div>
+
+
+
+                    <label class="label mar-t-medium">{{ className }}DbMap.cs
+                        <a class="button is-small" @click="downloadFile('DbMap', className)">
+                            <span class="icon is-small">
+                                <i class="fas fa-file-download"></i>
+                            </span>
+                            <span>baixar este arquivo</span>
+                        </a>
+                        <a class="button is-small" @click="copyToClipboard('DbMap')">
+                            <span class="icon is-small">
+                                <i class="fas fa-copy"></i>
+                            </span>
+                            <span>copiar este código</span>
+                        </a></label>
+                    <div class="code-block" id="DbMap">using System.Data.Entity.ModelConfiguration;
+using BaseDomain.Misc;
+
+namespace {{ namespace }}
+{
+    class {{ className }}DbMap : EntityTypeConfiguration&lt;{{ className }}>, IDbMapping
+    {
+        public {{ className }}DbMap()
+        {
+            // Table & Column Mappings
+            ToTable("T?##_{{ className }}");
+            Property(p => p.Id).HasColumnName("T?##_id_{{ className }}").HasColumnOrder(1);
+            <span v-for="prop in propriedades">Property(p => p.{{ prop.nome }}).HasColumnName("_{{ prop.nome }}")<span
+                v-if="prop.tipo.toLowerCase() =='string'">.HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasUniqueIndexAnnotation("IX_NumCnj", 1)</span><span
+                v-else-if="prop.tipo.toLowerCase() =='datetime'">.HasColumnType("date")</span>;
+            </span>
+            // Relationships
+            /*
+            HasRequired       (t => t.Orgao          )
+                .WithMany     (t => t.Processos      )
+                .HasForeignKey(d => d.OrgaoId        );*/
+        }
+    }
+}</div>
+
+
+
+                    <label class="label mar-t-medium">{{ className }}Bo.cs
+                        <a class="button is-small" @click="downloadFile('Bo', className)">
+                            <span class="icon is-small">
+                                <i class="fas fa-file-download"></i>
+                            </span>
+                            <span>baixar este arquivo</span>
+                        </a>
+                        <a class="button is-small" @click="copyToClipboard('Bo')">
+                            <span class="icon is-small">
+                                <i class="fas fa-copy"></i>
+                            </span>
+                            <span>copiar este código</span>
+                        </a></label>
+                    <div class="code-block" id="Bo">using System;
+using System.Data.Entity;
+using System.Threading.Tasks;
+using BaseDomain.BaseBo;
+using BaseDomain.Misc;
+
+namespace Domain.Entities
+{
+    public class {{ className }}Bo : BaseBoSaveDelete&lt;{{ contextName }}, {{ className }}, Guid>
+    {
+        public {{ className }}Bo(DbContext contexto, UnitOfWork&lt;{{ contextName }}> uow = null) : base(contexto, uow)
+        {
+        }
+
+        public async Task Salvar({{ className }} {{ className.toLowerCase() }}) => await Save({{ className.toLowerCase() }});
+        public async Task Excluir({{ className }} {{ className.toLowerCase() }}) => await Delete({{ className.toLowerCase() }});
+        public async Task ExcluirPeloId({{ tipoId }} id) => await DeleteById(id);
+    }
+}</div>
+
+
+
+                    <label class="label mar-t-medium">{{ className }}ExpecsAndValidations.cs
+                        <a class="button is-small" @click="downloadFile('ExpecsAndValidations', className)">
+                            <span class="icon is-small">
+                                <i class="fas fa-file-download"></i>
+                            </span>
+                            <span>baixar este arquivo</span>
+                        </a>
+                        <a class="button is-small" @click="copyToClipboard('ExpecsAndValidations')">
+                            <span class="icon is-small">
+                                <i class="fas fa-copy"></i>
+                            </span>
+                            <span>copiar este código</span>
+                        </a></label>
+                    <div class="code-block" id="ExpecsAndValidations">using System;
+using BaseDomain.BaseEntities;
+using {{ namespace }}.Misc;
+
+namespace {{ namespace }}
+{
+    public static class {{ className }}Expecs
+    {/*
+        public static bool NomeEstaDefinidoExpec(this {{ className }} {{ className.toLowerCase() }})
+        {
+            const string errorMsg = "É necessário definir o nome do Profissional";
+            var expectativaSatisfeita = profissional.Nome.IsNotNullOrNotEmpty();
+
+            return {{ className.toLowerCase() }}.VerifyExpec&lt;{{ className.toLowerCase() }}>(expectativaSatisfeita, errorMsg);
+        }*/
+    }
+
+    public static class {{ className }}Validations
+    {/*
+        public static bool PodeSerSalvoValidation(this {{ className }} {{ className.toLowerCase() }})
+        {
+            return  {{ className.toLowerCase() }}.NomeEstaDefinidoExpec();
+        }*/
+    }
+}</div>
+
+
+
+                    <label class="label mar-t-medium">
+                        Relacionamentos
+                        <a class="button is-small" @click="copyToClipboard('relacionamentos')">
+                            <span class="icon is-small">
+                                <i class="fas fa-copy"></i>
+                            </span>
+                            <span>copiar este código</span>
+                        </a>
+                    </label>
+                    <div class="code-block" id="relacionamentos">
+public {{ tipoId }} {{ className }}Id { get; set; }
+public {{ className }} {{ className }} { get; set; }
+
+public virtual ICollection&lt;{{ className }}> NomeDaPropriedadeDeLista { get; set; }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<script>
+    function SalvarClasse(fileContent, fileName) {
+        var blob = new Blob([fileContent], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, fileName);
+    }
+
+    function CopyToClipboard(containerid) {
+        if (window.getSelection) {
+            if (window.getSelection().empty) { // Chrome
+                window.getSelection().empty();
+            } else if (window.getSelection().removeAllRanges) { // Firefox
+                window.getSelection().removeAllRanges();
+            }
+        } else if (document.selection) { // IE?
+            document.selection.empty();
+        }
+
+        if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(document.getElementById(containerid));
+            range.select().createTextRange();
+            document.execCommand("copy");
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(document.getElementById(containerid));
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+        }
+    }
+
+    var app = new Vue({
+        el   : '#app',
+        data : {
+            namespace             : '',
+            className             : '',
+            tipoId                : '',
+            contextName           : '',
+            propsPraProcessamento : '',
+            propriedades          : [ { tipo: '', nome: '' } ]
+        },
+        methods: {
+            copyToClipboard: function(divId) {
+                CopyToClipboard(divId);
+            },
+            addProp: function() {
+                this.propriedades.push({ tipo: '', nome: '' });
+                this.$nextTick(() => {
+                    this.$refs.tipo[this.propriedades.length - 1].focus();
+                });
+            },
+            delProp: function(index) {
+                this.propriedades.splice(index, 1);
+                if (index === 0) this.addProp();
+            },
+            processarProps: function () {
+                this.propriedades   = [];
+                var props           = this.propsPraProcessamento.split("\n"),
+                    vuePropriedades = this.propriedades;
+                $.each(props, function (key, prop) {
+                    var strProp = prop.trim().replace(/  +/g, ' ').replace('{ get; set; }', '{get;set;}');
+
+                    if(strProp.endsWith('{get;set;}')){
+                        var partesDaDeclaracaoDaPropriedade = strProp.split(' '),
+                            tipo = partesDaDeclaracaoDaPropriedade[1],
+                            nome = partesDaDeclaracaoDaPropriedade[2];
+                        vuePropriedades.push({ 'tipo': tipo, 'nome': nome });
+                    }
+                });
+            },
+            downloadFile: function (arquivo, className) {
+                var fileName    = '',
+                    fileContent = '';
+
+                switch (arquivo) {
+                    case 'Bo':
+                        fileContent = $('#Bo').text();
+                        fileName    = className + 'Bo.cs';
+                        break;
+
+                    case 'DbMap':
+                        fileContent = $('#DbMap').text();
+                        fileName    = className + 'DbMap.cs';
+                        break;
+
+                    case 'ClassePrincipal':
+                        fileName    = className+'.cs';
+                        fileContent = $('#ClassePrincipal').text();
+                        break;
+
+                    case 'ExpecsAndValidations':
+                        fileContent = $('#ExpecsAndValidations').text();
+                        fileName    = className + 'ExpecsAndValidations.cs';
+                        break;
+                }
+
+                SalvarClasse(fileContent, fileName);
+            }
+        }
+    });
+</script>
+</body>
+</html>

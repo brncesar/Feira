@@ -1,5 +1,4 @@
 using FeirasLivres.Api.Controllers;
-using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
@@ -10,14 +9,13 @@ namespace Feira.Api.Controllers
 {
     public class FeiraController : BaseController<FeiraController>
     {
-        private readonly FindFeira                _findFeiraUseCase;
-        private readonly AddNewFeira              _addNewFeiraUseCase;
-        private readonly EditExistingFeira        _editFeiraUseCase;
-        private readonly RemoveExistingFeira      _removeFeiraUseCase;
+        private readonly FindFeira           _findFeiraUseCase;
+        private readonly AddNewFeira         _addNewFeiraUseCase;
+        private readonly EditExistingFeira   _editFeiraUseCase;
+        private readonly RemoveExistingFeira _removeFeiraUseCase;
 
         public FeiraController(
             ILogger<FeiraController> logger,
-            IFeiraRepository         feiraRepository,
             FindFeira                findFeiraUseCase,
             AddNewFeira              addNewFeiraUseCase,
             EditExistingFeira        editFeiraUseCase,

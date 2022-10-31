@@ -71,7 +71,8 @@ DELETE {{host}}/api/Feira/Remove/9999-1
 POST {{host}}/api/Feira/Add
 Content-Type: {{contentType}}
 
-{	"nome"                 : "Nova Feira Teste",
+{
+	"nome"                 : "Nova Feira Teste",
 	"numeroRegistro"       : "9999-1",
 	"setorCensitarioIBGE"  : "355030801000054",
 	"areaDePonderacaoIBGE" : "3550308005039",
