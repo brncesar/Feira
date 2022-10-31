@@ -84,7 +84,7 @@ Na definição de seus métodos de negócio expostos ao mundo externo o domínio
 		- ![dto!](https://p.yusukekamiyamane.com/icons/search/fugue/icons/envelope-share.png) [RemoveExistingFeiraParams](https://github.com/brncesar/Feira/blob/master/FeirasLivres.Domain/Entities/FeiraEntity/RemoveExistingFeiraUseCase/RemoveExistingFeira.Params.cs)
 
 
-## 4 - Endpoints<a name="EndPoints"></a>
+## 4 - Endpoints<a name="ApiEndpoints"></a>
 A API deste projeto fornece métodos de consulta e recuperação de Distritos e Sub-Prefeituras por nome e código, além de permitir consultar, editar, adicionar e excluir Feiras.
 A documentação detalhada de cada um dos endpoints pode ser encontrada no arquivo [Api.md](https://github.com/brncesar/Feira/blob/master/Docs/Api.md) na pasta **Docs** deste projeto.
 
