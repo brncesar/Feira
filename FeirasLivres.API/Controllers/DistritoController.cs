@@ -1,20 +1,21 @@
 using FeirasLivres.Api.Controllers;
-using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
 using FeirasLivres.Domain.Entities.DistritoEntity.GetDistritoByCodigoUseCase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feira.Api.Controllers
 {
-    public class DistritoController : BaseController
+    public class DistritoController : BaseController<DistritoController>
     {
-        private readonly ILogger<DistritoController> _logger;
-        private readonly FindDistrito _findDistritoUseCase;
+        private readonly FindDistrito        _findDistritoUseCase;
         private readonly GetDistritoByCodigo _getDistritoByCodigo;
 
-        public DistritoController(ILogger<DistritoController> logger, FindDistrito findDistritoUseCase, GetDistritoByCodigo getDistritoByCodigo)
+        public DistritoController(
+            ILogger<DistritoController> logger,
+            FindDistrito findDistritoUseCase,
+            GetDistritoByCodigo getDistritoByCodigo)
+            : base(logger)
         {
-            _logger              = logger;
             _findDistritoUseCase = findDistritoUseCase;
             _getDistritoByCodigo = getDistritoByCodigo;
         }
@@ -22,11 +23,9 @@ namespace Feira.Api.Controllers
         [HttpGet("Find")]
         public async Task<ActionResult> Find([FromQuery] FindDistritoParams findParam)
         {
-            var findResult = await _findDistritoUseCase.Execute(findParam);
+            var domainResult = await _findDistritoUseCase.Execute(findParam);
 
-            return findResult.IsSuccess()
-                ? Ok(findResult.Value)
-                : Error(findResult);
+            return DomainResult(domainResult);
         }
 
         [HttpGet("GetByCodigo/{codigo}")]
@@ -34,9 +33,7 @@ namespace Feira.Api.Controllers
         {
             var domainResult = await _getDistritoByCodigo.Execute(new(codigo));
 
-            return domainResult.IsSuccess()
-                ? Ok(domainResult.Value)
-                : Error(domainResult);
+            return DomainResult(domainResult);
         }
     }
 }

@@ -7,9 +7,14 @@ namespace FeirasLivres.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class BaseController : ControllerBase
+    [ServiceFilter(typeof(LogEndpointFilter))]
+    public abstract class BaseController<TController> : ControllerBase
     {
-        protected ObjectResult Error<T>(IDomainActionResult<T> domainActionResultWithError)
+        public ILogger<TController> Logger { get; }
+
+        protected BaseController(ILogger<TController> logger) => Logger = logger;
+
+        protected ObjectResult Error<TDomainResult>(IDomainActionResult<TDomainResult> domainActionResultWithError)
         {
             HttpContext.Items[CustomProblemDetailsFactory.HttpContextApplicationErrorsKey] = domainActionResultWithError.Errors;
 
@@ -26,20 +31,18 @@ namespace FeirasLivres.Api.Controllers
 
             var statusCode = firstError.Type switch
             {
-                ErrorType.Conflict => StatusCodes.Status409Conflict,
-                ErrorType.NotFound => StatusCodes.Status404NotFound,
+                ErrorType.Conflict   => StatusCodes.Status409Conflict,
+                ErrorType.NotFound   => StatusCodes.Status404NotFound,
                 ErrorType.Validation => StatusCodes.Status400BadRequest,
-                _ => StatusCodes.Status500InternalServerError
+                _                    => StatusCodes.Status500InternalServerError
             };
 
             return Problem(statusCode: statusCode, title: title);
         }
 
-        protected ObjectResult DomainResult<T>(IDomainActionResult<T> domainActionResult)
-        {
-            return domainActionResult.IsSuccess()
+        protected ObjectResult DomainResult<TDomainResult>(IDomainActionResult<TDomainResult> domainActionResult)
+            => domainActionResult.IsSuccess()
                 ? Ok(domainActionResult.Value)
                 : Error(domainActionResult);
-        }
     }
 }

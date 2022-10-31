@@ -1,20 +1,21 @@
 using FeirasLivres.Api.Controllers;
-using FeirasLivres.Domain.Entities.Common;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.GetSubPrefeituraByCodigoUseCase;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Feira.Api.Controllers
 {
-    public class SubPrefeituraController : BaseController
+    public class SubPrefeituraController : BaseController<SubPrefeituraController>
     {
-        private readonly ILogger<SubPrefeituraController> _logger;
-        private readonly FindSubPrefeitura                _findSubPrefeituraUseCase;
-        private readonly GetSubPrefeituraByCodigo         _getSubPrefeituraByCodigo;
+        private readonly FindSubPrefeitura        _findSubPrefeituraUseCase;
+        private readonly GetSubPrefeituraByCodigo _getSubPrefeituraByCodigo;
 
-        public SubPrefeituraController(ILogger<SubPrefeituraController> logger, FindSubPrefeitura findSubPrefeituraUseCase, GetSubPrefeituraByCodigo getSubPrefeituraByCodigo)
+        public SubPrefeituraController(
+            ILogger<SubPrefeituraController> logger,
+            FindSubPrefeitura findSubPrefeituraUseCase,
+            GetSubPrefeituraByCodigo getSubPrefeituraByCodigo)
+            : base(logger)
         {
-            _logger              = logger;
             _findSubPrefeituraUseCase = findSubPrefeituraUseCase;
             _getSubPrefeituraByCodigo = getSubPrefeituraByCodigo;
         }
@@ -22,11 +23,9 @@ namespace Feira.Api.Controllers
         [HttpGet("Find")]
         public async Task<ActionResult> Find([FromQuery] FindSubPrefeituraParams findParam)
         {
-            var findResult = await _findSubPrefeituraUseCase.Execute(findParam);
+            var domainResult = await _findSubPrefeituraUseCase.Execute(findParam);
 
-            return findResult.IsSuccess()
-                ? Ok(findResult.Value)
-                : Error(findResult);
+            return DomainResult(domainResult);
         }
 
         [HttpGet("GetByCodigo/{codigo}")]
@@ -34,9 +33,7 @@ namespace Feira.Api.Controllers
         {
             var domainResult = await _getSubPrefeituraByCodigo.Execute(new(codigo));
 
-            return domainResult.IsSuccess()
-                ? Ok(domainResult.Value)
-                : Error(domainResult);
+            return DomainResult(domainResult);
         }
     }
 }

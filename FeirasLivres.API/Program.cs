@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    // Add services to the container.
     builder.Services.AddControllers();
 
     builder.Services.AddSingleton<ProblemDetailsFactory, CustomProblemDetailsFactory>();
@@ -17,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddDomain();
     builder.Services.AddInfrastructure(builder.Configuration);
 
+    builder.Logging.SetSerilog(builder);
 }
 
 var app = builder.Build();

@@ -8,10 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Feira.Api.Controllers
 {
-    public class FeiraController : BaseController
+    public class FeiraController : BaseController<FeiraController>
     {
-        private readonly ILogger<FeiraController> _logger;
-        private readonly IFeiraRepository         _feiraRepository;
         private readonly FindFeira                _findFeiraUseCase;
         private readonly AddNewFeira              _addNewFeiraUseCase;
         private readonly EditExistingFeira        _editFeiraUseCase;
@@ -24,9 +22,8 @@ namespace Feira.Api.Controllers
             AddNewFeira              addNewFeiraUseCase,
             EditExistingFeira        editFeiraUseCase,
             RemoveExistingFeira      removeFeiraUseCase)
+            : base(logger)
         {
-            _logger             = logger;
-            _feiraRepository    = feiraRepository;
             _findFeiraUseCase   = findFeiraUseCase;
             _addNewFeiraUseCase = addNewFeiraUseCase;
             _editFeiraUseCase   = editFeiraUseCase;

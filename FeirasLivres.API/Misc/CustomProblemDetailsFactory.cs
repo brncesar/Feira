@@ -1,8 +1,10 @@
 ﻿using FeirasLivres.Domain.Common;
+using FeirasLivres.Domain.Misc;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using Serilog;
 using System.Diagnostics;
 
 namespace FeirasLivres.Api.Misc;
@@ -83,10 +85,22 @@ internal sealed class CustomProblemDetailsFactory : ProblemDetailsFactory
         if (traceId != null)
             problemDetails.Extensions["traceId"] = traceId;
 
+
+        LogErrors(httpContext, problemDetails);
+    }
+
+    private void LogErrors(HttpContext httpContext, ProblemDetails problemDetails) {
         var applicationErrors = httpContext?.Items[HttpContextApplicationErrorsKey] as List<Error>;
 
-        if (applicationErrors is not null && applicationErrors.Count > 1)
-            problemDetails.Extensions.Add("errorCodes", applicationErrors.Skip(1).Select(e => $"{e.Code} » {e.Description} ({e.Type})"));
+        if (applicationErrors is null || applicationErrors.None()) return;
+
+        var firstError = applicationErrors.First();
+        Log.Error($"{firstError.Type} » {firstError.Code} - {firstError.Description}");
+
+        foreach (var error in applicationErrors.Skip(1)) {
+            Log.Error($"{error.Type} » {error.Code} - {error.Description}");
+            problemDetails.Extensions.Add("errorCodes", $"{error.Code} » {error.Description} ({error.Type})");
+        }
     }
 
     public const string HttpContextApplicationErrorsKey = "Errors";
