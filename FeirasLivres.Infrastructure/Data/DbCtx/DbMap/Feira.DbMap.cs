@@ -11,7 +11,7 @@ internal class FeiraDbMap : IEntityTypeConfiguration<Feira>
         builder.ToTable("TP01_Feira");
         builder.HasKey  (p => p.Id                  );
         builder.Property(p => p.Id                  ).HasColumnName("TP01_id_Feira"          ).HasColumnOrder(1);
-        builder.Property(p => p.Nome                ).HasColumnName("no_Feira"               ).HasMaxLength(30).IsRequired().IsFixedLength().HasColumnType("varchar");
+        builder.Property(p => p.Nome                ).HasColumnName("no_Feira"               ).HasMaxLength(30).IsRequired().HasColumnType("varchar");
         builder.Property(p => p.NumeroRegistro      ).HasColumnName("nu_Registro"            ).HasMaxLength( 6).IsRequired().IsFixedLength().HasColumnType("char");
         builder.Property(p => p.SetorCensitarioIBGE ).HasColumnName("cd_SetorCensitarioIBGE" ).HasMaxLength(15).IsRequired().IsFixedLength().HasColumnType("char");
         builder.Property(p => p.AreaDePonderacaoIBGE).HasColumnName("cd_AreaDePonderacaoIBGE").HasMaxLength(13).IsRequired().IsFixedLength().HasColumnType("char");
