@@ -27,5 +27,16 @@ internal class FeiraDbMap : IEntityTypeConfiguration<Feira>
         builder.Property(p => p.Longitude           ).HasColumnName("nu_Longitude"           );
 
         builder.HasIndex(b => b.NumeroRegistro).IsUnique(true);
+
+        // Relationships
+        builder
+            .HasOne       (thisEntity  => thisEntity .Distrito  )
+            .WithMany     (otherEntity => otherEntity.Feiras    )
+            .HasForeignKey(thisEntity  => thisEntity .DistritoId);
+
+        builder
+            .HasOne       (thisEntity  => thisEntity .SubPrefeitura  )
+            .WithMany     (otherEntity => otherEntity.Feiras         )
+            .HasForeignKey(thisEntity  => thisEntity .SubPrefeituraId);
     }
 }

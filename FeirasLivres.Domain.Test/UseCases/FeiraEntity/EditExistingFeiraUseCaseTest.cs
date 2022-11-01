@@ -1,9 +1,6 @@
 using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.DistritoEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
-using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 
 namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity;
 
@@ -26,10 +23,8 @@ public class EditExistingFeiraUseCaseTest
         CodDistrito          : "01",
         CodSubPrefeitura     : "25");
 
-    public EditExistingFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
-    {
-        _testTarget = new EditExistingFeira(feiraRepsitory, distritoRepository, subPrefeituraRepository);
-    }
+    public EditExistingFeiraUseCaseTest(EditExistingFeira editExistingFeira)
+        => _testTarget = editExistingFeira;
 
     [Fact]
     public async Task MustReturnErrorWhenTryingEditInexistFeira()

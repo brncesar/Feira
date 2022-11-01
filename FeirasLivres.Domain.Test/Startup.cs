@@ -1,7 +1,4 @@
-﻿using FeirasLivres.Domain.Entities.DistritoEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity;
-using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
-using FeirasLivres.Infrastructure.FakeInMemory.Data;
+﻿using FeirasLivres.Infrastructure.FakeInMemory;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FeirasLivres.Domain.Test
@@ -10,9 +7,8 @@ namespace FeirasLivres.Domain.Test
     {
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IFeiraRepository        , FeiraRepositoryMemory        >();
-            services.AddTransient<IDistritoRepository     , DistritoRepositoryMemory     >();
-            services.AddTransient<ISubPrefeituraRepository, SubPrefeituraRepositoryMemory>();
+            services.AddDomain();
+            services.AddInfrastructureFakeInMemory();
         }
     }
 }

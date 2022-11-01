@@ -8,21 +8,20 @@ using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.GetSubPrefeituraByCodigoUseCase;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FeirasLivres.Domain
+namespace FeirasLivres.Domain;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddDomain(this IServiceCollection services)
     {
-        public static IServiceCollection AddDomain(this IServiceCollection services)
-        {
-            return services
-                .AddScoped<FindDistrito            >()
-                .AddScoped<GetDistritoByCodigo     >()
-                .AddScoped<FindSubPrefeitura       >()
-                .AddScoped<GetSubPrefeituraByCodigo>()
-                .AddScoped<FindFeira               >()
-                .AddScoped<AddNewFeira             >()
-                .AddScoped<RemoveExistingFeira     >()
-                .AddScoped<EditExistingFeira       >();
-        }
+        return services
+            .AddScoped<FindDistrito            >()
+            .AddScoped<GetDistritoByCodigo     >()
+            .AddScoped<FindSubPrefeitura       >()
+            .AddScoped<GetSubPrefeituraByCodigo>()
+            .AddScoped<FindFeira               >()
+            .AddScoped<AddNewFeira             >()
+            .AddScoped<RemoveExistingFeira     >()
+            .AddScoped<EditExistingFeira       >();
     }
 }

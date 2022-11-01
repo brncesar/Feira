@@ -1,5 +1,4 @@
 using FeirasLivres.Domain.Common;
-using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.RemoveExistingFeiraUseCase;
 
 namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity;
@@ -8,10 +7,8 @@ public class RemoveExistingFeiraUseCaseTest
 {
     private RemoveExistingFeira _testTarget;
 
-    public RemoveExistingFeiraUseCaseTest(IFeiraRepository feiraRepsitory)
-    {
-        _testTarget = new RemoveExistingFeira(feiraRepsitory);
-    }
+    public RemoveExistingFeiraUseCaseTest(RemoveExistingFeira removeExistingFeira)
+        => _testTarget = removeExistingFeira;
 
     [Fact]
     public async Task MustReturnErrorWhenTryingRemoveInexistFeira()

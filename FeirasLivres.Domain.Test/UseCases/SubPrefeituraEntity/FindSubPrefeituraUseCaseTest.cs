@@ -1,5 +1,4 @@
 using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 using FeirasLivres.Domain.Misc;
 
@@ -12,10 +11,8 @@ namespace FeirasLivres.Domain.Test.UseCases.SubPrefeituraEntity
             Nome  : "AGUA",
             Codigo: "01");
 
-        public FindSubPrefeituraUseCaseTest(ISubPrefeituraRepository distritoRepository)
-        {
-            _testTarget = new FindSubPrefeitura(distritoRepository);
-        }
+        public FindSubPrefeituraUseCaseTest(FindSubPrefeitura findSubPrefeitura)
+            => _testTarget = findSubPrefeitura;
 
         [Fact]
         public async Task MustReturnErrorWhenTryingToToFindWithoutAnyInformation()

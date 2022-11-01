@@ -1,5 +1,4 @@
 using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.DistritoEntity;
 using FeirasLivres.Domain.Entities.DistritoEntity.GetDistritoByCodigoUseCase;
 using FeirasLivres.Domain.Misc;
 
@@ -9,10 +8,8 @@ namespace FeirasLivres.Domain.Test.UseCases.DistritoEntity
     {
         private GetDistritoByCodigo _testTarget;
 
-        public GetDistritoByCodigoUseCaseTest(IDistritoRepository distritoRepository)
-        {
-            _testTarget = new GetDistritoByCodigo(distritoRepository);
-        }
+        public GetDistritoByCodigoUseCaseTest(GetDistritoByCodigo getDistritoByCodigo)
+            => _testTarget = getDistritoByCodigo;
 
         [Fact]
         public async Task MustReturnErrorErrorWhenDistritoNotFound()

@@ -1,360 +1,818 @@
-﻿<!DOCTYPE html>
-<html>
+﻿<!doctype html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BaseDomain - Gerador de classes</title>
-    <link rel="stylesheet" href="bulma.min.css">
-    <!--<link href="prism/prism.css" rel="stylesheet" />-->
-    <script src="jquery-3.3.1.min.js"></script>
-    <script src="vue.js"></script>
-    <!--<script src="prism/prism.js"></script>-->
-    <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
-    <script src="FileSaver.js"></script>
-    <style>
-        pre {
-            padding: 8px !important;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <title>Template caso de uso</title>
+
+    <link rel="stylesheet" href="./css/fabric.min.css" />
+    <link rel="stylesheet" href="./js/prism/prism.css" />
+    <link rel="stylesheet" href="./css/bootstrap4.6.1/bootstrap.min.css" />
+
+    <script src="./js/jquery.min.js"></script>
+    <script src="./css/bootstrap4.6.1/bootstrap.bundle.min.js"></script>
+    <script src="./js/FileSaver.min.js"></script>
+    <script src="./js/prism/prism.js" data-manual></script>
+    <script src="./js/vue.2.6.11.min.js"></script>
+    <style>
         code, pre {
             font-size: 12px !important;
         }
 
-        div.code-block {
-            background-color: #f5f5f5;
-            white-space: pre;
-            font-family: monospace;
-            padding: 5px 10px 6px;
-            font-size: 12px;
+        .custom-label,
+        .custom-label label{
+            margin-bottom: 0;
+            font-weight: bold;
         }
 
-        .mar-t-medium {
-            margin-top: 25px !important;
+        .inputs-prop {
+            width: 100%;
+            display: flex;
+            margin-top: 5px;
+            justify-content: space-between;
+        }
+
+        .ms-Icon.fixPosition{
+            position: relative;
+            top: 2px;
+        }
+
+        .filePath {
+            margin-top: 20px;
+            font-weight: bolder;
         }
     </style>
 </head>
-<body>
-    <section class="section">
-        <div class="container" id="app">
-            <div class="columns">
-                <div class="column is-one-third">
-                    <div class="field">
-                        <label class="label">Namespace</label>
-                        <div class="control">
-                            <input class="input" type="text" placeholder="Namespace" v-model="namespace">
-                        </div>
-                        <p class="help">O mesmo que você está usando no seu projeto</p>
-                    </div>
-                    <div class="field">
-                        <label class="label">Classe</label>
-                        <div class="control">
-                            <input class="input" type="text" placeholder="Nome da classe" v-model="className">
-                        </div>
-                        <p class="help">Preferencialmente usando UpperCamelCase</p>
-                    </div>
-                    <div class="field">
-                        <label class="label">DbContext</label>
-                        <div class="control">
-                            <input class="input" type="text" placeholder="Nome da sua classe de contexto" v-model="contextName">
-                        </div>
-                        <p class="help">Preferencialmente usando UpperCamelCase</p>
-                    </div>
-                    <div class="field">
-                        <label class="label">Tipo do Id</label>
-                        <div class="control">
-                            <label class="radio"><input type="radio" name="answer" v-model="tipoId" value="Int" /> Int </label>
-                            <label class="radio"><input type="radio" name="answer" v-model="tipoId" value="Long" /> Long</label>
-                            <label class="radio"><input type="radio" name="answer" v-model="tipoId" value="Guid" /> Guid</label>
-                        </div>
-                    </div>
-                    <p class="label" style="margin-bottom: 15px;">
-                        Propriedades
-                        <a class="button is-rounded is-link is-small" style="float: right; padding-top: 1px;" @click="addProp">Adicionar nova</a>
-                    </p>
-                    <div class="columns is-variable is-1" v-for="(prop, index) in propriedades" style="margin-bottom: 0;">
-                        <div class="column is-one-third">
-                            <input class="input" type="text" placeholder="Tipo" v-model="prop.tipo" ref="tipo">
-                        </div>
-                        <div class="column">
-                            <div class="field has-addons">
-                                <p class="control">
-                                    <input class="input" type="text" placeholder="Propriedade" v-model="prop.nome" v-on:keyup.enter="addProp">
-                                </p>
-                                <a class="button" @click="delProp(index)">
-                                    <span class="icon">
-                                        <i class="fas fa-backspace"></i>
-                                    </span>
-                                </a>
-                            </div>
-
-                        </div>
-                    </div>
-                    <textarea class="textarea" v-model="propsPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="10"></textarea>
-                    <a class="button is-link is-fullwidth" @click="processarProps()">Processar propriedades</a>
+<body class="line-numbers">
+    <div class="container pt-3" id="app" data-prismjs-copy-timeout="500">
+        <h2>Adicionar novo caso de uso</h2>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group custom-label mb-3">
+                    <label for="flowName">Namespace</label>
+                    <input class="form-control" type="text" placeholder="Namespace do domínio" v-model="namespace" @keyup="reRenderPrismCodes()">
+                    <small class="form-text text-muted">O mesmo que você está usando no seu projeto</small>
                 </div>
-                <div class="column">
-                    <label class="label">{{ className }}.cs
-                    <a class="button is-small" @click="downloadFile('ClassePrincipal', className)">
-                        <span class="icon is-small">
-                            <i class="fas fa-file-download"></i>
-                        </span>
-                        <span>baixar este arquivo</span>
-                    </a>
-                    <a class="button is-small" @click="copyToClipboard('ClassePrincipal')">
-                        <span class="icon is-small">
-                            <i class="fas fa-copy"></i>
-                        </span>
-                        <span>copiar este código</span>
-                    </a></label>
-                    <div class="code-block" id="ClassePrincipal">using System;
-using System.Collections.Generic;
-using BaseDomain.BaseEntities;
+                <div class="form-group custom-label mb-3">
+                    <label for="flowName">Caso de uso</label>
+                    <input class="form-control" type="text" placeholder="Nome do caso de uso" v-model="useCase" @keyup="reRenderPrismCodes()">
+                    <small class="form-text text-muted">Nome do caso de uso em UpperCamelCase</small>
+                </div>
+                <div class="form-group custom-label mb-3">
+                    <label for="flowName">Entidade</label>
+                    <input class="form-control" type="text" placeholder="Nome da entidade" v-model="entityName" @keyup="reRenderPrismCodes()">
+                    <small class="form-text text-muted">Nome da entidade para qual se dará o caso de uso</small>
+                </div>
+                
+                <label for="flowName"><strong>Props da entidade e dos DTO's (Domain)</strong></label>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#classes-entity" role="tab">Entidade</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">Params</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#classes-result" role="tab">Result</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="classes-tabContent">
+                            <div class="tab-pane fade show active" id="classes-entity" role="tabpanel">
+                                <div>
+                                    Propriedades
+                                    <button type="button" class="btn btn-primary btn-sm" @click="addProp('Entity')" style="float: right; padding-top: 1px;">Adicionar nova</button>
+                                </div>
+                                <div class="inputs-prop" v-for="(prop, index) in propsEntity">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Tipo" style="width:100px" v-model="prop.tipo" @keyup="reRenderPrismCodes()" ref="tipoEntity">
+                                    <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Nome" v-model="prop.nome" @keyup="reRenderPrismCodes()" v-on:keyup.enter="addProp('Entity')">
+                                    <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Entity', index)">
+                                        <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>    
+                                    </button>
+                                </div>
+                                <textarea class="form-control mt-4" v-model="propsEntityPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="3"></textarea>
+                                <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Entity')">Processar propriedades</button>
+                            </div>
+                
+                            <div class="tab-pane fade" id="classes-params" role="tabpanel">
+                                <div>
+                                    Propriedades
+                                    <button type="button" class="btn btn-primary btn-sm" @click="addProp('Params')" style="float: right; padding-top: 1px;">Adicionar nova</button>
+                                </div>
+                                <div class="inputs-prop" v-for="(prop, index) in propsParams">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Tipo" style="width:100px" v-model="prop.tipo" ref="tipoParams" @keyup="reRenderPrismCodes()">
+                                    <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Nome" v-model="prop.nome" v-on:keyup.enter="addProp('Params')" @keyup="reRenderPrismCodes()">
+                                    <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Params', index)">
+                                        <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>    
+                                    </button>
+                                </div>
+                                <textarea class="form-control mt-4" v-model="propsParamsPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="3"></textarea>
+                                <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Params')">Processar propriedades</button>
+                            </div>
+                
+                            <div class="tab-pane fade" id="classes-result" role="tabpanel">
+                                <div>
+                                    Propriedades
+                                    <button type="button" class="btn btn-primary btn-sm" @click="addProp('Result')" style="float: right; padding-top: 1px;">Adicionar nova</button>
+                                </div>
+                                <div class="inputs-prop" v-for="(prop, index) in propsResult">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Tipo" style="width:100px" v-model="prop.tipo" ref="tipoResult" @keyup="reRenderPrismCodes()">
+                                    <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Nome" v-model="prop.nome" v-on:keyup.enter="addProp('Result')" @keyup="reRenderPrismCodes()">
+                                    <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Result', index)">
+                                        <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>    
+                                    </button>
+                                </div>
+                                <textarea class="form-control mt-4" v-model="propsResultPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="3"></textarea>
+                                <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Result')">Processar propriedades</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-8">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#codes-domain" role="tab">Domínio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#codes-infrastructure" role="tab">Infraestrutura</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#codes-api" role="tab">API</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#codes-tests" role="tab">Testes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#codes-rest-client" role="tab">Rest Client</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="classes-tabContent">
+                            <div class="tab-pane fade show active" id="codes-domain" role="tabpanel">
+                                <strong>
+                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ entityName }}.cs
+                                </strong>
+                                <div id="CodeDomainEntity" style="display: none;">using {{ namespace }}.Domain.Entities.Common;
 
-namespace {{ namespace }}
+namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+    
+public class {{ entityName }} : BaseEntity
 {
-    public class {{ className }} : BaseEntity&lt;{{tipoId}}>
+{{ propsEntity.map((prop) => `    public ${prop.tipo} ${prop.nome} { get; set; }\n`).join('') }}}
+                                </div><pre><code class="language-csharp" id="prismCodeDomainEntity"></code></pre>
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.cs
+                                </div>
+                                <div id="CodeDomainUseCase" style="display: none;">using {{ namespace }}.Domain.Misc;
+
+namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+public class {{ useCase }}
+{
+    private readonly I{{ entityName }}Repository _{{ entityName.toLowerCase() }}Repository;
+
+    public {{ useCase }}(I{{ entityName }}Repository {{ entityName.toLowerCase() }}Repository)
+        => (_{{ entityName.toLowerCase() }}Repository) = ({{ entityName.toLowerCase() }}Repository);
+
+    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; Execute({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
     {
-        <span v-for="prop in propriedades">public {{ prop.tipo }} {{ prop.nome }} { get; set; }
-        </span>
+        var paramsValidationResult = new {{ useCase }}ParamsValidator().Validate({{ firstLetterToLower(useCase) }}Params);
+        var {{ firstLetterToLower(useCase) }}Result = new DomainActionResult&lt;{{ useCase }}Result&gt;(paramsValidationResult.Errors);
+
+        if (paramsValidationResult.HasErrors())
+            return {{ firstLetterToLower(useCase) }}Result;
+
+        var {{ firstLetterToLower(useCase) }}RespositoryResult = await _{{ entityName }}Repository.{{ useCase }}Async({{ firstLetterToLower(useCase) }}Params);
+
+        if ({{ firstLetterToLower(useCase) }}RespositoryResult.HasErrors())
+            return {{ firstLetterToLower(useCase) }}Result.AddErrors({{ firstLetterToLower(useCase) }}RespositoryResult.Errors);
+
+        return {{ firstLetterToLower(useCase) }}RespositoryResult.Value is not null
+            ? {{ firstLetterToLower(useCase) }}Result.SetValue({{ firstLetterToLower(useCase) }}RespositoryResult.Value)
+            : {{ firstLetterToLower(useCase) }}Result;
     }
-}                    </div>
+}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCase"></code></pre>
 
 
 
-                    <label class="label mar-t-medium">{{ className }}DbMap.cs
-                        <a class="button is-small" @click="downloadFile('DbMap', className)">
-                            <span class="icon is-small">
-                                <i class="fas fa-file-download"></i>
-                            </span>
-                            <span>baixar este arquivo</span>
-                        </a>
-                        <a class="button is-small" @click="copyToClipboard('DbMap')">
-                            <span class="icon is-small">
-                                <i class="fas fa-copy"></i>
-                            </span>
-                            <span>copiar este código</span>
-                        </a></label>
-                    <div class="code-block" id="DbMap">using System.Data.Entity.ModelConfiguration;
-using BaseDomain.Misc;
 
-namespace {{ namespace }}
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Params.cs
+                                </div>
+                                <div id="CodeDomainUseCaseParams" style="display: none;">namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+public record {{ useCase }}Params(
+{{ propsParams.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
+                                </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseParams"></code></pre>
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Params.Validator.cs
+                                </div>
+                                <div id="CodeDomainUseCaseParamsValidator" style="display: none;">using {{ namespace }}.Domain.Misc;
+using FluentValidation;
+
+namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+internal class {{ useCase }}ParamsValidator : AbstractValidator&lt;{{ useCase }}Params&gt;
 {
-    class {{ className }}DbMap : EntityTypeConfiguration&lt;{{ className }}>, IDbMapping
+    public {{ useCase }}ParamsValidator()
     {
-        public {{ className }}DbMap()
+{{ propsParams.map((prop) => `        RuleFor(p => p.${prop.nome}); //.Length(2, 9);`).join('\n') }}
+
+        /** SOME VALIDATIONS EXAMPLES **********************************************************************************
+        
+        RuleFor(p => p.Matricula).NotEmpty().MaximumLength(9).WithName("Matrícula com 9 dígitos");
+
+        RuleFor(p => p.SomeStringToCastToEnum)
+            .IsEnumName(typeof(SomeEnum), caseSensitive: false)
+            .WithMessage(p => $"SomeEnum '{p.SomeStringToCastToEnum}' inválida. Os valores possíveis são: {string.Join(", ", Enum.GetValues(typeof(SomeEnum)).Cast&lt;SomeEnum&gt;())}");
+
+        RuleFor(p => new { p.Nome, p.Codigo })
+            .Must(x => x.Codigo.IsNotNullOrNotEmpty() || x.Nome.IsNotNullOrNotEmpty())
+            .WithMessage(z => $"É necessário informar pelo menos um parâmetro para busca do Distrito [ Nome | Código ]");
+
+        var beAValidLongitude = (double longitude) => longitude is >= -90 and <= 90;
+        RuleFor(p => p.Longitude).Must(beAValidLongitude)
+            .WithMessage(p =>
+                $"Longitude inválida. O valor deve estar compreendido entre -180 e 180." +
+                $"O valor informado foi: {p.Longitude}");
+
+        RuleFor(p => p.NumeroRegistro).Matches("[0-9]{4}[-][0-9]")
+            .WithMessage(p =>
+                $"O número do registro da feira deve ser informado no formato ####-#. " +
+                $"O valor informado foi: {p.NumeroRegistro}");
+
+        For more examples go to: https://docs.fluentvalidation.net/en/latest/built-in-validators.html
+        ************************************************************************************************************* */
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseParamsValidator"></code></pre>
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Result.cs
+                                </div>
+                                <div id="CodeDomainUseCaseResult" style="display: none;">namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+public record {{ useCase }}Result(
+{{ propsResult.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
+                                </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseResult"></code></pre>
+
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Errors.cs
+                                </div>
+                                <div id="CodeDomainUseCaseErrors" style="display: none;">using {{ namespace }}.Domain.Common;
+
+namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+public sealed class {{ useCase }}Errors
+{
+    private static string className = nameof({{ useCase }}Errors).Replace("Errors", "");
+
+    // public static Error SomeUseCaseError() => ErrorHelpers.GetError(ErrorType.NotFound, "The related {{ entityName }} was not found", codeError: $"{className}.SomeUseCaseError");
+}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseErrors"></code></pre>
+
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/I{{ entityName }}Repository.cs
+                                </div>
+                                <div id="CodeDomainUseCaseEntityRepository" style="display: none;">using {{ namespace }}.Domain.Common;
+
+using {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase;
+
+namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+
+public interface I{{ entityName }}Repository :
+    IBaseEntityRepositoryGetById&lt;{{ entityName }}&gt;,
+    IBaseEntityRepositoryAdd&lt;{{ entityName }}&gt;,
+    IBaseEntityRepositoryUpdate&lt;{{ entityName }}&gt;,
+    IBaseEntityRepositoryDelete&lt;{{ entityName }}&gt;,
+    IBaseEntityRepositoryGetAll&lt;{{ entityName }}&gt;/*,
+    IBaseEntityRepositoryAllCrudOperations&lt;{{ entityName }}&gt;*/
+{
+    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; GetByCodigoAsync(string codigo);
+
+    Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params);
+}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseEntityRepository"></code></pre>
+
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/DependencyInjection.cs
+                                </div>
+                                <div id="CodeDomainDependencyInjection" style="display: none;">using {{ namespace }}.Domain.Entities.AnotherEntity.AddNewAnotherEntityUseCase;
+using {{ namespace }}.Domain.Entities.AnotherEntity.EditAnotherEntityUseCase;
+using {{ namespace }}.Domain.Entities.AnotherEntity.FindAnotherEntityUseCase;
+using {{ namespace }}.Domain.Entities.AnotherEntity.RemoveAnotherEntityUseCase;
+using {{ namespace }}.Domain.Entities.SecondAnotherEntity.FindSecondAnotherEntityUseCase;
+using {{ namespace }}.Domain.Entities.SecondAnotherEntity.GetSubSecondAnotherEntityByCodigoUseCase;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.AnotherUseCase;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace {{ namespace }}.Domain;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddDomain(this IServiceCollection services)
+    {
+        return services
+            .AddScoped&lt;AddNewAnotherEntityUseCase              &gt;()
+            .AddScoped&lt;EditAnotherEntityUseCase                &gt;()
+            .AddScoped&lt;FindAnotherEntityUseCase                &gt;()
+            .AddScoped&lt;RemoveAnotherEntityUseCase              &gt;()
+            .AddScoped&lt;FindSecondAnotherEntityUseCase          &gt;()
+            .AddScoped&lt;GetSubSecondAnotherEntityByCodigoUseCase&gt;()
+            .AddScoped&lt;AnotherUseCase                          &gt;()
+            // 👆 Already existing use cases
+            // 👇 Your new use case
+            .AddScoped&lt;{{ useCase }}UseCase&gt;();
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeDomainDependencyInjection"></code></pre>
+                            </div>
+    
+                            <div class="tab-pane fade" id="codes-infrastructure" role="tabpanel">
+                                <strong>
+                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
+                                    {{ namespace }}.Infrastructure/Data/DbCtx/{{ namespace }}DbContext.cs
+                                </strong>
+                                <div id="CodeInfrastructureDbContext" style="display: none;">using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using Microsoft.EntityFrameworkCore;
+
+namespace {{ namespace }}.Infrastructure.Data.DbCtx;
+
+public class {{ namespace }}DbContext : DbContext
+{
+    public {{ namespace }}DbContext(DbContextOptions&lt;{{ namespace }}DbContext&gt; options) : base(options) { }/*
+
+    public DbSet&lt;Abcde        &gt; Abcde         { get; set; } = null!;
+    public DbSet&lt;Fghijklm     &gt; Fghijklm      { get; set; } = null!;
+    public DbSet&lt;Nopqrstuvwxyz&gt; Nopqrstuvwxyz { get; set; } = null!;*/
+    // 👆 other DbSet's
+    // 👇 your new DbSet
+    public DbSet&lt;{{ entityName }}&gt; {{ entityName }} { get; set; } = null!;
+
+    // ...
+}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureDbContext"></code></pre>
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Infrastructure/Data/DbCtx/DbMap/{{ entityName }}.DbMap.cs
+                                </div>
+                                <div id="CodeInfrastructureDbMap" style="display: none;">using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace {{ namespace }}.Infrastructure.Data.DbCtx.DbMap;
+
+internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName }}&gt;
+{
+    public void Configure(EntityTypeBuilder&lt;{{ entityName }}&gt; builder)
+    {
+        builder.ToTable("T?##_{{ entityName }}");
+        builder.HasKey  (p => p.Id);
+        builder.Property(p => p.Id).HasColumnName("T?##_id_{{ entityName }}").HasColumnOrder(1);
+{{ propsEntity.map((prop) => `        builder.HasKey  (p => p.${prop.nome}).HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").IsUnique(true).HasComment("Lorem ipsum dollor");\n`).join('') }}
+        // Relationships
+        /*
+        builder
+            .HasOne       (thisEntity  => thisEntity .NavigationProperty)
+            .WithMany     (otherEntity => otherEntity.ListPropertyOfThisEntity)
+            .HasForeignKey(thisEntity  => thisEntity .IdFromNavigationProperty);*/
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureDbMap"></code></pre>
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Infrastructure/Data/Repository/{{ entityName }}Repository.cs
+                                </div>
+                                <div id="CodeInfrastructureRepository" style="display: none;">using {{ namespace }}.Domain.Common;
+using {{ namespace }}.Domain.Entities.Common;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespace }}.Domain.Misc;
+using {{ namespace }}.Infrastructure.Data.DbCtx;
+using Microsoft.EntityFrameworkCore;
+
+namespace {{ namespace }}.Infrastructure.Data.Repository;
+
+public class {{ entityName }}Repository : BaseRepository&lt;{{ namespace }}DbContext, {{ entityName }}&gt;, I{{ entityName }}Repository
+{
+    public {{ entityName }}Repository({{ namespace }}DbContext dbCtx) : base(dbCtx) { }
+
+    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; GetByCodigoAsync(string codigo)
+    {
+        var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
+        try
         {
-            // Table & Column Mappings
-            ToTable("T?##_{{ className }}");
-            Property(p => p.Id).HasColumnName("T?##_id_{{ className }}").HasColumnOrder(1);
-            <span v-for="prop in propriedades">Property(p => p.{{ prop.nome }}).HasColumnName("_{{ prop.nome }}")<span
-                v-if="prop.tipo.toLowerCase() =='string'">.HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasUniqueIndexAnnotation("IX_NumCnj", 1)</span><span
-                v-else-if="prop.tipo.toLowerCase() =='datetime'">.HasColumnType("date")</span>;
-            </span>
-            // Relationships
-            /*
-            HasRequired       (t => t.Orgao          )
-                .WithMany     (t => t.Processos      )
-                .HasForeignKey(d => d.OrgaoId        );*/
+            var {{ firstLetterToLower(entityName) }} = await _dbSet.FirstOrDefaultAsync(d => d.Cod == codigo.Trim());
+
+            return {{ firstLetterToLower(entityName) }} is not null
+                ? domainRepositoryResult.SetValue({{ firstLetterToLower(entityName) }})
+                : domainRepositoryResult.NotFound();
+        }
+        catch (Exception ex)
+        {
+            return domainRepositoryResult.ReturnRepositoryError(ex);
         }
     }
-}</div>
 
-
-
-                    <label class="label mar-t-medium">{{ className }}Bo.cs
-                        <a class="button is-small" @click="downloadFile('Bo', className)">
-                            <span class="icon is-small">
-                                <i class="fas fa-file-download"></i>
-                            </span>
-                            <span>baixar este arquivo</span>
-                        </a>
-                        <a class="button is-small" @click="copyToClipboard('Bo')">
-                            <span class="icon is-small">
-                                <i class="fas fa-copy"></i>
-                            </span>
-                            <span>copiar este código</span>
-                        </a></label>
-                    <div class="code-block" id="Bo">using System;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using BaseDomain.BaseBo;
-using BaseDomain.Misc;
-
-namespace Domain.Entities
-{
-    public class {{ className }}Bo : BaseBoSaveDelete&lt;{{ contextName }}, {{ className }}, Guid>
+    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
     {
-        public {{ className }}Bo(DbContext contexto, UnitOfWork&lt;{{ contextName }}> uow = null) : base(contexto, uow)
+        var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
+        try
         {
+            // repository logic
+
+            return domainRepositoryResult;
         }
-
-        public async Task Salvar({{ className }} {{ className.toLowerCase() }}) => await Save({{ className.toLowerCase() }});
-        public async Task Excluir({{ className }} {{ className.toLowerCase() }}) => await Delete({{ className.toLowerCase() }});
-        public async Task ExcluirPeloId({{ tipoId }} id) => await DeleteById(id);
+        catch (Exception ex)
+        {
+            return domainRepositoryResult.ReturnRepositoryError(ex);
+        }
     }
-}</div>
+}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureRepository"></code></pre>
 
 
 
-                    <label class="label mar-t-medium">{{ className }}ExpecsAndValidations.cs
-                        <a class="button is-small" @click="downloadFile('ExpecsAndValidations', className)">
-                            <span class="icon is-small">
-                                <i class="fas fa-file-download"></i>
-                            </span>
-                            <span>baixar este arquivo</span>
-                        </a>
-                        <a class="button is-small" @click="copyToClipboard('ExpecsAndValidations')">
-                            <span class="icon is-small">
-                                <i class="fas fa-copy"></i>
-                            </span>
-                            <span>copiar este código</span>
-                        </a></label>
-                    <div class="code-block" id="ExpecsAndValidations">using System;
-using BaseDomain.BaseEntities;
-using {{ namespace }}.Misc;
 
-namespace {{ namespace }}
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/DependencyInjection.cs
+                                </div>
+                                <div id="CodeInfrastructureDependencyInjection" style="display: none;">using {{ namespace }}.Domain.Entities.AnotherEntity;
+using {{ namespace }}.Domain.Entities.SecondAnotherEntity;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using {{ namespace }}.Infrastructure.Data.DbCtx;
+using {{ namespace }}.Infrastructure.Data.Repository;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace {{ namespace }}.Infrastructure
 {
-    public static class {{ className }}Expecs
-    {/*
-        public static bool NomeEstaDefinidoExpec(this {{ className }} {{ className.toLowerCase() }})
+    public static class DependencyInjection
+    {
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            const string errorMsg = "É necessário definir o nome do Profissional";
-            var expectativaSatisfeita = profissional.Nome.IsNotNullOrNotEmpty();
+            services.AddDbContext&lt;{{ namespace }}DbContext&gt;(options =>
+                options.UseSqlite(configuration.GetConnectionString("{{ namespace }}Connection")));
 
-            return {{ className.toLowerCase() }}.VerifyExpec&lt;{{ className.toLowerCase() }}>(expectativaSatisfeita, errorMsg);
-        }*/
+            services.AddScoped&lt;IAnotherEntityRepository      , AnotherEntityRepository      &gt;();
+            services.AddScoped&lt;ISecondAnotherEntityRepository, SecondAnotherEntityRepository&gt;();
+            // 👆 Already existing repositories map
+            // 👇 Your new repository
+            services.AddScoped&lt;I{{ entityName }}Repository, {{ entityName }}Repository&gt;();
+
+            return services;
+        }
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureDependencyInjection"></code></pre>
+                            </div>
+                
+                            <div class="tab-pane fade" id="codes-api" role="tabpanel">
+                                <strong>
+                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
+                                    {{ namespace }}.Api/Controllers/{{ entityName }}Controller.cs
+                                </strong>
+                                <div id="CodeApiController" style="display: none;">using {{ namespace }}.Api.Controllers;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.Get{{ entityName }}ByCodigoUseCase;
+using Microsoft.AspNetCore.Mvc;
+
+namespace {{ namespace }}.Api.Controllers;
+
+public class {{ entityName }}Controller : BaseController&lt;{{ entityName }}Controller&gt;
+{
+    private readonly {{ useCase }} _{{ firstLetterToLower(useCase) }};
+    private readonly Get{{ entityName }}ByCodigo _get{{ entityName }}ByCodigo;
+
+    public {{ entityName }}Controller(
+        ILogger&lt;{{ entityName }}Controller&gt; logger,
+        {{ useCase }} {{ firstLetterToLower(useCase) }},
+        Get{{ entityName }}ByCodigo get{{ entityName }}ByCodigo)
+        : base(logger)
+    {
+        _{{ firstLetterToLower(useCase) }} = {{ firstLetterToLower(useCase) }};
+        _get{{ entityName }}ByCodigo = get{{ entityName }}ByCodigo;
     }
 
-    public static class {{ className }}Validations
-    {/*
-        public static bool PodeSerSalvoValidation(this {{ className }} {{ className.toLowerCase() }})
-        {
-            return  {{ className.toLowerCase() }}.NomeEstaDefinidoExpec();
-        }*/
+    [HttpPost("{{ useCase }}")]
+    public async Task&lt;ActionResult&gt; {{ useCase }}({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
+    {
+        var domainResult = await _{{ firstLetterToLower(useCase) }}.Execute({{ firstLetterToLower(useCase) }}Params);
+
+        return DomainResult(domainResult);
     }
-}</div>
+
+    [HttpGet("GetByCodigo/{codigo}")]
+    public async Task&lt;ActionResult&gt; GetByCodigo(string codigo)
+    {
+        var domainResult = await _get{{ entityName }}ByCodigo.Execute(new(codigo));
+
+        return DomainResult(domainResult);
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeApiController"></code></pre>
+                            </div>
+                
+                            <div class="tab-pane fade" id="codes-tests" role="tabpanel">
+                                <strong>
+                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
+                                    {{ namespace }}.Domain.Test/UseCases/DbCtx/{{ entityName }}Entity/{{ useCase }}UseCaseTest.cs
+                                </strong>
+                                <div id="CodeDomainUseCaseTest" style="display: none;">using {{ namespace }}.Domain.Entities.Common;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespace }}.Domain.Misc;
+
+namespace {{ namespace }}.Domain.Test.UseCases.DistritoEntity;
+
+public class {{ useCase }}UseCaseTest
+{
+    private {{ useCase }} _testTarget;
+    private {{ useCase }}Params _useCaseParamObj = new {{ useCase }}Params(
+{{ propsParams.map((prop) => `        ${prop.nome}: "some valid domain value"`).join(',\n') }});
+
+    public {{ useCase }}UseCaseTest({{ useCase }} {{ firstLetterToLower(useCase) }})
+    {
+        _testTarget = {{ firstLetterToLower(useCase) }};
+    }
+
+    [Fact]
+    public async Task MustReturnErrorWhenTryingToExecuteWithoutAnyInformation()
+    {
+        var useCaseParamObj = new {{ useCase }}ParamsParams(null, null);
+
+        var {{ useCase }}ParamsResult = await _testTarget.Execute(useCaseParamObj);
+
+        Assert.True({{ useCase }}ParamsResult.HasErrors());
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseTest"></code></pre>
 
 
 
-                    <label class="label mar-t-medium">
-                        Relacionamentos
-                        <a class="button is-small" @click="copyToClipboard('relacionamentos')">
-                            <span class="icon is-small">
-                                <i class="fas fa-copy"></i>
-                            </span>
-                            <span>copiar este código</span>
-                        </a>
-                    </label>
-                    <div class="code-block" id="relacionamentos">
-public {{ tipoId }} {{ className }}Id { get; set; }
-public {{ className }} {{ className }} { get; set; }
 
-public virtual ICollection&lt;{{ className }}> NomeDaPropriedadeDeLista { get; set; }
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Infrastructure.FakeInMemory/Data/{{ entityName }}RepositoryMemory.cs
+                                </div>
+                                <div id="CodeInfrastructureFakeInMemoryEntityRepository" style="display: none;">using {{ namespace }}.Domain.Common;
+using {{ namespace }}.Domain.Entities.Common;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespace }}.Domain.Misc;
+
+namespace {{ namespace }}.Infrastructure.FakeInMemory.Data;
+
+public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
+{
+    private List&lt;{{ entityName }}&gt; Lista{{ entityName }}Mock { get; }
+
+    public {{ entityName }}RepositoryMemory()
+    {
+        Lista{{ entityName }}Mock = new List&lt;{{ entityName }}&gt;{
+            new {{ entityName }} { Id = new Guid("9a3a04aa-5069-4ec6-86ff-7572b24e8f22"), Codigo = "01", Nome = "AGUA RASA"         },
+            new {{ entityName }} { Id = new Guid("370b00a3-f45f-4693-b4bd-7a2918ca59b7"), Codigo = "18", Nome = "CANGAIBA"          },
+            new {{ entityName }} { Id = new Guid("fa7e6176-cf00-4656-9779-ac4567c6845b"), Codigo = "02", Nome = "ALTO DE PINHEIROS" },
+            new {{ entityName }} { Id = new Guid("d2278ca3-597b-447c-b9de-b3e1d1b7e9fd"), Codigo = "04", Nome = "ARICANDUVA"        },
+            new {{ entityName }} { Id = new Guid("89373846-832f-4a38-a157-c3b73a541d74"), Codigo = "07", Nome = "AGUA"              },
+        };
+    }
+
+    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; {{ useCase }}(Guid id)
+    {
+        var domainRepositoryResult = new DomainActionResult&lt;{{ entityName }}&gt;();
+
+        // repository logic
+
+        return domainRepositoryResult;
+    }
+
+    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; GetByCodigoAsync(string codigo)
+    {
+        var {{ firstLetterToLower(entityName) }} = Lista{{ entityName }}Mock.SingleOrDefault(f =&gt; f.Codigo == codigo.Trim());
+
+        var domainRepositoryResult = new DomainActionResult&lt;{{ entityName }}&gt;({{ firstLetterToLower(entityName) }});
+
+        return {{ firstLetterToLower(entityName) }} is not null
+            ? domainRepositoryResult
+            : domainRepositoryResult.AddNotFoundError($"{nameof({{ entityName }}RepositoryMemory)}.{nameof(GetByIdAsync)}", "{{ entityName }} não encontrado");
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre>
+
+
+
+
+                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                                    {{ namespace }}.Domain/DependencyInjection.cs
+                                </div>
+                                <div id="CodeInfrastructureFakeInMemoryDependencyInjection" style="display: none;">using {{ namespace }}.Domain.Entities.AnotherEntity;
+using {{ namespace }}.Domain.Entities.SecondAnotherEntity;
+using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+using FeirasLivres.Infrastructure.FakeInMemory.Data;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace {{ namespace }}.Infrastructure.FakeInMemory;
+
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructureFakeInMemory(this IServiceCollection services)
+    {
+        services.AddScoped&lt;IAnotherEntityRepository      , AnotherEntityRepositoryMemory      &gt;();
+        services.AddScoped&lt;ISecondAnotherEntityRepository, SecondAnotherEntityRepositoryMemory&gt;();
+        // 👆 Already existing repositories map
+        // 👇 Your new repository
+        services.AddScoped&lt;I{{ entityName }}Repository, {{ entityName }}RepositoryMemory&gt;();
+
+        return services;
+    }
+}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryDependencyInjection"></code></pre>
+                            </div>
+                
+                            <div class="tab-pane fade" id="codes-rest-client" role="tabpanel">
+                                <strong>
+                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
+                                    Requests/{{ entityName }}.http
+                                </strong>
+                                <div id="CodeRestClientEndPoints" style="display: none;">@hostname = localhost
+@port = 7257
+@host = https://{{'{'}}{{'{hostname}'}}{{'}'}}:{{'{'}}{{'{port}'}}{{'}'}}
+@contentType = application/json
+
+### Find - Empty result
+POST {{'{'}}{{'{host}'}}{{'}'}}/api/{{ entityName }}/{{ useCase }}
+Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
+
+{    
+{{ propsParams.map((prop) => `	${firstLetterToLower(prop.nome)}: "some valid domain value"`).join(',\n') }}
+}
+                                </div><pre><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-<script>
-    function SalvarClasse(fileContent, fileName) {
-        var blob = new Blob([fileContent], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, fileName);
-    }
-
-    function CopyToClipboard(containerid) {
-        if (window.getSelection) {
-            if (window.getSelection().empty) { // Chrome
-                window.getSelection().empty();
-            } else if (window.getSelection().removeAllRanges) { // Firefox
-                window.getSelection().removeAllRanges();
-            }
-        } else if (document.selection) { // IE?
-            document.selection.empty();
+    </div>
+    <script>
+        function SalvarClasse(fileContent, fileName) {
+            var blob = new Blob([fileContent], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, fileName);
         }
 
-        if (document.selection) {
-            var range = document.body.createTextRange();
-            range.moveToElementText(document.getElementById(containerid));
-            range.select().createTextRange();
-            document.execCommand("copy");
-        } else if (window.getSelection) {
-            var range = document.createRange();
-            range.selectNode(document.getElementById(containerid));
-            window.getSelection().addRange(range);
-            document.execCommand("copy");
+        function htmlDecode(input){
+            var e = document.createElement('textarea');
+            e.innerHTML = input;
+            // handle case of empty input
+            return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         }
-    }
 
-    var app = new Vue({
-        el   : '#app',
-        data : {
-            namespace             : '',
-            className             : '',
-            tipoId                : '',
-            contextName           : '',
-            propsPraProcessamento : '',
-            propriedades          : [ { tipo: '', nome: '' } ]
-        },
-        methods: {
-            copyToClipboard: function(divId) {
-                CopyToClipboard(divId);
+        var app = new Vue({
+            el   : '#app',
+            data : {
+                namespace                   : '',
+                entityName                  : '',
+                useCase                     : '',
+                propsEntityPraProcessamento : '',
+                propsParamsPraProcessamento : '',
+                propsResultPraProcessamento : '',
+                propsEntity                 : [ { tipo: '', nome: '' } ],
+                propsParams                 : [ { tipo: '', nome: '' } ],
+                propsResult                 : [ { tipo: '', nome: '' } ],
             },
-            addProp: function() {
-                this.propriedades.push({ tipo: '', nome: '' });
-                this.$nextTick(() => {
-                    this.$refs.tipo[this.propriedades.length - 1].focus();
-                });
+            mounted() {
+                Prism.highlightAll();
+                this.reRenderPrismCodes();
+                window.vm = this;
             },
-            delProp: function(index) {
-                this.propriedades.splice(index, 1);
-                if (index === 0) this.addProp();
-            },
-            processarProps: function () {
-                this.propriedades   = [];
-                var props           = this.propsPraProcessamento.split("\n"),
-                    vuePropriedades = this.propriedades;
-                $.each(props, function (key, prop) {
-                    var strProp = prop.trim().replace(/  +/g, ' ').replace('{ get; set; }', '{get;set;}');
+            methods: {
+                firstLetterToLower(string) {
+                    return string.charAt(0).toLowerCase() + string.slice(1);
+                },
+                reRenderPrismCodes(){
+                    [
+                        'CodeDomainEntity',
+                        'CodeDomainUseCase',
+                        'CodeDomainUseCaseErrors',
+                        'CodeDomainUseCaseParams',
+                        'CodeDomainUseCaseParamsValidator',
+                        'CodeDomainUseCaseResult',
+                        'CodeDomainUseCaseEntityRepository',
+                        'CodeDomainDependencyInjection',
+                        'CodeInfrastructureDbContext',
+                        'CodeInfrastructureDbMap',
+                        'CodeInfrastructureRepository',
+                        'CodeInfrastructureDependencyInjection',
+                        'CodeApiController',
+                        'CodeDomainUseCaseTest',
+                        'CodeInfrastructureFakeInMemoryEntityRepository',
+                        'CodeInfrastructureFakeInMemoryDependencyInjection',
+                        'CodeRestClientEndPoints'
+                    ].forEach( (code) => { $('#prism'+code).html( Prism.highlight( htmlDecode( $('#'+code).html() ), Prism.languages.csharp, 'csharp' ) ) } );
+                },
+                addProp: function(tipo) {
+                    var self = this;
+                    this[`props${tipo}`].push({ tipo: '', nome: '' });
+                    this.$nextTick(() => {
+                        this.$refs[`tipo${tipo}`][this[`props${tipo}`].length - 1].focus();
+                    });
+                    this.reRenderPrismCodes();
+                },
+                delProp: function(tipo, index) {
+                    this[`props${tipo}`].splice(index, 1);
+                    if (index === 0) this.addProp();
+                    this.reRenderPrismCodes();
+                },
+                processarProps: function (tipo) {
+                    var self = this;
+                    this[`props${tipo}`] = [];
+                    var arrStrLinesPropsOnTextArea = this[`props${tipo}PraProcessamento`].split("\n");
 
-                    if(strProp.endsWith('{get;set;}')){
-                        var partesDaDeclaracaoDaPropriedade = strProp.split(' '),
-                            tipo = partesDaDeclaracaoDaPropriedade[1],
-                            nome = partesDaDeclaracaoDaPropriedade[2];
-                        vuePropriedades.push({ 'tipo': tipo, 'nome': nome });
+                    $.each(arrStrLinesPropsOnTextArea, function (key, prop) {
+                        var strProp = prop.trim().replace(/  +/g, ' ').replace('{ get; set; }', '{get;set;}');
+                        
+                        if (strProp.indexOf('get;') > 0){
+                            var partesDaDeclaracaoDaPropriedade = strProp.split(' '),
+                                tipoProp = partesDaDeclaracaoDaPropriedade[1],
+                                nomeProp = partesDaDeclaracaoDaPropriedade[2];
+                            self[`props${tipo}`].push({ 'tipo': tipoProp, 'nome': nomeProp });
+                        } else {
+                            var recordLine = prop.trim().replace(/\s\s+/g, ' ').trim().replace(' ,', ',').replace(' ?', '?');
+                            if(/[a-zA-Z][a-zA-Z0-9]{1,}[\\?]?[\s][A-Z][a-zA-Z0-9]{1,}[,)]/.test(recordLine)){
+                                var partesDaDeclaracaoDaPropriedade = recordLine.replace(',', '').replace(')', '').replace(';', '').split(' '),
+                                    tipoProp = partesDaDeclaracaoDaPropriedade[0],
+                                    nomeProp = partesDaDeclaracaoDaPropriedade[1];
+                                self[`props${tipo}`].push({ 'tipo': tipoProp, 'nome': nomeProp });
+                            }
+                        }
+                    });
+                    
+                    this[`props${tipo}PraProcessamento`] = '';
+                    setTimeout(this.reRenderPrismCodes, 500);
+                },
+
+
+                
+                
+                downloadFile: function (arquivo, className) {
+                    var fileName    = '',
+                        fileContent = '';
+
+                    switch (arquivo) {
+                        case 'Bo':
+                            fileContent = $('#Bo').text();
+                            fileName    = className + 'Bo.cs';
+                            break;
+
+                        case 'DbMap':
+                            fileContent = $('#DbMap').text();
+                            fileName    = className + 'DbMap.cs';
+                            break;
+
+                        case 'ClassePrincipal':
+                            fileName    = className+'.cs';
+                            fileContent = $('#ClassePrincipal').text();
+                            break;
+
+                        case 'ExpecsAndValidations':
+                            fileContent = $('#ExpecsAndValidations').text();
+                            fileName    = className + 'ExpecsAndValidations.cs';
+                            break;
                     }
-                });
-            },
-            downloadFile: function (arquivo, className) {
-                var fileName    = '',
-                    fileContent = '';
 
-                switch (arquivo) {
-                    case 'Bo':
-                        fileContent = $('#Bo').text();
-                        fileName    = className + 'Bo.cs';
-                        break;
-
-                    case 'DbMap':
-                        fileContent = $('#DbMap').text();
-                        fileName    = className + 'DbMap.cs';
-                        break;
-
-                    case 'ClassePrincipal':
-                        fileName    = className+'.cs';
-                        fileContent = $('#ClassePrincipal').text();
-                        break;
-
-                    case 'ExpecsAndValidations':
-                        fileContent = $('#ExpecsAndValidations').text();
-                        fileName    = className + 'ExpecsAndValidations.cs';
-                        break;
+                    SalvarClasse(fileContent, fileName);
                 }
-
-                SalvarClasse(fileContent, fileName);
             }
-        }
-    });
-</script>
-</body>
+        });
+    </script>
+  </body>
 </html>

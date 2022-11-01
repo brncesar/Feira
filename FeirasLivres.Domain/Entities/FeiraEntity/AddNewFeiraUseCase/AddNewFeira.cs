@@ -15,9 +15,9 @@ public class AddNewFeira
     private readonly IDistritoRepository      _distritoRepository;
     private readonly ISubPrefeituraRepository _subPrefeituraRepository;
 
-    public AddNewFeira(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepsitory)
+    public AddNewFeira(IFeiraRepository feiraRepository, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
         =>  (_feiraRepository, _distritoRepository, _subPrefeituraRepository) =
-            ( feiraRepsitory ,  distritoRepository,  subPrefeituraRepsitory );
+            ( feiraRepository,  distritoRepository,  subPrefeituraRepository);
 
     public async Task<IDomainActionResult<FeiraResult>> Execute(AddNewFeiraParams newFeiraInfos)
     {

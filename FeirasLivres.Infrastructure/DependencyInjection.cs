@@ -13,7 +13,6 @@ namespace FeirasLivres.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<FeirasLivresDbContext>();
             services.AddScoped<IFeiraRepository        , FeiraRepository        >();
             services.AddScoped<IDistritoRepository     , DistritoRepository     >();
             services.AddScoped<ISubPrefeituraRepository, SubPrefeituraRepository>();

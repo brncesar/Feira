@@ -1,9 +1,6 @@
 using FeirasLivres.Domain.Common;
 using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.DistritoEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
-using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Test.UseCases.FeiraEntity;
@@ -28,10 +25,7 @@ public class AddNewFeiraUseCaseTest
         CodSubPrefeitura     : "25"
     );
 
-    public AddNewFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository, ISubPrefeituraRepository subPrefeituraRepository)
-    {
-        _testTarget = new AddNewFeira(feiraRepsitory, distritoRepository, subPrefeituraRepository);
-    }
+    public AddNewFeiraUseCaseTest(AddNewFeira addNewFeira) => _testTarget = addNewFeira;
 
     [Theory]
     [InlineData(-91,    0, false)]

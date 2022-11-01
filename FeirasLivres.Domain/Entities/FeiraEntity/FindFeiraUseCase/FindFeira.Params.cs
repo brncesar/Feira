@@ -1,6 +1,4 @@
-﻿using FeirasLivres.Domain.Entities.Enums;
-
-namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
+﻿namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 
 public record FindFeiraParams(
     string? Nome,

@@ -1,6 +1,4 @@
 using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.DistritoEntity;
-using FeirasLivres.Domain.Entities.FeiraEntity;
 using FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 using FeirasLivres.Domain.Misc;
 
@@ -15,10 +13,7 @@ public class FindFeiraUseCaseTest
         CodDistrito: "01",
         Regiao5    : "Leste");
 
-    public FindFeiraUseCaseTest(IFeiraRepository feiraRepsitory, IDistritoRepository distritoRepository)
-    {
-        _testTarget = new FindFeira(feiraRepsitory, distritoRepository);
-    }
+    public FindFeiraUseCaseTest(FindFeira findFeira) => _testTarget = findFeira;
 
     [Fact]
     public async Task MustReturnErrorWhenTryingToToFindWithoutAnyInformation()

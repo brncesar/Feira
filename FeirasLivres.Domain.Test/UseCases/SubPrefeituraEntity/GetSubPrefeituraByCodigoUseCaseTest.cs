@@ -1,5 +1,4 @@
 using FeirasLivres.Domain.Entities.Common;
-using FeirasLivres.Domain.Entities.SubPrefeituraEntity;
 using FeirasLivres.Domain.Entities.SubPrefeituraEntity.GetSubPrefeituraByCodigoUseCase;
 using FeirasLivres.Domain.Misc;
 
@@ -9,10 +8,8 @@ namespace FeirasLivres.Domain.Test.UseCases.SubPrefeituraEntity
     {
         private GetSubPrefeituraByCodigo _testTarget;
 
-        public GetSubPrefeituraByCodigoUseCaseTest(ISubPrefeituraRepository distritoRepository)
-        {
-            _testTarget = new GetSubPrefeituraByCodigo(distritoRepository);
-        }
+        public GetSubPrefeituraByCodigoUseCaseTest(GetSubPrefeituraByCodigo getSubPrefeituraByCodigo)
+            => _testTarget = getSubPrefeituraByCodigo;
 
         [Fact]
         public async Task MustReturnErrorErrorWhenSubPrefeituraNotFound()
