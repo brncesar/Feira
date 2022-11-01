@@ -8,7 +8,7 @@
 4. [API Endpoints](#ApiEndpoints)
 5. [Log's](#Logs)
 6. [Testes](#Testes)
-7. [Adicionando um novo Caso de uso](#AddNovoCasoDeUso)
+7. [Adicionando um novo caso de uso](#AddNovoCasoDeUso)
 
 
 ## 1 - Contextualização <a name="Contextualização"></a>
@@ -102,7 +102,7 @@ A execução desse ShellScript irá:
 3. Abrir no browser a página do relatório
 
 
-## 7 - Adicionando um novo Caso de uso<a name="AddNovoCasoDeUso"></a>
+## 7 - Adicionando um novo caso de uso<a name="AddNovoCasoDeUso"></a>
 Para facilitar o entendimento da relação entre cada uma das camadas com suas responsabilidades eu criei um [gerador de código](https://codepen.io/brncesar/full/bGKVzPa) que auxilia na adição de um novo caso de uso na solução.
 Esse gerador pede alguns parâmetros:
 - Nome do radical do namespace da aplicação (nesse projeto estou usando "FeirasLivres")
