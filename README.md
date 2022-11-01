@@ -112,3 +112,5 @@ Esse gerador pede alguns parâmetros:
 - Parâmetros de entrada para execução do caso de uso
 - Parâmetros de saída na conclusão do caso de uso
 Vale a pena experimentar e ver os códigos sendo gerados, cada qual referente a sua própria camada/responsabilidade.
+![image](https://user-images.githubusercontent.com/3535044/199175765-a5a9a52f-c45e-42b9-b0d9-21f226d03633.png)
+
