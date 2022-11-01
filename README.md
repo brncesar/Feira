@@ -8,7 +8,7 @@
 4. [API Endpoints](#ApiEndpoints)
 5. [Log's](#Logs)
 6. [Testes](#Testes)
-
+7. [Adicionando um novo Caso de uso](#AddNovoCasoDeUso)
 
 
 ## 1 - Contextualização <a name="Contextualização"></a>
@@ -100,3 +100,15 @@ A execução desse ShellScript irá:
 1. Executar os testes que ao final geram o arquivo xml contendo os resultados analíticos.
 2. Gerar o relatório de abrangência de cobertura dos testes
 3. Abrir no browser a página do relatório
+
+
+## 7 - Adicionando um novo Caso de uso<a name="AddNovoCasoDeUso"></a>
+Para facilitar o entendimento da relação entre cada uma das camadas com suas responsabilidades eu criei um [gerador de código](https://codepen.io/brncesar/full/bGKVzPa) que auxilia na adição de um novo caso de uso na solução.
+Esse gerador pede alguns parâmetros:
+- Nome do radical do namespace da aplicação (nesse projeto estou usando "FeirasLivres")
+- Nome do novo caso de uso
+- Nome da entidade para a qual o caso de uso se destina
+- Lista de propriedades da entidade
+- Parâmetros de entrada para execução do caso de uso
+- Parâmetros de saída na conclusão do caso de uso
+Vale a pena experimentar e ver os códigos sendo gerados, cada qual referente a sua própria camada/responsabilidade.
