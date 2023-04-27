@@ -28,12 +28,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Requests", "Requests", "{C8
 		Requests\Distrito.http = Requests\Distrito.http
 		Requests\Feira.http = Requests\Feira.http
 		Requests\SubPrefeitura.http = Requests\SubPrefeitura.http
+		_RestClient-VSExtension.txt = _RestClient-VSExtension.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{6BB97A7D-7352-4BD1-AC1E-AB1CE79B10BC}"
 	ProjectSection(SolutionItems) = preProject
 		Docs\Api.md = Docs\Api.md
 		Docs\DomainModels.md = Docs\DomainModels.md
+		_MarkdownEditor-VSExtension.txt = _MarkdownEditor-VSExtension.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UseCaseClassesGenerator", "UseCaseClassesGenerator", "{070D533F-2025-4B8E-9631-7599C9B082E0}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\UseCaseClassesGenerator\Generator.html = Docs\UseCaseClassesGenerator\Generator.html
 	EndProjectSection
 EndProject
 Global
@@ -73,6 +80,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{070D533F-2025-4B8E-9631-7599C9B082E0} = {6BB97A7D-7352-4BD1-AC1E-AB1CE79B10BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FD4257BD-F1DD-4944-8A76-C37D3E8B7B2C}

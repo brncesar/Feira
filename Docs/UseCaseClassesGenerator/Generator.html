@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="author" content="Bruno Cesar (linkedin.com/in/brncesar)">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title>Template caso de uso</title>
 
     <link rel="stylesheet" href="./css/fabric.min.css" />
     <link rel="stylesheet" href="./js/prism/prism.css" />
+    <link rel="stylesheet" href="./js/iziToast/iziToast.min.css" />
     <link rel="stylesheet" href="./css/bootstrap4.6.1/bootstrap.min.css" />
 
     <script src="./js/jquery.min.js"></script>
@@ -15,7 +17,16 @@
     <script src="./js/FileSaver.min.js"></script>
     <script src="./js/prism/prism.js" data-manual></script>
     <script src="./js/vue.2.6.11.min.js"></script>
+    <script src="./js/iziToast/iziToast.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
+
     <style>
+        #app{
+            padding: 0 15px;
+        }
         code, pre {
             font-size: 12px !important;
         }
@@ -39,147 +50,189 @@
         }
 
         .filePath {
+            font-family: 'Yanone Kaffeesatz';
             margin-top: 20px;
-            font-weight: bolder;
+            font-size: 19px;
+        }
+
+        .filePath:first-child {
+            margin-top: 0;
+        }
+
+        .filePath > i {
+            margin-right: 5px;
+        }
+
+        h1,
+        label {
+            font-family: 'Yanone Kaffeesatz';
+        }
+
+        h2 {
+            width: 100%;
+            font-size: 25px;
+            text-align: center;
+            line-height: 0.1em;
+            margin: 10px 0 20px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #000;
+            font-family: 'Yanone Kaffeesatz';
+        }
+
+        h2 span {
+            background:#fff;
+            padding:0 10px;
         }
     </style>
 </head>
-<body class="line-numbers">
-    <div class="container pt-3" id="app" data-prismjs-copy-timeout="500">
-        <h2>Adicionar novo caso de uso</h2>
+<body>
+    <div class="container-fluids pt-3" id="app" data-prismjs-copy-timeout="500">
         <div class="row">
             <div class="col-4">
-                <div class="form-group custom-label mb-3">
-                    <label for="flowName">Namespace</label>
-                    <input class="form-control" type="text" placeholder="Namespace do domínio" v-model="namespace" @keyup="reRenderPrismCodes()">
-                    <small class="form-text text-muted">O mesmo que você está usando no seu projeto</small>
-                </div>
-                <div class="form-group custom-label mb-3">
-                    <label for="flowName">Caso de uso</label>
-                    <input class="form-control" type="text" placeholder="Nome do caso de uso" v-model="useCase" @keyup="reRenderPrismCodes()">
-                    <small class="form-text text-muted">Nome do caso de uso em UpperCamelCase</small>
-                </div>
-                <div class="form-group custom-label mb-3">
-                    <label for="flowName">Entidade</label>
-                    <input class="form-control" type="text" placeholder="Nome da entidade" v-model="entityName" @keyup="reRenderPrismCodes()">
-                    <small class="form-text text-muted">Nome da entidade para qual se dará o caso de uso</small>
-                </div>
-                
-                <label for="flowName"><strong>Props da entidade e dos DTO's (Domain)</strong></label>
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <ul class="nav nav-tabs card-header-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#classes-entity" role="tab">Entidade</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">Params</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#classes-result" role="tab">Result</a>
-                            </li>
-                        </ul>
+                <div class="sticky-top" style="margin-bottom: 20px;">
+                    <h1>Add new use case</h1>
+                    <div class="form-group custom-label mb-3">
+                        <label for="flowName">Namespace</label>
+                        <input class="form-control" type="text" placeholder="Domain namespace" v-model="namespace" @keyup="reRenderPrismCodes()">
+                        <small class="form-text text-muted">The same you are using in your project</small>
                     </div>
-                    <div class="card-body">
-                        <div class="tab-content" id="classes-tabContent">
-                            <div class="tab-pane fade show active" id="classes-entity" role="tabpanel">
-                                <div>
-                                    Propriedades
-                                    <button type="button" class="btn btn-primary btn-sm" @click="addProp('Entity')" style="float: right; padding-top: 1px;">Adicionar nova</button>
+                    <div class="form-group custom-label mb-3">
+                        <label for="flowName">Use case</label>
+                        <input class="form-control" type="text" placeholder="Use case name" v-model="useCase" @keyup="reRenderPrismCodes()">
+                        <small class="form-text text-muted">Use case name in UpperCamelCase</small>
+                    </div>
+                    <div class="form-group custom-label mb-3">
+                        <label for="flowName">Entity</label>
+                        <input class="form-control" type="text" placeholder="Entity name" v-model="entityName" @keyup="reRenderPrismCodes()">
+                        <small class="form-text text-muted">Name of the entity for which the use case will apply</small>
+                    </div>
+
+                    <label for="flowName"><strong>Domain entity, Input method and Result properties</strong></label>
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-toggle="tab" href="#classes-entity" role="tab">Entity</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">Params</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="tab" href="#classes-result" role="tab">Result</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="classes-tabContent">
+                                <div class="tab-pane fade show active" id="classes-entity" role="tabpanel">
+                                    <div>
+                                        Properties
+                                        <button type="button" class="btn btn-primary btn-sm" @click="addProp('Entity')" style="float: right; padding-top: 1px;">Add new</button>
+                                    </div>
+                                    <div class="inputs-prop" v-for="(prop, index) in propsEntity">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Type" style="width:100px" v-model="prop.tipo" @keyup="reRenderPrismCodes()" ref="tipoEntity">
+                                        <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Name" v-model="prop.nome" @keyup="reRenderPrismCodes()" v-on:keyup.enter="addProp('Entity')">
+                                        <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Entity', index)">
+                                            <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <textarea class="form-control mt-4" v-model="propsEntityPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropertyName { get; set; }'" rows="3"></textarea>
+                                    <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Entity')">Process properties</button>
                                 </div>
-                                <div class="inputs-prop" v-for="(prop, index) in propsEntity">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Tipo" style="width:100px" v-model="prop.tipo" @keyup="reRenderPrismCodes()" ref="tipoEntity">
-                                    <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Nome" v-model="prop.nome" @keyup="reRenderPrismCodes()" v-on:keyup.enter="addProp('Entity')">
-                                    <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Entity', index)">
-                                        <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>    
-                                    </button>
+
+                                <div class="tab-pane fade" id="classes-params" role="tabpanel">
+                                    <div>
+                                        Properties
+                                        <button type="button" class="btn btn-primary btn-sm" @click="addProp('Params')" style="float: right; padding-top: 1px;">Add new</button>
+                                    </div>
+                                    <div class="inputs-prop" v-for="(prop, index) in propsParams">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Type" style="width:100px" v-model="prop.tipo" ref="tipoParams" @keyup="reRenderPrismCodes()">
+                                        <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Name" v-model="prop.nome" v-on:keyup.enter="addProp('Params')" @keyup="reRenderPrismCodes()">
+                                        <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Params', index)">
+                                            <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-block btn-sm" @click="copyEntityPropsTo('Params')">Copy all properties from Entity</button>
+                                    <textarea class="form-control mt-4" v-model="propsParamsPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropertyName { get; set; }'" rows="3"></textarea>
+                                    <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Params')">Process properties</button>
                                 </div>
-                                <textarea class="form-control mt-4" v-model="propsEntityPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="3"></textarea>
-                                <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Entity')">Processar propriedades</button>
-                            </div>
-                
-                            <div class="tab-pane fade" id="classes-params" role="tabpanel">
-                                <div>
-                                    Propriedades
-                                    <button type="button" class="btn btn-primary btn-sm" @click="addProp('Params')" style="float: right; padding-top: 1px;">Adicionar nova</button>
+
+                                <div class="tab-pane fade" id="classes-result" role="tabpanel">
+                                    <div>
+                                        Properties
+                                        <button type="button" class="btn btn-primary btn-sm" @click="addProp('Result')" style="float: right; padding-top: 1px;">Add new</button>
+                                    </div>
+                                    <div class="inputs-prop" v-for="(prop, index) in propsResult">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Type" style="width:100px" v-model="prop.tipo" ref="tipoResult" @keyup="reRenderPrismCodes()">
+                                        <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Name" v-model="prop.nome" v-on:keyup.enter="addProp('Result')" @keyup="reRenderPrismCodes()">
+                                        <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Result', index)">
+                                            <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" class="btn btn-primary btn-block btn-sm" @click="copyEntityPropsTo('Result')">Copy all properties from Entity</button>
+                                    <textarea class="form-control mt-4" v-model="propsResultPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropertyName { get; set; }'" rows="3"></textarea>
+                                    <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Result')">Process properties</button>
                                 </div>
-                                <div class="inputs-prop" v-for="(prop, index) in propsParams">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Tipo" style="width:100px" v-model="prop.tipo" ref="tipoParams" @keyup="reRenderPrismCodes()">
-                                    <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Nome" v-model="prop.nome" v-on:keyup.enter="addProp('Params')" @keyup="reRenderPrismCodes()">
-                                    <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Params', index)">
-                                        <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>    
-                                    </button>
-                                </div>
-                                <textarea class="form-control mt-4" v-model="propsParamsPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="3"></textarea>
-                                <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Params')">Processar propriedades</button>
-                            </div>
-                
-                            <div class="tab-pane fade" id="classes-result" role="tabpanel">
-                                <div>
-                                    Propriedades
-                                    <button type="button" class="btn btn-primary btn-sm" @click="addProp('Result')" style="float: right; padding-top: 1px;">Adicionar nova</button>
-                                </div>
-                                <div class="inputs-prop" v-for="(prop, index) in propsResult">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Tipo" style="width:100px" v-model="prop.tipo" ref="tipoResult" @keyup="reRenderPrismCodes()">
-                                    <input type="text" class="form-control form-control-sm ml-1 mr-1" placeholder="Nome" v-model="prop.nome" v-on:keyup.enter="addProp('Result')" @keyup="reRenderPrismCodes()">
-                                    <button class="btn btn-secondary btn-sm" type="button" style="width:50px;" @click="delProp('Result', index)">
-                                        <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>    
-                                    </button>
-                                </div>
-                                <textarea class="form-control mt-4" v-model="propsResultPraProcessamento" placeholder="Use os campos acima ou cole aqui todas as propriedades no formato 'public Tipo NomeProp { get; set; }'" rows="3"></textarea>
-                                <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Result')">Processar propriedades</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        
+
             <div class="col-8">
                 <div class="card">
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#codes-domain" role="tab">Domínio</a>
+                                <a class="nav-link active" data-toggle="tab" href="#codes-domain" role="tab" @click="reHighlightLines()">Domain</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#codes-infrastructure" role="tab">Infraestrutura</a>
+                                <a class="nav-link" data-toggle="tab" href="#codes-infrastructure" role="tab" @click="reHighlightLines()">Infrastructure</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#codes-api" role="tab">API</a>
+                                <a class="nav-link" data-toggle="tab" href="#codes-api" role="tab" @click="reHighlightLines()">API</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#codes-tests" role="tab">Testes</a>
+                                <a class="nav-link" data-toggle="tab" href="#codes-tests" role="tab" @click="reHighlightLines()">Tests</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" data-toggle="tab" href="#codes-rest-client" role="tab">Rest Client</a>
+                                <a class="nav-link" data-toggle="tab" href="#codes-rest-client" role="tab" @click="reHighlightLines()">Rest Client</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#codes-powershell-script" role="tab">PS1 script</a>
                             </li>
                         </ul>
                     </div>
                     <div class="card-body">
                         <div class="tab-content" id="classes-tabContent">
-                            <div class="tab-pane fade show active" id="codes-domain" role="tabpanel">
-                                <strong>
-                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ entityName }}.cs
-                                </strong>
-                                <div id="CodeDomainEntity" style="display: none;">using {{ namespace }}.Domain.Entities.Common;
 
-namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-    
+                            <!-- TAB DOMAIN -------------------------------------------------------------------------------------------------------- -->
+                            <div class="tab-pane fade show active" id="codes-domain" role="tabpanel">
+
+                                <h2><span>👇 New files to be created (if they do not exist yet) 👇</span></h2>
+
+
+
+
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ entityName }.cs`"></file-title>
+                                <div id="CodeDomainEntity" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.Common;
+
+namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+
 public class {{ entityName }} : BaseEntity
 {
 {{ propsEntity.map((prop) => `    public ${prop.tipo} ${prop.nome} { get; set; }\n`).join('') }}}
-                                </div><pre><code class="language-csharp" id="prismCodeDomainEntity"></code></pre>
+</div>                          <pre><code class="language-csharp" id="prismCodeDomainEntity"></code></pre>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.cs
-                                </div>
-                                <div id="CodeDomainUseCase" style="display: none;">using {{ namespace }}.Domain.Misc;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.cs`"></file-title>
+                                <div id="CodeDomainUseCase" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
+using {{ namespaceOrBlank }}Domain.Entities.Common;
+using {{ namespaceOrBlank }}Domain.Misc;
 
-namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
 public class {{ useCase }}
 {
@@ -196,7 +249,7 @@ public class {{ useCase }}
         if (paramsValidationResult.HasErrors())
             return {{ firstLetterToLower(useCase) }}Result;
 
-        var {{ firstLetterToLower(useCase) }}RespositoryResult = await _{{ entityName }}Repository.{{ useCase }}Async({{ firstLetterToLower(useCase) }}Params);
+        var {{ firstLetterToLower(useCase) }}RespositoryResult = await _{{ firstLetterToLower(entityName) }}Repository.{{ useCase }}Async({{ firstLetterToLower(useCase) }}Params);
 
         if ({{ firstLetterToLower(useCase) }}RespositoryResult.HasErrors())
             return {{ firstLetterToLower(useCase) }}Result.AddErrors({{ firstLetterToLower(useCase) }}RespositoryResult.Errors);
@@ -205,30 +258,26 @@ public class {{ useCase }}
             ? {{ firstLetterToLower(useCase) }}Result.SetValue({{ firstLetterToLower(useCase) }}RespositoryResult.Value)
             : {{ firstLetterToLower(useCase) }}Result;
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCase"></code></pre>
+}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCase"></code></pre>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Params.cs
-                                </div>
-                                <div id="CodeDomainUseCaseParams" style="display: none;">namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Params.cs`" ></file-title>
+                                <div id="CodeDomainUseCaseParams" style="display: none;">namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
 public record {{ useCase }}Params(
 {{ propsParams.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
-                                </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseParams"></code></pre>
+</div>                          <pre><code class="language-csharp" id="prismCodeDomainUseCaseParams"></code></pre>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Params.Validator.cs
-                                </div>
-                                <div id="CodeDomainUseCaseParamsValidator" style="display: none;">using {{ namespace }}.Domain.Misc;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Params.Validator.cs`" ></file-title>
+                                <div id="CodeDomainUseCaseParamsValidator" style="display: none;">using {{ namespaceOrBlank }}Domain.Misc;
 using FluentValidation;
 
-namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
 internal class {{ useCase }}ParamsValidator : AbstractValidator&lt;{{ useCase }}Params&gt;
 {
@@ -237,7 +286,7 @@ internal class {{ useCase }}ParamsValidator : AbstractValidator&lt;{{ useCase }}
 {{ propsParams.map((prop) => `        RuleFor(p => p.${prop.nome}); //.Length(2, 9);`).join('\n') }}
 
         /** SOME VALIDATIONS EXAMPLES **********************************************************************************
-        
+
         RuleFor(p => p.Matricula).NotEmpty().MaximumLength(9).WithName("Matrícula com 9 dígitos");
 
         RuleFor(p => p.SomeStringToCastToEnum)
@@ -262,50 +311,47 @@ internal class {{ useCase }}ParamsValidator : AbstractValidator&lt;{{ useCase }}
         For more examples go to: https://docs.fluentvalidation.net/en/latest/built-in-validators.html
         ************************************************************************************************************* */
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseParamsValidator"></code></pre>
+}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseParamsValidator"></code></pre>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Result.cs
-                                </div>
-                                <div id="CodeDomainUseCaseResult" style="display: none;">namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Result.cs`" ></file-title>
+                                <div id="CodeDomainUseCaseResult" style="display: none;">namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
 public record {{ useCase }}Result(
 {{ propsResult.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
-                                </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseResult"></code></pre>
+</div>                          <pre><code class="language-csharp" id="prismCodeDomainUseCaseResult"></code></pre>
 
 
 
 
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Errors.cs`" ></file-title>
+                                <div id="CodeDomainUseCaseErrors" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase/{{ useCase }}.Errors.cs
-                                </div>
-                                <div id="CodeDomainUseCaseErrors" style="display: none;">using {{ namespace }}.Domain.Common;
-
-namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
 public sealed class {{ useCase }}Errors
 {
     private static string className = nameof({{ useCase }}Errors).Replace("Errors", "");
 
-    // public static Error SomeUseCaseError() => ErrorHelpers.GetError(ErrorType.NotFound, "The related {{ entityName }} was not found", codeError: $"{className}.SomeUseCaseError");
-}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseErrors"></code></pre>
+    // public static Error SomeUseCaseError() => ErrorHelpers.GetError(ErrorType.NotFound, "The related {{ entityName }} was not found", codeError: $"{{ useCase }}.SomeUseCaseError");
+}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseErrors"></code></pre>
 
 
 
 
+                                <h2 class="mt-5"><span>👇 Existing files for which it is only necessary to increment their content 👇</span></h2>
+                                <div class="text-center"><em>Add the highlighted lines to the existing files</em></div>
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/Entities/{{ entityName }}Entity/I{{ entityName }}Repository.cs
-                                </div>
-                                <div id="CodeDomainUseCaseEntityRepository" style="display: none;">using {{ namespace }}.Domain.Common;
 
-using {{ namespace }}.Domain/Entities/{{ entityName }}Entity/{{ useCase }}UseCase;
 
-namespace {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/_I${ entityName }Repository.cs`" ></file-title>
+                                <div id="CodeDomainUseCaseEntityRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.Common;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
 public interface I{{ entityName }}Repository :
     IBaseEntityRepositoryGetById&lt;{{ entityName }}&gt;,
@@ -314,85 +360,70 @@ public interface I{{ entityName }}Repository :
     IBaseEntityRepositoryDelete&lt;{{ entityName }}&gt;,
     IBaseEntityRepositoryGetAll&lt;{{ entityName }}&gt;/*,
     IBaseEntityRepositoryAllCrudOperations&lt;{{ entityName }}&gt;*/
-{
-    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; GetByCodigoAsync(string codigo);
-
+{/*
+    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; ExampleOfAnExistingMethodAsync();
+    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; ExampleOfAnotherExistingMethodAsync(string loremParameter);
+    Task&lt;IDomainActionResult&lt;List&lt;{{ entityName }}&gt;&gt;&gt; LastExampleOfAPreExistingMethodAsync(int ipsumParameter);*/
+    // 👆 Other pre-existing methods. It's just an example
+    // 👇 Method for your use case.
     Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params);
-}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseEntityRepository"></code></pre>
+}</div>                         <div class="append-to-file"><pre data-line="2,19"><code class="language-csharp" id="prismCodeDomainUseCaseEntityRepository"></code></pre></div>
 
 
 
 
+                                <file-title :path="`${ namespaceOrBlank }Domain/DependencyInjection.cs`" ></file-title>
+                                <div id="CodeDomainDependencyInjection" style="display: none;">using Microsoft.Extensions.DependencyInjection;
+// 👇 Other pre-defined use cases (it's just an example)
+using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.AddNewAnotherEntityUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.EditAnotherEntityUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.FindAnotherEntityUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.RemoveAnotherEntityUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity.FindSecondAnotherEntityUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity.GetSubSecondAnotherEntityByCodigoUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.AnotherUseCase;
+// 👇 your new use case
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/DependencyInjection.cs
-                                </div>
-                                <div id="CodeDomainDependencyInjection" style="display: none;">using {{ namespace }}.Domain.Entities.AnotherEntity.AddNewAnotherEntityUseCase;
-using {{ namespace }}.Domain.Entities.AnotherEntity.EditAnotherEntityUseCase;
-using {{ namespace }}.Domain.Entities.AnotherEntity.FindAnotherEntityUseCase;
-using {{ namespace }}.Domain.Entities.AnotherEntity.RemoveAnotherEntityUseCase;
-using {{ namespace }}.Domain.Entities.SecondAnotherEntity.FindSecondAnotherEntityUseCase;
-using {{ namespace }}.Domain.Entities.SecondAnotherEntity.GetSubSecondAnotherEntityByCodigoUseCase;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.AnotherUseCase;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace {{ namespace }}.Domain;
+namespace {{ namespaceOrBlank }}Domain;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddDomain(this IServiceCollection services)
     {
-        return services
-            .AddScoped&lt;AddNewAnotherEntityUseCase              &gt;()
+        return services/*
             .AddScoped&lt;EditAnotherEntityUseCase                &gt;()
             .AddScoped&lt;FindAnotherEntityUseCase                &gt;()
+            .AddScoped&lt;AddNewAnotherEntityUseCase              &gt;()
             .AddScoped&lt;RemoveAnotherEntityUseCase              &gt;()
             .AddScoped&lt;FindSecondAnotherEntityUseCase          &gt;()
             .AddScoped&lt;GetSubSecondAnotherEntityByCodigoUseCase&gt;()
-            .AddScoped&lt;AnotherUseCase                          &gt;()
-            // 👆 Already existing use cases
+            // 👆 Already existing use cases. It's just an example
             // 👇 Your new use case
-            .AddScoped&lt;{{ useCase }}UseCase&gt;();
+            .AddScoped&lt;{{ useCase }}&gt;();
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeDomainDependencyInjection"></code></pre>
+}</div>                       <div class="append-to-file"><pre data-line="11,29"><code class="language-csharp" id="prismCodeDomainDependencyInjection"></code></pre></div>
                             </div>
-    
+
+
+
+
+
+                            <!-- TAB INFRASTRUCTURE ------------------------------------------------------------------------------------------------ -->
                             <div class="tab-pane fade" id="codes-infrastructure" role="tabpanel">
-                                <strong>
-                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
-                                    {{ namespace }}.Infrastructure/Data/DbCtx/{{ namespace }}DbContext.cs
-                                </strong>
-                                <div id="CodeInfrastructureDbContext" style="display: none;">using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-using Microsoft.EntityFrameworkCore;
 
-namespace {{ namespace }}.Infrastructure.Data.DbCtx;
-
-public class {{ namespace }}DbContext : DbContext
-{
-    public {{ namespace }}DbContext(DbContextOptions&lt;{{ namespace }}DbContext&gt; options) : base(options) { }/*
-
-    public DbSet&lt;Abcde        &gt; Abcde         { get; set; } = null!;
-    public DbSet&lt;Fghijklm     &gt; Fghijklm      { get; set; } = null!;
-    public DbSet&lt;Nopqrstuvwxyz&gt; Nopqrstuvwxyz { get; set; } = null!;*/
-    // 👆 other DbSet's
-    // 👇 your new DbSet
-    public DbSet&lt;{{ entityName }}&gt; {{ entityName }} { get; set; } = null!;
-
-    // ...
-}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureDbContext"></code></pre>
+                                <h2><span>👇 New files to be created (if they do not exist yet) 👇</span></h2>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Infrastructure/Data/DbCtx/DbMap/{{ entityName }}.DbMap.cs
-                                </div>
-                                <div id="CodeInfrastructureDbMap" style="display: none;">using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
+                                <file-title :path="`${ namespaceOrBlank }Infrastructure/Data/DbCtx/DbMap/${ entityName }.DbMap.cs`"></file-title>
+                                <div id="CodeInfrastructureDbMap" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace {{ namespace }}.Infrastructure.Data.DbCtx.DbMap;
+namespace {{ namespaceOrBlank }}Infrastructure.Data.DbCtx.DbMap;
 
 internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName }}&gt;
 {
@@ -400,8 +431,9 @@ internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName
     {
         builder.ToTable("T?##_{{ entityName }}");
         builder.HasKey  (p => p.Id);
-        builder.Property(p => p.Id).HasColumnName("T?##_id_{{ entityName }}").HasColumnOrder(1);
-{{ propsEntity.map((prop) => `        builder.HasKey  (p => p.${prop.nome}).HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").IsUnique(true).HasComment("Lorem ipsum dollor");\n`).join('') }}
+        builder.Property(p => p.Id).HasColumnName("T?##_id_{{ entityName }}").HasColumnOrder(1);/*
+        builder.HasIndex(b => b.Cod).IsUnique(true);*/
+{{ propsEntity.map((prop) => `        builder.Property(p => p.${prop.nome}).HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasComment("Lorem ipsum dollor");\n`).join('') }}
         // Relationships
         /*
         builder
@@ -409,29 +441,86 @@ internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName
             .WithMany     (otherEntity => otherEntity.ListPropertyOfThisEntity)
             .HasForeignKey(thisEntity  => thisEntity .IdFromNavigationProperty);*/
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureDbMap"></code></pre>
+}</div>                         <pre><code class="language-csharp" id="prismCodeInfrastructureDbMap"></code></pre>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Infrastructure/Data/Repository/{{ entityName }}Repository.cs
-                                </div>
-                                <div id="CodeInfrastructureRepository" style="display: none;">using {{ namespace }}.Domain.Common;
-using {{ namespace }}.Domain.Entities.Common;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespace }}.Domain.Misc;
-using {{ namespace }}.Infrastructure.Data.DbCtx;
+                                <h2 class="mt-5"><span>👇 Existing files for which it is only necessary to increment their content 👇</span></h2>
+                                <div class="text-center"><em>Add the highlighted lines to the existing files</em></div>
+
+
+
+
+                                <file-title :path="`${ namespaceOrBlank }Infrastructure/Data/DbCtx/${ namespace }DbContext.cs`"></file-title>
+                                <div id="CodeInfrastructureDbContext" style="display: none;">using Microsoft.EntityFrameworkCore;
+// 👇 Other entities pre-defined in the context file (it's just an example)
+using {{ namespaceOrBlank }}Domain.Entities.LoremEntity;
+using {{ namespaceOrBlank }}Domain.Entities.IpsumEntity;
+using {{ namespaceOrBlank }}Domain.Entities.DolorEntity;
+// 👇 your new Entity
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+
+namespace {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
+
+public class {{ namespaceOrExampleProjectName }}DbContext : DbContext
+{
+    public {{ namespaceOrExampleProjectName }}DbContext(DbContextOptions&lt;{{ namespaceOrExampleProjectName }}DbContext&gt; options) : base(options) { }
+
+    public DbSet&lt;Lorem&gt; Lorem { get; set; } = null!;
+    public DbSet&lt;Ipsum&gt; Ipsum { get; set; } = null!;
+    public DbSet&lt;Dolor&gt; Dolor { get; set; } = null!;
+    // 👆 other DbSet's pre-defined in the context file
+    // 👇 your new DbSet
+    public DbSet&lt;{{ entityName }}&gt; {{ entityName }} { get; set; } = null!;
+
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        #if DEBUG
+        optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+        #endif
+
+        base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .RemovePluralizeConvention()
+            .RemoveOneToManyCascadeConvention()
+            .ApplyEntitiesTypeConfigurations&lt;{{ namespaceOrExampleProjectName }}DbContext&gt;(); // DbMaps
+
+        base.OnModelCreating(modelBuilder);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<string>().HaveColumnType("varchar").HaveMaxLength(100);
+
+        base.ConfigureConventions(configurationBuilder);
+    }
+}</div>                         <div class="append-to-file"><pre data-line="7,20"><code class="language-csharp" id="prismCodeInfrastructureDbContext"></code></pre></div>
+
+
+
+
+                                <file-title :path="`${ namespaceOrBlank }Infrastructure/Data/Repository/${ entityName }Repository.cs`"></file-title>
+                                <div id="CodeInfrastructureRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
+using {{ namespaceOrBlank }}Domain.Entities.Common;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespaceOrBlank }}Domain.Misc;
+using {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
 using Microsoft.EntityFrameworkCore;
 
-namespace {{ namespace }}.Infrastructure.Data.Repository;
+namespace {{ namespaceOrBlank }}Infrastructure.Data.Repository;
 
 public class {{ entityName }}Repository : BaseRepository&lt;{{ namespace }}DbContext, {{ entityName }}&gt;, I{{ entityName }}Repository
 {
-    public {{ entityName }}Repository({{ namespace }}DbContext dbCtx) : base(dbCtx) { }
+    public {{ entityName }}Repository({{ namespace }}DbContext dbCtx) : base(dbCtx) { }/*
 
-    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; GetByCodigoAsync(string codigo)
+    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; JUST_AN_EXAMPLE_GetByCodigoAsync(string codigo)
     {
         var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
         try
@@ -446,8 +535,9 @@ public class {{ entityName }}Repository : BaseRepository&lt;{{ namespace }}DbCon
         {
             return domainRepositoryResult.ReturnRepositoryError(ex);
         }
-    }
-
+    }*/
+    // 👆 Other methods pre-defined in the {{ entityName }} repository file
+    // 👇 Your new method in the repository to match the use case
     public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
     {
         var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
@@ -462,24 +552,25 @@ public class {{ entityName }}Repository : BaseRepository&lt;{{ namespace }}DbCon
             return domainRepositoryResult.ReturnRepositoryError(ex);
         }
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureRepository"></code></pre>
+}</div>                         <div class="append-to-file"><pre data-line="4,33-46"><code class="language-csharp" id="prismCodeInfrastructureRepository"></code></pre></div>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/DependencyInjection.cs
-                                </div>
-                                <div id="CodeInfrastructureDependencyInjection" style="display: none;">using {{ namespace }}.Domain.Entities.AnotherEntity;
-using {{ namespace }}.Domain.Entities.SecondAnotherEntity;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-using {{ namespace }}.Infrastructure.Data.DbCtx;
-using {{ namespace }}.Infrastructure.Data.Repository;
-using Microsoft.EntityFrameworkCore;
+                                <file-title :path="`${ namespaceOrBlank }Infrastructure/DependencyInjection.cs`"></file-title>
+                                <div id="CodeInfrastructureDependencyInjection" style="display: none;">using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
+using {{ namespaceOrBlank }}Infrastructure.Data.Repository;
+// 👇 Other pre-defined use cases (it's just an example)
+using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity;
+using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity;
+// 👇 your new entity
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
-namespace {{ namespace }}.Infrastructure
+
+namespace {{ namespaceOrBlank }}Infrastructure
 {
     public static class DependencyInjection
     {
@@ -497,151 +588,171 @@ namespace {{ namespace }}.Infrastructure
             return services;
         }
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureDependencyInjection"></code></pre>
+}</div>                         <div class="append-to-file"><pre data-line="10,26"><code class="language-csharp" id="prismCodeInfrastructureDependencyInjection"></code></pre></div>
                             </div>
-                
-                            <div class="tab-pane fade" id="codes-api" role="tabpanel">
-                                <strong>
-                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
-                                    {{ namespace }}.Api/Controllers/{{ entityName }}Controller.cs
-                                </strong>
-                                <div id="CodeApiController" style="display: none;">using {{ namespace }}.Api.Controllers;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.Get{{ entityName }}ByCodigoUseCase;
-using Microsoft.AspNetCore.Mvc;
 
-namespace {{ namespace }}.Api.Controllers;
+
+
+
+
+                            <!-- TAB API ----------------------------------------------------------------------------------------------------------- -->
+                            <div class="tab-pane fade" id="codes-api" role="tabpanel">
+                                <file-title :path="`${ namespaceOrBlank }Api/Controllers/${ entityName }Controller.cs`"></file-title>
+                                <div id="CodeApiController" style="display: none;">using {{ namespaceOrBlank }}Api.Controllers;
+using Microsoft.AspNetCore.Mvc;
+// 👇 Other pre-defined use cases in the {{ entityName }} controller file (it's just an example)
+using {{ namespaceOrBlank }}Domain.Entities.LoremUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.IpsumUseCase;
+using {{ namespaceOrBlank }}Domain.Entities.DolorUseCase;
+// 👇 your new use case
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+namespace {{ namespaceOrBlank }}Api.Controllers;
 
 public class {{ entityName }}Controller : BaseController&lt;{{ entityName }}Controller&gt;
 {
-    private readonly {{ useCase }} _{{ firstLetterToLower(useCase) }};
-    private readonly Get{{ entityName }}ByCodigo _get{{ entityName }}ByCodigo;
+    private readonly Get{{ entityName }}ByCodigo _get{{ entityName }}ByCodigoUseCase; // it's just an example
+    private readonly {{ useCase }} _{{ firstLetterToLower(useCase) }}UseCase;
 
     public {{ entityName }}Controller(
         ILogger&lt;{{ entityName }}Controller&gt; logger,
-        {{ useCase }} {{ firstLetterToLower(useCase) }},
-        Get{{ entityName }}ByCodigo get{{ entityName }}ByCodigo)
+        Get{{ entityName }}ByCodigo get{{ entityName }}ByCodigoUseCase, // it's just an example
+        {{ useCase }} {{ firstLetterToLower(useCase) }}UseCase)
         : base(logger)
     {
-        _{{ firstLetterToLower(useCase) }} = {{ firstLetterToLower(useCase) }};
-        _get{{ entityName }}ByCodigo = get{{ entityName }}ByCodigo;
+        _get{{ entityName }}ByCodigoUseCase = get{{ entityName }}ByCodigoUseCase; // it's just an example
+        _{{ firstLetterToLower(useCase) }}UseCase = {{ firstLetterToLower(useCase) }}UseCase;
     }
 
+    [HttpGet("JUST_AN_EXAMPLE_GetByCodigo/{codigo}")]
+    public async Task&lt;ActionResult&gt; JUST_AN_EXAMPLE_GetByCodigo(string codigo)
+    {
+        var domainResult = await _get{{ entityName }}ByCodigoUseCase.Execute(new(codigo));
+
+        return DomainResult(domainResult);
+    }
+    // 👆 Already existing api endpoint (it's just an example)
+
+    // 👇 Your new endpoint to expose use case
     [HttpPost("{{ useCase }}")]
     public async Task&lt;ActionResult&gt; {{ useCase }}({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
     {
-        var domainResult = await _{{ firstLetterToLower(useCase) }}.Execute({{ firstLetterToLower(useCase) }}Params);
+        var domainResult = await _{{ firstLetterToLower(useCase) }}UseCase.Execute({{ firstLetterToLower(useCase) }}Params);
 
         return DomainResult(domainResult);
     }
-
-    [HttpGet("GetByCodigo/{codigo}")]
-    public async Task&lt;ActionResult&gt; GetByCodigo(string codigo)
-    {
-        var domainResult = await _get{{ entityName }}ByCodigo.Execute(new(codigo));
-
-        return DomainResult(domainResult);
-    }
-}                               </div><pre><code class="language-csharp" id="prismCodeApiController"></code></pre>
+}</div>                         <div class="append-to-file"><pre data-line="8,15,20,37-43"><code class="language-csharp" id="prismCodeApiController"></code></pre></div>
                             </div>
-                
-                            <div class="tab-pane fade" id="codes-tests" role="tabpanel">
-                                <strong>
-                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
-                                    {{ namespace }}.Domain.Test/UseCases/DbCtx/{{ entityName }}Entity/{{ useCase }}UseCaseTest.cs
-                                </strong>
-                                <div id="CodeDomainUseCaseTest" style="display: none;">using {{ namespace }}.Domain.Entities.Common;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespace }}.Domain.Misc;
 
-namespace {{ namespace }}.Domain.Test.UseCases.DistritoEntity;
+
+
+
+
+                            <!-- TAB TESTS --------------------------------------------------------------------------------------------------------- -->
+                            <div class="tab-pane fade" id="codes-tests" role="tabpanel">
+
+                                <h2><span>👇 New files to be created (if they do not exist yet) 👇</span></h2>
+
+
+
+
+                                <file-title :path="`${ namespaceOrBlank }Domain.Test/UseCases/${ entityName }Entity/${ useCase }UseCaseTest.cs`"></file-title>
+                                <div id="CodeDomainUseCaseTest" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.Common;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespaceOrBlank }}Domain.Misc;
+
+namespace {{ namespaceOrBlank }}Domain.Test.UseCases.DistritoEntity;
 
 public class {{ useCase }}UseCaseTest
 {
-    private {{ useCase }} _testTarget;
-    private {{ useCase }}Params _useCaseParamObj = new {{ useCase }}Params(
-{{ propsParams.map((prop) => `        ${prop.nome}: "some valid domain value"`).join(',\n') }});
+    private {{ useCase }} _useCaseTestTarget;
+    private {{ useCase }}Params _useCaseCommonParamObj = new {{ useCase }}Params(
+{{ propsParams.map((prop) => {
+    switch (prop.tipo.toLowerCase()){
+        case 'guid'    : return `        ${prop.nome}: new Guid()`;
+        case 'bool'    : return `        ${prop.nome}: ${getRandomBool()}`;
+        case 'byte'    : return `        ${prop.nome}: ${getRandomInt(0, 7)}`;
+        case 'bit'     : return `        ${prop.nome}: ${getRandomInt(0, 1)}`;
+        case 'double'  : return `        ${prop.nome}: ${getRandomDecimal()}`;
+        case 'short'   :
+        case 'int'     : return `        ${prop.nome}: ${getRandomInt(100)}`;
+        case 'datetime': return `        ${prop.nome}: ${getRandomDateTime()}`;
+        case 'long'    : return `        ${prop.nome}: ${getRandomDecimal(0, 100, 4)}`;
+        default        : return `        ${prop.nome}: "some valid domain value"`;
+    }
+}).join(',\n') }});
 
-    public {{ useCase }}UseCaseTest({{ useCase }} {{ firstLetterToLower(useCase) }})
+    public {{ useCase }}UseCaseTest({{ useCase }} {{ firstLetterToLower(useCase) }}UseCase)
     {
-        _testTarget = {{ firstLetterToLower(useCase) }};
+        _useCaseTestTarget = {{ firstLetterToLower(useCase) }}UseCase;
     }
 
     [Fact]
     public async Task MustReturnErrorWhenTryingToExecuteWithoutAnyInformation()
     {
-        var useCaseParamObj = new {{ useCase }}ParamsParams(null, null);
+        // var useCaseSpecificParamObj = new {{ useCase }}Params(null, null);
 
-        var {{ useCase }}ParamsResult = await _testTarget.Execute(useCaseParamObj);
+        var {{ useCase }}ParamsResult = await _useCaseTestTarget.Execute(_useCaseCommonParamObj);
 
         Assert.True({{ useCase }}ParamsResult.HasErrors());
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseTest"></code></pre>
+}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseTest"></code></pre>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Infrastructure.FakeInMemory/Data/{{ entityName }}RepositoryMemory.cs
-                                </div>
-                                <div id="CodeInfrastructureFakeInMemoryEntityRepository" style="display: none;">using {{ namespace }}.Domain.Common;
-using {{ namespace }}.Domain.Entities.Common;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespace }}.Domain.Misc;
+                                <h2 class="mt-5"><span>👇 Existing files for which it is only necessary to increment their content 👇</span></h2>
+                                <div class="text-center"><em>Add the highlighted lines to the existing files</em></div>
 
-namespace {{ namespace }}.Infrastructure.FakeInMemory.Data;
+
+
+
+                                <file-title :path="`${ namespaceOrBlank }Infrastructure.FakeInMemory/Data/${ entityName }RepositoryMemory.cs`"></file-title>
+                                <div id="CodeInfrastructureFakeInMemoryEntityRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
+using {{ namespaceOrBlank }}Domain.Entities.Common;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+using {{ namespaceOrBlank }}Domain.Misc;
+
+namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
 
 public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
 {
-    private List&lt;{{ entityName }}&gt; Lista{{ entityName }}Mock { get; }
+    private List&lt;{{ entityName }}&gt; List{{ entityName }}Mock { get; }
 
     public {{ entityName }}RepositoryMemory()
     {
-        Lista{{ entityName }}Mock = new List&lt;{{ entityName }}&gt;{
-            new {{ entityName }} { Id = new Guid("9a3a04aa-5069-4ec6-86ff-7572b24e8f22"), Codigo = "01", Nome = "AGUA RASA"         },
-            new {{ entityName }} { Id = new Guid("370b00a3-f45f-4693-b4bd-7a2918ca59b7"), Codigo = "18", Nome = "CANGAIBA"          },
-            new {{ entityName }} { Id = new Guid("fa7e6176-cf00-4656-9779-ac4567c6845b"), Codigo = "02", Nome = "ALTO DE PINHEIROS" },
-            new {{ entityName }} { Id = new Guid("d2278ca3-597b-447c-b9de-b3e1d1b7e9fd"), Codigo = "04", Nome = "ARICANDUVA"        },
-            new {{ entityName }} { Id = new Guid("89373846-832f-4a38-a157-c3b73a541d74"), Codigo = "07", Nome = "AGUA"              },
+        List{{ entityName }}Mock = new List&lt;{{ entityName }}&gt;{
+{{ getStringNewRandomEntitiesInstances() }}
         };
-    }
+    }/*
 
-    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; {{ useCase }}(Guid id)
+    // 👇 Just a generic example of IRepository method
+    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; USE_CASE_EXEMPLE_GetByCodigoAsync(string codigo)
     {
-        var domainRepositoryResult = new DomainActionResult&lt;{{ entityName }}&gt;();
-
-        // repository logic
-
-        return domainRepositoryResult;
-    }
-
-    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; GetByCodigoAsync(string codigo)
-    {
-        var {{ firstLetterToLower(entityName) }} = Lista{{ entityName }}Mock.SingleOrDefault(f =&gt; f.Codigo == codigo.Trim());
+        var {{ firstLetterToLower(entityName) }} = List{{ entityName }}Mock.SingleOrDefault(f =&gt; f.Codigo == codigo.Trim());
 
         var domainRepositoryResult = new DomainActionResult&lt;{{ entityName }}&gt;({{ firstLetterToLower(entityName) }});
 
         return {{ firstLetterToLower(entityName) }} is not null
             ? domainRepositoryResult
             : domainRepositoryResult.AddNotFoundError($"{nameof({{ entityName }}RepositoryMemory)}.{nameof(GetByIdAsync)}", "{{ entityName }} não encontrado");
-    }
-}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre>
+    }*/
+}</div>                         <div class="append-to-file"><pre data-line="4,37-44"><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre></div>
 
 
 
 
-                                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
-                                    {{ namespace }}.Domain/DependencyInjection.cs
-                                </div>
-                                <div id="CodeInfrastructureFakeInMemoryDependencyInjection" style="display: none;">using {{ namespace }}.Domain.Entities.AnotherEntity;
-using {{ namespace }}.Domain.Entities.SecondAnotherEntity;
-using {{ namespace }}.Domain.Entities.{{ entityName }}Entity;
-using FeirasLivres.Infrastructure.FakeInMemory.Data;
-using Microsoft.Extensions.DependencyInjection;
+                                <file-title :path="`${ namespaceOrBlank }Infrastructure.FakeInMemory/DependencyInjection.cs`"></file-title>
+                                <div id="CodeInfrastructureFakeInMemoryDependencyInjection" style="display: none;">using {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
+using Microsoft.Extensions.DependencyInjection;/*
+// 👇 Other pre-defined use cases (it's just an example)
+using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity;
+using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity;*/
+// 👇 your new entity
+using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
-namespace {{ namespace }}.Infrastructure.FakeInMemory;
+namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory;
 
 public static class DependencyInjection
 {
@@ -655,37 +766,415 @@ public static class DependencyInjection
 
         return services;
     }
-}                               </div><pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryDependencyInjection"></code></pre>
+}</div>                         <div class="append-to-file"><pre data-line="7,19"><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryDependencyInjection"></code></pre></div>
                             </div>
-                
+
+
+
+
+
+                            <!-- TAB REST CLIENT -------------------------------------------------------------------------------------------------- -->
                             <div class="tab-pane fade" id="codes-rest-client" role="tabpanel">
-                                <strong>
-                                    <i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i> 
-                                    Requests/{{ entityName }}.http
-                                </strong>
+                                <file-title :path="`Requests/${ entityName }/${ useCase }.http`"></file-title>
                                 <div id="CodeRestClientEndPoints" style="display: none;">@hostname = localhost
 @port = 7257
 @host = https://{{'{'}}{{'{hostname}'}}{{'}'}}:{{'{'}}{{'{port}'}}{{'}'}}
 @contentType = application/json
 
-### Some title
+
+### 👇 YOUR NEW USE CASE - REGULAR USE TEST SCENARIO  👇 ##############################################################
+### {{ useCase }} {{ `${ '#'.repeat( 120 ) }`.substr(0, 115 - useCase.length) }}
+
+### Regular use --------------------------------------------------------------------------------------------------------
 POST {{'{'}}{{'{host}'}}{{'}'}}/api/{{ entityName }}/{{ useCase }}
 Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
 
-{    
-{{ propsParams.map((prop) => `	${firstLetterToLower(prop.nome)}: "some valid domain value"`).join(',\n') }}
+{
+{{ propsParams.map((prop) => `	"${firstLetterToLower(prop.nome)}": "some valid domain value"`).join(',\n') }}
 }
-                                </div><pre><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre>
+
+
+
+
+### 👇 FIND EXEMPLE - ALL TESTS SCENARIOS 👇 ##########################################################################
+### (GET) FIND #########################################################################################################
+
+### Empty result -------------------------------------------------------------------------------------------------------
+GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=feira+inexistente{{ '&' }}regiao5=leste
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+### One result ---------------------------------------------------------------------------------------------------------
+GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=AGUA+BRANCA
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+### Many results -------------------------------------------------------------------------------------------------------
+GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=VILA{{ '&' }}codDistrito=04
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+### Error parameter ----------------------------------------------------------------------------------------------------
+GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=nome+muito+muuuito+muito+grande{{ '&' }}regiao5=sudoeste
+
+
+
+
+### 👇 ADD  EXEMPLE - ALL TESTS SCENARIOS 👇 ##########################################################################
+### (POST) ADD New {{ entityName }} {{ `${ '#'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
+
+### New {{ entityName }} {{ `${ '-'.repeat( 120 ) }`.substr(0, 111 - entityName.length) }}
+POST {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Add
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+{
+	"nome"                 : "Nova Feira Teste",
+	"numeroRegistro"       : "9999-1",
+	"setorCensitarioIBGE"  : "355030801000054",
+	"areaDePonderacaoIBGE" : "3550308005039",
+	"codDistrito"          : "01",
+	"codSubPrefeitura"     : "25",
+	"regiao5"              : "LESTE",
+	"regiao8"              : "leste1",
+	"enderecoLogradouro"   : "Avenida Clark Kent",
+	"enderecoNumero"       : "5",
+	"enderecoBairro"       : "Metrópolis",
+	"enderecoReferencia"   : "Ao lado do Clarim Diário",
+	"latitude"             : -23.564711,
+	"longitude"            : -46.564711
+}
+
+### Find new {{ entityName }} added {{ `${ '-'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
+GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=Nova+Feira+Teste
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+### Edit new {{ entityName }} added {{ `${ '-'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
+PUT {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Edit
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+{
+	"nome"                 : "Feira dos Kent",
+	"numeroRegistro"       : "9999-1",
+	"regiao5"              : "oeste",
+	"regiao8"              : "oeste"
+}
+
+### Find agin new {{ entityName }} added (and edited) {{ `${ '-'.repeat( 120 ) }`.substr(0, 82 - entityName.length) }}
+GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=Feira+dos+Kent
+
+### Remove new {{ entityName }} edited {{ `${ '-'.repeat( 120 ) }`.substr(0, 97 - entityName.length) }}
+DELETE {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Remove/9999-1
+
+### Error parameter ----------------------------------------------------------------------------------------------------
+POST {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Add
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+{
+	"nome"                 : "Nova Feira Teste",
+	"numeroRegistro"       : "9999-1",
+	"setorCensitarioIBGE"  : "355030801000054",
+	"areaDePonderacaoIBGE" : "3550308005039",
+	"codDistrito"          : "01",
+	"codSubPrefeitura"     : "25",
+	"regiao5"              : "Sudoeste",
+	"regiao8"              : "Noroeste",
+	"enderecoLogradouro"   : "Avenida Clark Kent",
+	"enderecoNumero"       : "123456",
+	"enderecoBairro"       : "Metrópolis",
+	"enderecoReferencia"   : "Ao lado do Clarim Diário",
+	"latitude"             : -23564711,
+	"longitude"            : -46.564711
+}
+
+### Error: Try edit without numeroRegistro -----------------------------------------------------------------------------
+PUT {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Edit
+Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+{
+	"nome"    : "Feira dos Kent",
+	"regiao5" : "oeste",
+	"regiao8" : "oeste"
+}
+</div>                          <div class="append-to-file"><pre data-line="7-17"><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre></div>
+                            </div>
+
+
+
+
+
+                            <!-- TAB POWERSHELL SCRIPT -------------------------------------------------------------------------------------------- -->
+                            <div class="tab-pane fade" id="codes-powershell-script" role="tabpanel">
+                                <span class="filePath"><i class="ms-Icon ms-Icon--PowerShell fixPosition" aria-hidden="true" style="top: 4px;"></i>
+                                    PowerShell script generator
+                                </span>
+
+                                <div class="form-group custom-label mb-3">
+                                    <label for="vsProjectsLocalPath">Visual Studio projects path on your machine</label>
+                                    <input class="form-control" type="text" id="vsProjectsLocalPath" placeholder="Visual Studio solution path on your machine" v-model="vsProjectsLocalPath" @keyup="reRenderPrismCodes()">
+                                    <small class="form-text text-muted">Ex: C:\Repositories\{{ namespaceOrExampleProjectName }}</small>
+                                </div>
+
+                                <span class="filePath">
+                                    <a href="#" @click.prevent.stop="downloadPowerShellFile()" class="ml-2" title="Download PS1 file">
+                                        <i class="ms-Icon ms-Icon--Copy fixPosition" aria-hidden="true" style="top: 4px;"></i>
+                                        Download PS1 file
+                                    </a>
+                                </span>
+                                <div id="CodePs1" style="display: none;"># Helper functions -----------------------------------------------------------------------------------------------------
+function CreateDirectoryIfItDoesntExist([string]$path) {
+    if ( ! (Test-Path $path) ) {
+        New-Item $path -ItemType Directory
+    } else {
+        Write-Output "The folder already existed. "
+        Write-Output "  👉 $path`n"
+    }
+}
+
+function CreateNewFileReplacingTheOldOneIfItExists([string]$filePath, [string]$fileContent) {
+    if ( Test-Path $filePath ) {
+        Remove-Item $filePath -Recurse
+    }
+    New-Item $filePath -ItemType file -value $fileContent
+}
+
+function CreateNewFileIfItDoesntExists([string]$filePath, [string]$fileContent) {
+    if ( -not (Test-Path $filePath) ) {
+        New-Item $filePath -ItemType file -value $fileContent
+    } else {
+        $fileName = Split-Path -Path $filePath -Leaf
+        $fileName = $fileName.ToUpper()
+        Write-Output "WARNING: The $fileName file already existed, and to avoid breaking anything that is already referencing this FILE, IT WAS NOT REPLACED.`nIf the new code generated by this process causes any errors, it may be due to the difference between the $fileName file defined here and the existing one, since the original was not altered.`n"
+    }
+}
+
+function AppendContentToFile([string]$filePath, [string]$fileContent) {
+    if ( Test-Path $filePath ) {
+        $preCodeComment = @'
+
+
+
+/*** Content automatically added via Code Generator ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+'@
+        $posCodeComment = @'
+
+***********************************************************************************************************************/
+'@
+        Add-Content $filePath $preCodeComment
+        Add-Content $filePath $fileContent
+        Add-Content $filePath $posCodeComment
+    } else {
+        CreateNewFileReplacingTheOldOneIfItExists $filePath $fileContent
+    }
+}
+
+
+
+
+# Creating folder structure --------------------------------------------------------------------------------------------
+$DomainRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\"
+
+$DomainEntityFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\"
+CreateDirectoryIfItDoesntExist $DomainEntityFolder
+
+$DomainUseCaseFolder = $DomainEntityFolder + "{{ useCase }}UseCase\"
+CreateDirectoryIfItDoesntExist $DomainUseCaseFolder
+
+$DomainUseCaseTestFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\{{ entityName }}Entity\"
+CreateDirectoryIfItDoesntExist $DomainUseCaseTestFolder
+
+$InfrastructureFakeRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\"
+CreateDirectoryIfItDoesntExist $InfrastructureFakeRootFolder
+CreateDirectoryIfItDoesntExist $InfrastructureFakeRootFolder + "Data\"
+
+$InfrastructureRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\"
+CreateDirectoryIfItDoesntExist $InfrastructureRootFolder
+CreateDirectoryIfItDoesntExist $InfrastructureRootFolder + "Data\"
+
+$InfrastructureDbContextFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\"
+CreateDirectoryIfItDoesntExist $InfrastructureDbContextFolder
+
+$InfrastructureDbContextMapsFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\DbMap\"
+CreateDirectoryIfItDoesntExist $InfrastructureDbContextMapsFolder
+
+$InfrastructureRepositoriesFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\Repository\"
+CreateDirectoryIfItDoesntExist $InfrastructureRepositoriesFolder
+
+$ApiControllersFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Api\Controllers\"
+
+$DomainUseCasesTestsFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\"
+
+$RestClientEntitiesFolder = "{{ vsProjectsLocalPath }}\_Requests\"
+CreateDirectoryIfItDoesntExist $RestClientEntitiesFolder
+$RestClientEntityFolder = $RestClientEntitiesFolder + "{{ entityName }}\"
+CreateDirectoryIfItDoesntExist $RestClientEntityFolder
+
+
+
+
+
+# ---- Domain files ----------------------------------------------------------------------------------------------------
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ `${ entityName }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$EntityFileName = $DomainEntityFolder + "{{ entityName }}.cs"
+$EntityFileContentFile = @'
+{{ $('#CodeDomainEntity').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileIfItDoesntExists $EntityFileName $EntityFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\_I{{ `${ entityName }Repository.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$EntityRepositoryFileName = $DomainEntityFolder + "_I{{ entityName }}Repository.cs"
+$EntityRepositoryFileContentFile = @'
+{{ $('#CodeDomainUseCaseEntityRepository').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileIfItDoesntExists $EntityRepositoryFileName $EntityRepositoryFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$UseCaseFileName = $DomainUseCaseFolder + "{{ useCase }}.cs"
+$UseCaseFileContentFile = @'
+{{ $('#CodeDomainUseCase').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileReplacingTheOldOneIfItExists $UseCaseFileName $UseCaseFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Params.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$UseCaseParamsFileName = $DomainUseCaseFolder + "{{ useCase }}.Params.cs"
+$UseCaseParamsFileContentFile = @'
+{{ $('#CodeDomainUseCaseParams').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileReplacingTheOldOneIfItExists $UseCaseParamsFileName $UseCaseParamsFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Params.Validator.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$UseCaseParamsValidatorFileName = $DomainUseCaseFolder + "{{ useCase }}.Params.Validator.cs"
+$UseCaseParamsValidatorFileContentFile = @'
+{{ $('#CodeDomainUseCaseParamsValidator').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileReplacingTheOldOneIfItExists $UseCaseParamsValidatorFileName $UseCaseParamsValidatorFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Result.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$UseCaseResultFileName = $DomainUseCaseFolder + "{{ useCase }}.Result.cs"
+$UseCaseResultFileContentFile = @'
+{{ $('#CodeDomainUseCaseResult').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileReplacingTheOldOneIfItExists $UseCaseResultFileName $UseCaseResultFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Errors.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$UseCaseErrorsFileName = $DomainUseCaseFolder + "{{ useCase }}.Errors.cs"
+$UseCaseErrorsFileContentFile = @'
+{{ $('#CodeDomainUseCaseErrors').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileReplacingTheOldOneIfItExists $UseCaseErrorsFileName $UseCaseErrorsFileContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$DomainDependencyInjectionFileName = $DomainRootFolder + "DependencyInjection.cs"
+$DomainDependencyInjectionFileContentFile = @'
+{{ $('#CodeDomainDependencyInjection').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $DomainDependencyInjectionFileName $DomainDependencyInjectionFileContentFile
+
+
+
+
+
+# ---- Infrastructure classes ------------------------------------------------------------------------------------------
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\{{ namespaceOrExampleProjectName + `DbContext.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$DbContextFileName = $InfrastructureDbContextFolder + "{{ namespaceOrExampleProjectName }}DbContext.cs"
+$DbContextContentFile = @'
+{{ $('#CodeInfrastructureDbContext').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $DbContextFileName $DbContextContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\DbMaps\{{ entityName }}.{{ `DbMap.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$DbContextMapsFileName = $InfrastructureDbContextMapsFolder + "{{ entityName }}.DbMap.cs"
+$DbContextMapsContentFile = @'
+{{ $('#CodeInfrastructureDbMap').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileIfItDoesntExists $DbContextMapsFileName $DbContextMapsContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\Repository\{{ entityName }}{{ `Repository.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$RepositoryFileName = $InfrastructureRepositoriesFolder + "{{ entityName }}Repository.cs"
+$RepositoryContentFile = @'
+{{ $('#CodeInfrastructureRepository').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileIfItDoesntExists $RepositoryFileName $RepositoryContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$RepositoryDependencyInjectionFileName = $InfrastructureRootFolder + "DependencyInjection.cs"
+$RepositoryDependencyInjectionFileContentFile = @'
+{{ $('#CodeInfrastructureDependencyInjection').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $RepositoryDependencyInjectionFileName $RepositoryDependencyInjectionFileContentFile
+
+
+
+
+
+# ---- API files -------------------------------------------------------------------------------------------------------
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Api\Controllers\{{ entityName }}{{ `Controller.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$ApiControllerFileName = $ApiControllersFolder + "{{ entityName }}Controller.cs"
+$ApiControllerContentFile = @'
+{{ $('#CodeApiController').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $ApiControllerFileName $ApiControllerContentFile
+
+
+
+
+
+# ---- Tests files -----------------------------------------------------------------------------------------------------
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\{{ useCase }}{{ `UseCaseTest.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$DomainUseCaseTestFileName = $DomainUseCasesTestsFolder + "{{ entityName }}Entity\{{ useCase }}UseCaseTest.cs"
+$DomainUseCaseTestContentFile = @'
+{{ $('#CodeDomainUseCaseTest').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $DomainUseCaseTestFileName $DomainUseCaseTestContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\Data\{{ entityName }}{{ `RepositoryMemory.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$InfrastructureFakeRepositoryFileName = $InfrastructureFakeRootFolder + "Data\{{ entityName }}RepositoryMemory.cs"
+$InfrastructureFakeRepositoryContentFile = @'
+{{ $('#CodeInfrastructureFakeInMemoryEntityRepository').text().replaceAll("'", "`'") }}
+'@
+CreateNewFileIfItDoesntExists $InfrastructureFakeRepositoryFileName $InfrastructureFakeRepositoryContentFile
+
+
+# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$FakeRepositoryDependencyInjectionFileName = $InfrastructureFakeRootFolder + "DependencyInjection.cs"
+$FakeRepositoryDependencyInjectionFileContentFile = @'
+{{ $('#CodeInfrastructureFakeInMemoryDependencyInjection').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $FakeRepositoryDependencyInjectionFileName $FakeRepositoryDependencyInjectionFileContentFile
+
+
+
+
+
+# ---- Rest client files -----------------------------------------------------------------------------------------------
+# ~~~~ {{ vsProjectsLocalPath }}\_Requests\{{ entityName }}\{{ useCase }}{{ `.http ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+$RestClientEntityFileName = $RestClientEntitiesFolder + "{{ entityName }}\{{ useCase }}.http"
+$RestClientEntityContentFile = @'
+{{ $('#CodeRestClientEndPoints').text().replaceAll("'", "`'") }}
+'@
+AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
+                                </div><pre class="command-line" data-prompt="ps c:\>"><code class="language-PowerShell" id="prismCodePs1"></code></pre>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <span>
+            {{ workaroundProp.reduce((accumulator, currentValue) => accumulator + currentValue.workAround, '') }}
+        </span>
     </div>
     <script>
-        function SalvarClasse(fileContent, fileName) {
-            var blob = new Blob([fileContent], {type: "text/plain;charset=utf-8"});
+        function DownloadFile(fileContent, fileName) {
+            var blob = new Blob([fileContent], { type: "text/plain;charset=utf-8" });
             saveAs(blob, fileName);
         }
 
@@ -696,18 +1185,96 @@ Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
             return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
         }
 
+        Vue.component('file-title', {
+            template: `
+                <div class="filePath"><i class="ms-Icon ms-Icon--FileTypeSolution fixPosition" aria-hidden="true"></i>
+                    {{ path }}
+                    <a href="#" @click.prevent.stop="copyToClipboard(filename)" class="ml-2" title="Copy file name">
+                        <i class="ms-Icon ms-Icon--Copy fixPosition" aria-hidden="true" style="top: 4px;"></i>
+                    </a>
+                </div>
+            `,
+            props: {
+                path: { type: String, required: true },
+            },
+            computed: {
+                filename: function () {
+                    return this.path.split('/').pop();
+                },
+            },
+            methods: {
+                copyToClipboard(text){
+                    if (window.clipboardData && window.clipboardData.setData) {
+                        // IE specific code path to prevent textarea being shown while dialog is visible.
+                        this.showToastCopyOk(text);
+                        return clipboardData.setData("Text", text);
+                    } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+                        var textarea = document.createElement("textarea");
+                        textarea.textContent = text;
+                        textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        try {
+                        this.showToastCopyOk(text);
+                            return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+                        } catch (ex) {
+                            console.warn("Copy to clipboard failed.", ex);
+                            return false;
+                        } finally {
+                            document.body.removeChild(textarea);
+                        }
+                    }
+                },
+                showToastCopyOk(text){
+                    iziToast.success({
+                        layout     : 2,
+                        message    : text,
+                        position   : 'center',
+                        title      : '<div style="margin-bottom:5px;">Copy ok</div>',
+                        displayMode: 'replace',
+                    });
+                },
+            }
+        });
+
         var app = new Vue({
             el   : '#app',
             data : {
                 namespace                   : '',
                 entityName                  : '',
                 useCase                     : '',
+                vsProjectsLocalPath         : '',
                 propsEntityPraProcessamento : '',
                 propsParamsPraProcessamento : '',
                 propsResultPraProcessamento : '',
                 propsEntity                 : [ { tipo: '', nome: '' } ],
                 propsParams                 : [ { tipo: '', nome: '' } ],
                 propsResult                 : [ { tipo: '', nome: '' } ],
+
+                workaroundProp : [],
+            },
+            computed: {
+                namespaceOrBlank() {
+                    let namespaceTrimmed = this.namespace.trim();
+                    return namespaceTrimmed == ''
+                        ? ''
+                        : namespaceTrimmed + '.';
+                },
+                namespacePathOrBlank() {
+                    let namespaceTrimmed = this.namespace.trim();
+                    return namespaceTrimmed == ''
+                        ? ''
+                        : '\\'+ namespaceTrimmed;
+                },
+                namespaceOrExampleProjectName() {
+                    let namespaceTrimmed = this.namespace.trim();
+                    return namespaceTrimmed == ''
+                        ? 'ProjectName'
+                        : namespaceTrimmed;
+                },
+                vsProjectsLocalPathAndNamespaceFolderPrefix(){
+                    return this.vsProjectsLocalPath +'\\'+ this.namespaceOrBlank;
+                },
             },
             mounted() {
                 Prism.highlightAll();
@@ -715,32 +1282,77 @@ Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
                 window.vm = this;
             },
             methods: {
+                async aguardarPor(txtTempo){ // Exemplos: '500 milissegundos', '5 seconds', '1 minuto', '90 minutes', '2 horas'
+                    let [tempo, unidade] = txtTempo.trim().split(' ');
+
+                    switch (unidade.toLowerCase()) {
+                        case 'milliseconds' :
+                        case 'milissegundos':
+                            tempo = tempo;
+                            break;
+
+                        case 'second'  :
+                        case 'seconds' :
+                        case 'segundo' :
+                        case 'segundos':
+                            tempo *= 1000;
+                            break;
+
+                        case 'minute' :
+                        case 'minutes':
+                        case 'minuto':
+                        case 'minutos':
+                            tempo *= 1000 * 60;
+                            break;
+
+                        case 'hour' :
+                        case 'hours':
+                        case 'hora' :
+                        case 'horas':
+                            tempo *= 1000 * 60 * 60;
+                            break;
+                    }
+
+                    await new Promise((resolve) => setTimeout(resolve, tempo));
+                },
                 firstLetterToLower(string) {
                     return string.charAt(0).toLowerCase() + string.slice(1);
                 },
-                reRenderPrismCodes(){
+                async reRenderPrismCodes(){
+                    await this.aguardarPor('500 milissegundos');
                     [
-                        'CodeDomainEntity',
-                        'CodeDomainUseCase',
-                        'CodeDomainUseCaseErrors',
-                        'CodeDomainUseCaseParams',
-                        'CodeDomainUseCaseParamsValidator',
-                        'CodeDomainUseCaseResult',
-                        'CodeDomainUseCaseEntityRepository',
-                        'CodeDomainDependencyInjection',
-                        'CodeInfrastructureDbContext',
-                        'CodeInfrastructureDbMap',
-                        'CodeInfrastructureRepository',
-                        'CodeInfrastructureDependencyInjection',
-                        'CodeApiController',
-                        'CodeDomainUseCaseTest',
-                        'CodeInfrastructureFakeInMemoryEntityRepository',
-                        'CodeInfrastructureFakeInMemoryDependencyInjection',
-                        'CodeRestClientEndPoints'
-                    ].forEach( (code) => { $('#prism'+code).html( Prism.highlight( htmlDecode( $('#'+code).html() ), Prism.languages.csharp, 'csharp' ) ) } );
+                        { element: 'CodeDomainEntity'                                 , language: 'csharp'     },
+                        { element: 'CodeDomainUseCase'                                , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseErrors'                          , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseParams'                          , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseParamsValidator'                 , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseResult'                          , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseEntityRepository'                , language: 'csharp'     },
+                        { element: 'CodeDomainDependencyInjection'                    , language: 'csharp'     },
+                        { element: 'CodeInfrastructureDbContext'                      , language: 'csharp'     },
+                        { element: 'CodeInfrastructureDbMap'                          , language: 'csharp'     },
+                        { element: 'CodeInfrastructureRepository'                     , language: 'csharp'     },
+                        { element: 'CodeInfrastructureDependencyInjection'            , language: 'csharp'     },
+                        { element: 'CodeApiController'                                , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseTest'                            , language: 'csharp'     },
+                        { element: 'CodeInfrastructureFakeInMemoryEntityRepository'   , language: 'csharp'     },
+                        { element: 'CodeInfrastructureFakeInMemoryDependencyInjection', language: 'csharp'     },
+                        { element: 'CodeRestClientEndPoints'                          , language: 'http'       },
+                        { element: 'CodePs1'                                          , language: 'powershell' },/*
+                        { element: 'CodeHostJson'                      , language: 'javascript' },*/
+                    ].forEach( (item) => {
+                        const vueGeneratedCode = $('#'+item.element).html();
+                        const highlightedCode  = Prism.highlight(
+                            htmlDecode(vueGeneratedCode),
+                            Prism.languages[item.language],
+                            item.language
+                        );
+                        $('#prism'+item.element).html(highlightedCode);
+                    } );
+
+                    window.Prism.highlightAll();
                 },
                 addProp: function(tipo) {
-                    var self = this;
                     this[`props${tipo}`].push({ tipo: '', nome: '' });
                     this.$nextTick(() => {
                         this.$refs[`tipo${tipo}`][this[`props${tipo}`].length - 1].focus();
@@ -748,8 +1360,8 @@ Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
                     this.reRenderPrismCodes();
                 },
                 delProp: function(tipo, index) {
-                    this[`props${tipo}`].splice(index, 1);
-                    if (index === 0) this.addProp();
+                    this[`props${tipo}`].splice(index ?? this[`props${tipo}`].length - 1, 1);
+                    if (this[`props${tipo}`].length === 0) this.addProp(tipo);
                     this.reRenderPrismCodes();
                 },
                 processarProps: function (tipo) {
@@ -759,7 +1371,7 @@ Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
 
                     $.each(arrStrLinesPropsOnTextArea, function (key, prop) {
                         var strProp = prop.trim().replace(/  +/g, ' ').replace('{ get; set; }', '{get;set;}');
-                        
+
                         if (strProp.indexOf('get;') > 0){
                             var partesDaDeclaracaoDaPropriedade = strProp.split(' '),
                                 tipoProp = partesDaDeclaracaoDaPropriedade[1],
@@ -775,42 +1387,102 @@ Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
                             }
                         }
                     });
-                    
+
                     this[`props${tipo}PraProcessamento`] = '';
-                    setTimeout(this.reRenderPrismCodes, 500);
+                    this.reRenderPrismCodes();
                 },
+                reHighlightLines(){
+                    setTimeout(window.Prism.highlightAll, 300);
+                },
+                copyEntityPropsTo(otherCollectionName){
+                    this[`props${otherCollectionName}`] = [...this.propsEntity];
+                    this.reRenderPrismCodes();
+                },
+                downloadPowerShellFile() {
+                    iziToast.toastLoading('Aguarde', 'Processando...', true, {overlay: true, zindex: 99999});
 
+                    this.workaroundToUpdatePs1Content();
 
-                
-                
-                downloadFile: function (arquivo, className) {
-                    var fileName    = '',
-                        fileContent = '';
+                    setTimeout( () => {
+                        DownloadFile($('#CodePs1').text(), 'GenerateOperationFiles.ps1');
+                        iziToast.hideAll();
+                    }, 1250);
+                },
+                workaroundToUpdatePs1Content(){
+                    this.workaroundProp.push({workAround:'&nbsp;'});
+                    this.reRenderPrismCodes();
+                },
+                downloadFile: function (fileContent, fileName) {
+                    DownloadFile(fileContent, fileName);
+                },
+                getRandomInt(min = 0, max = 100, zeroPadding = null){
+                    min = Math.ceil(min);
+                    max = Math.floor(max);
+                    const result = Math.floor(Math.random() * (max - min + 1)) + min;
 
-                    switch (arquivo) {
-                        case 'Bo':
-                            fileContent = $('#Bo').text();
-                            fileName    = className + 'Bo.cs';
-                            break;
+                    return zeroPadding === null
+                        ? result
+                        : String(result).padStart(zeroPadding, '0');
+                },
+                getRandomDecimal(min = 0, max = 100, precision = 2){
+                    let rand = Math.random() * (max - min) + min;
+                    return rand.toFixed(precision);
+                },
+                getRandomBool(){
+                    return this.getRandomInt() % 2 === 0 ? 'true' : 'false';
+                },
+                getRandomDateTime(){
+                    const ano = `${this.getRandomInt(19, 20)}${this.getRandomInt(0, 99, 2)}`;
+                    const mes = this.getRandomInt(1, 12);
+                    const dia = this.getRandomInt(1, 28);
+                    return `new DateTime(${ano}, ${mes}, ${dia})`;
+                },
+                getStringNewRandomEntitiesInstances(){
+                    const arrGuids = [
+                        '81b9f6fc-e489-11ed-b5ea-0242ac120001',
+                        '81b9f83c-e489-11ed-b5ea-0242ac120002',
+                        '81b9f972-e489-11ed-b5ea-0242ac120003',
+                        '81b9fed6-e489-11ed-b5ea-0242ac120004',
+                        '81ba014c-e489-11ed-b5ea-0242ac120005',
+                        '81ba0296-e489-11ed-b5ea-0242ac120006',
+                        '81ba0426-e489-11ed-b5ea-0242ac120007',
+                        '81ba0552-e489-11ed-b5ea-0242ac120008',
+                        '81ba066a-e489-11ed-b5ea-0242ac120009',
+                        '81ba0796-e489-11ed-b5ea-0242ac120010',
+                        '81ba08e0-e489-11ed-b5ea-0242ac120011',
+                        '81ba0e12-e489-11ed-b5ea-0242ac120012',
+                        '81ba0f52-e489-11ed-b5ea-0242ac120013',
+                        '81ba1074-e489-11ed-b5ea-0242ac120014',
+                        '81ba11a0-e489-11ed-b5ea-0242ac120015',
+                        '81ba12cc-e489-11ed-b5ea-0242ac120016',
+                        '81ba13f8-e489-11ed-b5ea-0242ac120017',
+                        '81ba1510-e489-11ed-b5ea-0242ac120018',
+                        '81ba161e-e489-11ed-b5ea-0242ac120019',
+                        '81b9f422-e489-11ed-b5ea-0242ac120020',
+                    ];
+                    const arrAllInstances = [];
 
-                        case 'DbMap':
-                            fileContent = $('#DbMap').text();
-                            fileName    = className + 'DbMap.cs';
-                            break;
-
-                        case 'ClassePrincipal':
-                            fileName    = className+'.cs';
-                            fileContent = $('#ClassePrincipal').text();
-                            break;
-
-                        case 'ExpecsAndValidations':
-                            fileContent = $('#ExpecsAndValidations').text();
-                            fileName    = className + 'ExpecsAndValidations.cs';
-                            break;
+                    for (let i = 0; i < arrGuids.length; i++) {
+                        const guid = arrGuids[i];
+                        const arrPropsWithRandomValues = this.propsEntity.map((prop) => {
+                            switch (prop.tipo.toLowerCase()){
+                                case 'guid'    : return `                 ${prop.nome} = new Guid("${guid}")`;
+                                case 'bool'    : return `                 ${prop.nome} = ${this.getRandomBool()}`;
+                                case 'byte'    : return `                 ${prop.nome} = ${this.getRandomInt(0, 7)}`;
+                                case 'bit'     : return `                 ${prop.nome} = ${this.getRandomInt(0, 1)}`;
+                                case 'double'  : return `                 ${prop.nome} = ${this.getRandomDecimal()}`;
+                                case 'datetime': return `                 ${prop.nome} = ${this.getRandomDateTime()}`;
+                                case 'short'   :
+                                case 'int'     : return `                 ${prop.nome} = ${this.getRandomInt(1, 100)}`;
+                                case 'long'    : return `                 ${prop.nome} = ${this.getRandomDecimal(0, 100, 4)}`;
+                                default        : return `                 ${prop.nome} = "some valid domain value"`;
+                            }
+                        });
+                        arrAllInstances.push(`            new ${ this.entityName } {\n${arrPropsWithRandomValues.join(',\n')} }`);
                     }
 
-                    SalvarClasse(fileContent, fileName);
-                }
+                    return arrAllInstances.join(',\n');
+                },
             }
         });
     </script>
