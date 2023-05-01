@@ -83,6 +83,27 @@
             background:#fff;
             padding:0 10px;
         }
+
+
+        ul.toast-errors-list,
+        ol.toast-stapes-list{
+            padding:0;
+            margin:5px 0 0 25px;
+        }
+        ol.toast-stapes-list{
+            margin-left:35px;
+        }
+        ul.toast-errors-list li,
+        ol.toast-stapes-list li{
+            margin-top:4px;
+        }
+
+        .child-node-class {
+            display: flex;
+        }
+        .child-node-class label{
+            font-family: unset;
+        }
     </style>
 </head>
 <body>
@@ -91,21 +112,30 @@
             <div class="col-4">
                 <div class="sticky-top" style="margin-bottom: 20px;">
                     <h1>Add new use case</h1>
-                    <div class="form-group custom-label mb-3">
-                        <label for="flowName">Namespace</label>
-                        <input class="form-control" type="text" placeholder="Domain namespace" v-model="namespace" @keyup="reRenderPrismCodes()">
-                        <small class="form-text text-muted">The same you are using in your project</small>
+
+                    <div class="form-row">
+                        <div class="col">
+                            <div class="form-group custom-label mb-3">
+                                <label for="flowName">Namespace</label>
+                                <input class="form-control" type="text" placeholder="Domain namespace" v-model="namespace" @keyup="reRenderPrismCodes()">
+                                <small class="form-text text-muted">The same you are using in your project</small>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group custom-label mb-3">
+                                <label for="flowName">Entity</label>
+                                <input class="form-control" type="text" placeholder="Entity name" v-model="entityName" @keyup="reRenderPrismCodes()">
+                                <small class="form-text text-muted">Name of the entity for which the use case will apply</small>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="form-group custom-label mb-3">
                         <label for="flowName">Use case</label>
                         <input class="form-control" type="text" placeholder="Use case name" v-model="useCase" @keyup="reRenderPrismCodes()">
                         <small class="form-text text-muted">Use case name in UpperCamelCase</small>
                     </div>
-                    <div class="form-group custom-label mb-3">
-                        <label for="flowName">Entity</label>
-                        <input class="form-control" type="text" placeholder="Entity name" v-model="entityName" @keyup="reRenderPrismCodes()">
-                        <small class="form-text text-muted">Name of the entity for which the use case will apply</small>
-                    </div>
+
 
                     <label for="flowName"><strong>Domain entity, Input method and Result properties</strong></label>
                     <div class="card mb-3">
@@ -115,10 +145,20 @@
                                     <a class="nav-link active" data-toggle="tab" href="#classes-entity" role="tab">Entity</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">Params</a>
+                                    <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">Input params</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#classes-result" role="tab">Result</a>
+                                    <a class="nav-link" data-toggle="tab" href="#classes-result" role="tab">
+                                        <div class="child-node-class">
+                                            <span>Result output (</span>
+                                            <span style="cursor: pointer; color: #dc3545; margin-right: 5px" @click="isResultTypeList=!isResultTypeList">flat</span>
+                                            <div class="custom-control custom-switch">
+                                                <input type="checkbox" class="custom-control-input" id="isResultTypeList" v-model="isResultTypeList">
+                                                <label class="custom-control-label" for="isResultTypeList" style="cursor: pointer; color: #007bff" @click="isResultTypeList=!isResultTypeList">as list</label>
+                                            </div>
+                                            <span>)</span>
+                                        </div>
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -241,10 +281,10 @@ public class {{ useCase }}
     public {{ useCase }}(I{{ entityName }}Repository {{ entityName.toLowerCase() }}Repository)
         => (_{{ entityName.toLowerCase() }}Repository) = ({{ entityName.toLowerCase() }}Repository);
 
-    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; Execute({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
+    public async Task&lt;IDomainActionResult&lt;{{ typeResult }}&gt;&gt; Execute({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
     {
         var paramsValidationResult = new {{ useCase }}ParamsValidator().Validate({{ firstLetterToLower(useCase) }}Params);
-        var {{ firstLetterToLower(useCase) }}Result = new DomainActionResult&lt;{{ useCase }}Result&gt;(paramsValidationResult.Errors);
+        var {{ firstLetterToLower(useCase) }}Result = new DomainActionResult&lt;{{ typeResult }}&gt;(paramsValidationResult.Errors);
 
         if (paramsValidationResult.HasErrors())
             return {{ firstLetterToLower(useCase) }}Result;
@@ -429,11 +469,10 @@ internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName
 {
     public void Configure(EntityTypeBuilder&lt;{{ entityName }}&gt; builder)
     {
-        builder.ToTable("T?##_{{ entityName }}");
-        builder.HasKey  (p => p.Id);
+        builder.ToTable("T?##_{{ entityName }}").HasKey(p => p.Id);
         builder.Property(p => p.Id).HasColumnName("T?##_id_{{ entityName }}").HasColumnOrder(1);/*
         builder.HasIndex(b => b.Cod).IsUnique(true);*/
-{{ propsEntity.map((prop) => `        builder.Property(p => p.${prop.nome}).HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasComment("Lorem ipsum dollor");\n`).join('') }}
+{{ propsEntity.map((prop) => `        builder.Property(p => p.${ prop.nome }).HasColumnName("??_${ prop.nome }").HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasComment("Lorem ipsum dollor");\n`).join('') }}
         // Relationships
         /*
         builder
@@ -598,8 +637,7 @@ namespace {{ namespaceOrBlank }}Infrastructure
                             <!-- TAB API ----------------------------------------------------------------------------------------------------------- -->
                             <div class="tab-pane fade" id="codes-api" role="tabpanel">
                                 <file-title :path="`${ namespaceOrBlank }Api/Controllers/${ entityName }Controller.cs`"></file-title>
-                                <div id="CodeApiController" style="display: none;">using {{ namespaceOrBlank }}Api.Controllers;
-using Microsoft.AspNetCore.Mvc;
+                                <div id="CodeApiController" style="display: none;">using Microsoft.AspNetCore.Mvc;
 // 👇 Other pre-defined use cases in the {{ entityName }} controller file (it's just an example)
 using {{ namespaceOrBlank }}Domain.Entities.LoremUseCase;
 using {{ namespaceOrBlank }}Domain.Entities.IpsumUseCase;
@@ -641,7 +679,7 @@ public class {{ entityName }}Controller : BaseController&lt;{{ entityName }}Cont
 
         return DomainResult(domainResult);
     }
-}</div>                         <div class="append-to-file"><pre data-line="8,15,20,37-43"><code class="language-csharp" id="prismCodeApiController"></code></pre></div>
+}</div>                         <div class="append-to-file"><pre data-line="7,14,19,36-42"><code class="language-csharp" id="prismCodeApiController"></code></pre></div>
                             </div>
 
 
@@ -701,12 +739,6 @@ public class {{ useCase }}UseCaseTest
 
 
 
-                                <h2 class="mt-5"><span>👇 Existing files for which it is only necessary to increment their content 👇</span></h2>
-                                <div class="text-center"><em>Add the highlighted lines to the existing files</em></div>
-
-
-
-
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure.FakeInMemory/Data/${ entityName }RepositoryMemory.cs`"></file-title>
                                 <div id="CodeInfrastructureFakeInMemoryEntityRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
 using {{ namespaceOrBlank }}Domain.Entities.Common;
@@ -718,14 +750,9 @@ namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
 
 public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
 {
-    private List&lt;{{ entityName }}&gt; List{{ entityName }}Mock { get; }
-
-    public {{ entityName }}RepositoryMemory()
-    {
-        List{{ entityName }}Mock = new List&lt;{{ entityName }}&gt;{
+    public static List&lt;{{ entityName }}&gt; List{{ entityName }}Mock { get; } = new List&lt;{{ entityName }}&gt;{
 {{ getStringNewRandomEntitiesInstances() }}
-        };
-    }/*
+        };/*
 
     // 👇 Just a generic example of IRepository method
     public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; USE_CASE_EXEMPLE_GetByCodigoAsync(string codigo)
@@ -738,7 +765,13 @@ public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
             ? domainRepositoryResult
             : domainRepositoryResult.AddNotFoundError($"{nameof({{ entityName }}RepositoryMemory)}.{nameof(GetByIdAsync)}", "{{ entityName }} não encontrado");
     }*/
-}</div>                         <div class="append-to-file"><pre data-line="4,37-44"><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre></div>
+}</div>                         <pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre>
+
+
+
+
+                                <h2 class="mt-5"><span>👇 Existing files for which it is only necessary to increment their content 👇</span></h2>
+                                <div class="text-center"><em>Add the highlighted lines to the existing files</em></div>
 
 
 
@@ -790,9 +823,21 @@ POST {{'{'}}{{'{host}'}}{{'}'}}/api/{{ entityName }}/{{ useCase }}
 Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
 
 {
-{{ propsParams.map((prop) => `	"${firstLetterToLower(prop.nome)}": "some valid domain value"`).join(',\n') }}
+{{ propsParams.map((prop) => {
+    switch (prop.tipo.toLowerCase()){
+        case 'guid'    : return `	${firstLetterToLower(prop.nome)}: "${arrGuids[getRandomInt(0, arrGuids.length-1)]}"`;
+        case 'bool'    : return `	${firstLetterToLower(prop.nome)}: ${getRandomBool()}`;
+        case 'byte'    : return `	${firstLetterToLower(prop.nome)}: ${getRandomInt(0, 7)}`;
+        case 'bit'     : return `	${firstLetterToLower(prop.nome)}: ${getRandomInt(0, 1)}`;
+        case 'double'  : return `	${firstLetterToLower(prop.nome)}: ${getRandomDecimal()}`;
+        case 'short'   :
+        case 'int'     : return `	${firstLetterToLower(prop.nome)}: ${getRandomInt(100)}`;
+        case 'datetime': return `	${firstLetterToLower(prop.nome)}: ${getRandomNewJsDateObject()}`;
+        case 'long'    : return `	${firstLetterToLower(prop.nome)}: ${getRandomDecimal(0, 100, 4)}`;
+        default        : return `	${firstLetterToLower(prop.nome)}: "some valid domain value"`;
+    }
+}).join(',\n') }}
 }
-
 
 
 
@@ -892,7 +937,7 @@ Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
 	"regiao5" : "oeste",
 	"regiao8" : "oeste"
 }
-</div>                          <div class="append-to-file"><pre data-line="7-17"><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre></div>
+</div>                          <div class="append-to-file"><pre data-line="8-18"><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre></div>
                             </div>
 
 
@@ -905,18 +950,24 @@ Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
                                     PowerShell script generator
                                 </span>
 
-                                <div class="form-group custom-label mb-3">
-                                    <label for="vsProjectsLocalPath">Visual Studio projects path on your machine</label>
-                                    <input class="form-control" type="text" id="vsProjectsLocalPath" placeholder="Visual Studio solution path on your machine" v-model="vsProjectsLocalPath" @keyup="reRenderPrismCodes()">
+                                <div class="form-group custom-label">
+                                    <label for="vsProjectsLocalPath">Visual Studio projects path on your computer</label>
+                                    <input class="form-control" type="text" id="vsProjectsLocalPath" placeholder="Visual Studio solution path on your computer" v-model="vsProjectsLocalPath" @keyup="reRenderPrismCodes()">
                                     <small class="form-text text-muted">Ex: C:\Repositories\{{ namespaceOrExampleProjectName }}</small>
                                 </div>
 
-                                <span class="filePath">
-                                    <a href="#" @click.prevent.stop="downloadPowerShellFile()" class="ml-2" title="Download PS1 file">
+                                <div class="filePath my-4">
+                                    <a href="#" @click.prevent.stop="downloadPowerShellFile()" title="Download PS1 file">
                                         <i class="ms-Icon ms-Icon--Copy fixPosition" aria-hidden="true" style="top: 4px;"></i>
                                         Download PS1 file
                                     </a>
-                                </span>
+                                </div>
+
+                                <div class="form-group custom-label mb-3">
+                                    <label for="vsProjectsLocalPath">PowerShell command to execute download script on your computer</label>
+                                    <input class="form-control" type="text" readonly :value="`powershell -ExecutionPolicy Bypass -File GenerateUseCaseFiles_${ this.entityName }.${ this.useCase }.ps1`">
+                                </div>
+
                                 <div id="CodePs1" style="display: none;"># Helper functions -----------------------------------------------------------------------------------------------------
 function CreateDirectoryIfItDoesntExist([string]$path) {
     if ( ! (Test-Path $path) ) {
@@ -1168,9 +1219,7 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 </div>
             </div>
         </div>
-        <span>
-            {{ workaroundProp.reduce((accumulator, currentValue) => accumulator + currentValue.workAround, '') }}
-        </span>
+        <span v-html="workaroundProp.reduce((accumulator, currentValue) => accumulator + currentValue.workAround, '')"></span>
     </div>
     <script>
         function DownloadFile(fileContent, fileName) {
@@ -1247,9 +1296,32 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 propsEntityPraProcessamento : '',
                 propsParamsPraProcessamento : '',
                 propsResultPraProcessamento : '',
+                isResultTypeList            : false,
                 propsEntity                 : [ { tipo: '', nome: '' } ],
                 propsParams                 : [ { tipo: '', nome: '' } ],
                 propsResult                 : [ { tipo: '', nome: '' } ],
+                arrGuids : [
+                    '81b9f6fc-e489-11ed-b5ea-0242ac120001',
+                    '81b9f83c-e489-11ed-b5ea-0242ac120002',
+                    '81b9f972-e489-11ed-b5ea-0242ac120003',
+                    '81b9fed6-e489-11ed-b5ea-0242ac120004',
+                    '81ba014c-e489-11ed-b5ea-0242ac120005',
+                    '81ba0296-e489-11ed-b5ea-0242ac120006',
+                    '81ba0426-e489-11ed-b5ea-0242ac120007',
+                    '81ba0552-e489-11ed-b5ea-0242ac120008',
+                    '81ba066a-e489-11ed-b5ea-0242ac120009',
+                    '81ba0796-e489-11ed-b5ea-0242ac120010',
+                    '81ba08e0-e489-11ed-b5ea-0242ac120011',
+                    '81ba0e12-e489-11ed-b5ea-0242ac120012',
+                    '81ba0f52-e489-11ed-b5ea-0242ac120013',
+                    '81ba1074-e489-11ed-b5ea-0242ac120014',
+                    '81ba11a0-e489-11ed-b5ea-0242ac120015',
+                    '81ba12cc-e489-11ed-b5ea-0242ac120016',
+                    '81ba13f8-e489-11ed-b5ea-0242ac120017',
+                    '81ba1510-e489-11ed-b5ea-0242ac120018',
+                    '81ba161e-e489-11ed-b5ea-0242ac120019',
+                    '81b9f422-e489-11ed-b5ea-0242ac120020',
+                ],
 
                 workaroundProp : [],
             },
@@ -1274,6 +1346,14 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 },
                 vsProjectsLocalPathAndNamespaceFolderPrefix(){
                     return this.vsProjectsLocalPath +'\\'+ this.namespaceOrBlank;
+                },
+                typeResult(){
+                    return this.isResultTypeList ? `List<${ this.useCase }Result>` : this.useCase+'Result'
+                },
+            },
+            watch: {
+                isResultTypeList: function (newVal, oldVal) {
+                    this.reRenderPrismCodes();
                 },
             },
             mounted() {
@@ -1399,14 +1479,53 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                     this.reRenderPrismCodes();
                 },
                 downloadPowerShellFile() {
-                    iziToast.toastLoading('Aguarde', 'Processando...', true, {overlay: true, zindex: 99999});
+                    const problemsToGeneratePowerShellFile = this.getProblemsToGeneratePowerShellFile();
+
+                    if(problemsToGeneratePowerShellFile.length > 0){
+                        iziToast.toastError(
+                            'Error! To download PS1 file you must provide:',
+                            `<ul class="toast-errors-list"><li>${problemsToGeneratePowerShellFile.join('</li><li>')}</li></ul>`,
+                            true,
+                            { layout: 2, timeout: 10000 }
+                        );
+                        return;
+                    }
+                    iziToast.toastLoading('Wait', 'Processing...', true, moreOptions = {overlay: true, zindex: 99999, close: false,});
 
                     this.workaroundToUpdatePs1Content();
 
                     setTimeout( () => {
-                        DownloadFile($('#CodePs1').text(), 'GenerateOperationFiles.ps1');
-                        iziToast.hideAll();
+                        this.downloadFile($('#CodePs1').text(), `GenerateUseCaseFiles_${ this.entityName }.${ this.useCase }.ps1`);
                     }, 1250);
+                },
+                getProblemsToGeneratePowerShellFile(){
+                    const problems = [];
+                    const firstPropsProvided     = this.propsEntity[0];
+                    const mustProvideUseCaseName = this.useCase            .trim() === '';
+                    const mustProvideEntityName  = this.entityName         .trim() === '';
+                    const mustProvideLocalPath   = this.vsProjectsLocalPath.trim() === '';
+                    const mustProvideAtLeastOneProperty = this.propsEntity.length === 1 && (firstPropsProvided.tipo.trim() === '' || firstPropsProvided.nome.trim() === '');
+
+                    if(mustProvideUseCaseName       ) problems.push("The path to the folder that contains your solution's projects.");
+                    if(mustProvideEntityName        ) problems.push("The Entity name.");
+                    if(mustProvideUseCaseName       ) problems.push("The UseCase name.");
+                    if(mustProvideAtLeastOneProperty) problems.push("At least one Entity's property.");
+
+                    if(!mustProvideLocalPath){
+                        const pathAdjustedToTest = this.vsProjectsLocalPath.slice(-1) === '\\'
+                            ? this.vsProjectsLocalPath
+                            : this.vsProjectsLocalPath + '\\';
+
+                        const isValidPath = /^([a-zA-Z]:\\)([-\u4e00-\u9fa5\w\s.()~!@#$%^&()\[\]{}+=]+\\)*$/.test(pathAdjustedToTest);
+
+                        if(!isValidPath){
+                            problems.push("A valid path to the folder that contains your solution's projects");
+                        } else if(problems.length === 0) {
+                            this.vsProjectsLocalPath = pathAdjustedToTest.slice(0, -1);
+                        }
+                    }
+
+                    return problems;
                 },
                 workaroundToUpdatePs1Content(){
                     this.workaroundProp.push({workAround:'&nbsp;'});
@@ -1414,6 +1533,29 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 },
                 downloadFile: function (fileContent, fileName) {
                     DownloadFile(fileContent, fileName);
+
+                    iziToast.toastSuccess(
+                        '<div style="margin-bottom:7px;">Success! Now just run the script.</div>',
+                        `
+                            These steps may help:
+                            <ol class="toast-stapes-list">
+                                <li>Open a PowerShell window as administrator</li>
+                                <li>Navigate to the directory where the "GenerateUseCaseFiles_${ this.entityName }.${ this.useCase }.ps1" file was downloaded</li>
+                                <li>Run the command: "powershell -ExecutionPolicy Bypass -File GenerateUseCaseFiles_${ this.entityName }.${ this.useCase }.ps1"</li>
+                                <li style="margin-top:10px;"><em>💡 Just use Ctrl + V in PowerShell. The command is already in the clipboard.</em></li>
+                            </ol>
+                        `,
+                        true,
+                        { layout: 2, timeout: 20000 }
+                    );
+
+                    this.setPowerShellCommandToClipboard();
+                },
+                setPowerShellCommandToClipboard() {
+                    const inputTextReadOnly = document.querySelector('input[readOnly]');
+                    inputTextReadOnly.select();
+                    inputTextReadOnly.setSelectionRange(0, 99999);
+                    document.execCommand('copy');
                 },
                 getRandomInt(min = 0, max = 100, zeroPadding = null){
                     min = Math.ceil(min);
@@ -1431,6 +1573,12 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 getRandomBool(){
                     return this.getRandomInt() % 2 === 0 ? 'true' : 'false';
                 },
+                getRandomNewJsDateObject(){
+                    const ano = `${this.getRandomInt(19, 20)}${this.getRandomInt(0, 99, 2)}`;
+                    const mes = this.getRandomInt(1, 11);
+                    const dia = this.getRandomInt(1, 28);
+                    return `new Date(${ano}, ${mes}, ${dia})`;
+                },
                 getRandomDateTime(){
                     const ano = `${this.getRandomInt(19, 20)}${this.getRandomInt(0, 99, 2)}`;
                     const mes = this.getRandomInt(1, 12);
@@ -1438,47 +1586,25 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                     return `new DateTime(${ano}, ${mes}, ${dia})`;
                 },
                 getStringNewRandomEntitiesInstances(){
-                    const arrGuids = [
-                        '81b9f6fc-e489-11ed-b5ea-0242ac120001',
-                        '81b9f83c-e489-11ed-b5ea-0242ac120002',
-                        '81b9f972-e489-11ed-b5ea-0242ac120003',
-                        '81b9fed6-e489-11ed-b5ea-0242ac120004',
-                        '81ba014c-e489-11ed-b5ea-0242ac120005',
-                        '81ba0296-e489-11ed-b5ea-0242ac120006',
-                        '81ba0426-e489-11ed-b5ea-0242ac120007',
-                        '81ba0552-e489-11ed-b5ea-0242ac120008',
-                        '81ba066a-e489-11ed-b5ea-0242ac120009',
-                        '81ba0796-e489-11ed-b5ea-0242ac120010',
-                        '81ba08e0-e489-11ed-b5ea-0242ac120011',
-                        '81ba0e12-e489-11ed-b5ea-0242ac120012',
-                        '81ba0f52-e489-11ed-b5ea-0242ac120013',
-                        '81ba1074-e489-11ed-b5ea-0242ac120014',
-                        '81ba11a0-e489-11ed-b5ea-0242ac120015',
-                        '81ba12cc-e489-11ed-b5ea-0242ac120016',
-                        '81ba13f8-e489-11ed-b5ea-0242ac120017',
-                        '81ba1510-e489-11ed-b5ea-0242ac120018',
-                        '81ba161e-e489-11ed-b5ea-0242ac120019',
-                        '81b9f422-e489-11ed-b5ea-0242ac120020',
-                    ];
                     const arrAllInstances = [];
 
-                    for (let i = 0; i < arrGuids.length; i++) {
-                        const guid = arrGuids[i];
+                    for (let i = 0; i < this.arrGuids.length; i++) {
+                        const guid = this.arrGuids[i];
                         const arrPropsWithRandomValues = this.propsEntity.map((prop) => {
                             switch (prop.tipo.toLowerCase()){
-                                case 'guid'    : return `                 ${prop.nome} = new Guid("${guid}")`;
-                                case 'bool'    : return `                 ${prop.nome} = ${this.getRandomBool()}`;
-                                case 'byte'    : return `                 ${prop.nome} = ${this.getRandomInt(0, 7)}`;
-                                case 'bit'     : return `                 ${prop.nome} = ${this.getRandomInt(0, 1)}`;
-                                case 'double'  : return `                 ${prop.nome} = ${this.getRandomDecimal()}`;
-                                case 'datetime': return `                 ${prop.nome} = ${this.getRandomDateTime()}`;
+                                case 'guid'    : return `            ${prop.nome} = new Guid("${guid}")`;
+                                case 'bool'    : return `            ${prop.nome} = ${this.getRandomBool()}`;
+                                case 'byte'    : return `            ${prop.nome} = ${this.getRandomInt(0, 7)}`;
+                                case 'bit'     : return `            ${prop.nome} = ${this.getRandomInt(0, 1)}`;
+                                case 'double'  : return `            ${prop.nome} = ${this.getRandomDecimal()}`;
+                                case 'datetime': return `            ${prop.nome} = ${this.getRandomDateTime()}`;
                                 case 'short'   :
-                                case 'int'     : return `                 ${prop.nome} = ${this.getRandomInt(1, 100)}`;
-                                case 'long'    : return `                 ${prop.nome} = ${this.getRandomDecimal(0, 100, 4)}`;
-                                default        : return `                 ${prop.nome} = "some valid domain value"`;
+                                case 'int'     : return `            ${prop.nome} = ${this.getRandomInt(1, 100)}`;
+                                case 'long'    : return `            ${prop.nome} = ${this.getRandomDecimal(0, 100, 4)}`;
+                                default        : return `            ${prop.nome} = "some valid domain value"`;
                             }
                         });
-                        arrAllInstances.push(`            new ${ this.entityName } {\n${arrPropsWithRandomValues.join(',\n')} }`);
+                        arrAllInstances.push(`        new ${ this.entityName } {\n${arrPropsWithRandomValues.join(',\n')} }`);
                     }
 
                     return arrAllInstances.join(',\n');
