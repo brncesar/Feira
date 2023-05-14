@@ -11,7 +11,7 @@ using FluentValidation.Results;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.EditExistingFeiraUseCase;
 
-public class EditExistingFeira
+public class EditExistingFeira : IEditExistingFeira
 {
     private readonly IFeiraRepository         _feiraRepository;
     private readonly IDistritoRepository      _distritoRepository;

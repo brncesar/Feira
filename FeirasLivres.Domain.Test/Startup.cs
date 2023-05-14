@@ -1,14 +1,13 @@
 ﻿using FeirasLivres.Infrastructure.FakeInMemory;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FeirasLivres.Domain.Test
+namespace FeirasLivres.Domain.Test;
+
+public class Startup
 {
-    public class Startup
+    public void ConfigureServices(IServiceCollection services)
     {
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddDomain();
-            services.AddInfrastructureFakeInMemory();
-        }
+        services.AddDomain();
+        services.AddInfrastructureFakeInMemory();
     }
 }

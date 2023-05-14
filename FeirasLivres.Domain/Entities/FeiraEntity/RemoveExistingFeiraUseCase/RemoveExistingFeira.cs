@@ -4,7 +4,7 @@ using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.RemoveExistingFeiraUseCase;
 
-public class RemoveExistingFeira
+public class RemoveExistingFeira: IRemoveExistingFeira
 {
     private readonly IFeiraRepository _feiraRepository;
 

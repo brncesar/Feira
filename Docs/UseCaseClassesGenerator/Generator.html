@@ -5,7 +5,7 @@
     <meta name="author" content="Bruno Cesar (linkedin.com/in/brncesar)">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Template caso de uso</title>
+    <title>Add new use case</title>
 
     <link rel="stylesheet" href="./css/fabric.min.css" />
     <link rel="stylesheet" href="./js/prism/prism.css" />
@@ -24,17 +24,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Yanone+Kaffeesatz&display=swap" rel="stylesheet">
 
     <style>
-        #app{
+        #app {
             padding: 0 15px;
         }
+
         code, pre {
             font-size: 12px !important;
-        }
-
-        .custom-label,
-        .custom-label label{
-            margin-bottom: 0;
-            font-weight: bold;
         }
 
         .inputs-prop {
@@ -44,7 +39,7 @@
             justify-content: space-between;
         }
 
-        .ms-Icon.fixPosition{
+        .ms-Icon.fixPosition {
             position: relative;
             top: 2px;
         }
@@ -55,13 +50,13 @@
             font-size: 19px;
         }
 
-        .filePath:first-child {
-            margin-top: 0;
-        }
+            .filePath:first-child {
+                margin-top: 0;
+            }
 
-        .filePath > i {
-            margin-right: 5px;
-        }
+            .filePath > i {
+                margin-right: 5px;
+            }
 
         h1,
         label {
@@ -79,30 +74,98 @@
             font-family: 'Yanone Kaffeesatz';
         }
 
-        h2 span {
-            background:#fff;
-            padding:0 10px;
-        }
+            h2 span {
+                background: #fff;
+                padding: 0 10px;
+            }
 
 
         ul.toast-errors-list,
-        ol.toast-stapes-list{
-            padding:0;
-            margin:5px 0 0 25px;
+        ol.toast-stapes-list {
+            padding: 0;
+            margin: 5px 0 0 25px;
         }
-        ol.toast-stapes-list{
-            margin-left:35px;
+
+        ol.toast-stapes-list {
+            margin-left: 35px;
         }
-        ul.toast-errors-list li,
-        ol.toast-stapes-list li{
-            margin-top:4px;
+
+            ul.toast-errors-list li,
+            ol.toast-stapes-list li {
+                margin-top: 4px;
+            }
+
+        .radio {
+            background: #8ebdf0;
+            padding: 4px;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+            .radio input {
+                width: auto;
+                height: 100%;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                outline: none;
+                cursor: pointer;
+                border-radius: 2px;
+                padding: 4px 10px 0;
+                background: #8ebdf0;
+                color: #fff;
+                font-size: 18px;
+                font-family: 'Yanone Kaffeesatz';
+                transition: all 100ms linear;
+                margin-right: 15px;
+            }
+
+                .radio input:last-child {
+                    margin-right: 0;
+                }
+
+                .radio input:checked {
+                    background-image: linear-gradient(180deg, #007bff, #005fc5);
+                    color: #fff;
+                    box-shadow: 0 1px 1px #0000002e;
+                    text-shadow: 0 1px 0px #79485f7a;
+                }
+
+                .radio input:before {
+                    content: attr(label);
+                    display: inline-block;
+                    text-align: center;
+                    width: 100%;
+                }
+
+        .sticky-top {
+            font-family: 'Yanone Kaffeesatz';
+        }
+
+            .sticky-top label,
+            ul.custom-font {
+                font-size: 21px;
+            }
+
+        ul.custom-font {
+            font-size: 18px;
         }
 
         .child-node-class {
             display: flex;
         }
-        .child-node-class label{
-            font-family: unset;
+
+        .custom-label,
+        .custom-label label {
+            margin-bottom: 0;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .custom-control-label {
+            font-size: 18px !important;
         }
     </style>
 </head>
@@ -116,41 +179,41 @@
                     <div class="form-row">
                         <div class="col">
                             <div class="form-group custom-label mb-3">
-                                <label for="flowName">Namespace</label>
-                                <input class="form-control" type="text" placeholder="Domain namespace" v-model="namespace" @keyup="reRenderPrismCodes()">
+                                <label for="domain-namespace">Namespace</label>
+                                <input class="form-control" id="domain-namespace" type="text" placeholder="Domain namespace" v-model="namespace" @keyup="reRenderPrismCodes()">
                                 <small class="form-text text-muted">The same you are using in your project</small>
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group custom-label mb-3">
-                                <label for="flowName">Entity</label>
-                                <input class="form-control" type="text" placeholder="Entity name" v-model="entityName" @keyup="reRenderPrismCodes()">
+                                <label for="entity-name">Entity</label>
+                                <input class="form-control" id="entity-name" type="text" placeholder="Entity name" v-model="entityName" @keyup="reRenderPrismCodes()">
                                 <small class="form-text text-muted">Name of the entity for which the use case will apply</small>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group custom-label mb-3">
-                        <label for="flowName">Use case</label>
-                        <input class="form-control" type="text" placeholder="Use case name" v-model="useCase" @keyup="reRenderPrismCodes()">
+                        <label for="use-case-name">Use case</label>
+                        <input class="form-control" type="text" id="use-case-name" placeholder="Use case name" v-model="useCase" @keyup="reRenderPrismCodes()">
                         <small class="form-text text-muted">Use case name in UpperCamelCase</small>
                     </div>
 
 
-                    <label for="flowName"><strong>Domain entity, Input method and Result properties</strong></label>
+                    <label><strong>Domain entity, Input method and Result properties</strong></label>
                     <div class="card mb-3">
                         <div class="card-header">
-                            <ul class="nav nav-tabs card-header-tabs">
+                            <ul class="nav nav-tabs card-header-tabs custom-font">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#classes-entity" role="tab">Entity</a>
+                                    <a class="nav-link active" data-toggle="tab" href="#classes-entity" role="tab">ENTITY</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">Input params</a>
+                                    <a class="nav-link" data-toggle="tab" href="#classes-params" role="tab">INPUT PARAMS</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#classes-result" role="tab">
                                         <div class="child-node-class">
-                                            <span>Result output (</span>
+                                            <span>RESULT OUTPUT (</span>
                                             <span style="cursor: pointer; color: #dc3545; margin-right: 5px" @click="isResultTypeList=!isResultTypeList">flat</span>
                                             <div class="custom-control custom-switch">
                                                 <input type="checkbox" class="custom-control-input" id="isResultTypeList" v-model="isResultTypeList">
@@ -176,7 +239,7 @@
                                             <i class="ms-Icon ms-Icon--Blocked" aria-hidden="true"></i>
                                         </button>
                                     </div>
-                                    <textarea class="form-control mt-4" v-model="propsEntityPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropertyName { get; set; }'" rows="3"></textarea>
+                                    <textarea class="form-control mt-4" v-model="propsEntityPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropName { get; set; }'" rows="3"></textarea>
                                     <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Entity')">Process properties</button>
                                 </div>
 
@@ -193,11 +256,22 @@
                                         </button>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-block btn-sm" @click="copyEntityPropsTo('Params')">Copy all properties from Entity</button>
-                                    <textarea class="form-control mt-4" v-model="propsParamsPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropertyName { get; set; }'" rows="3"></textarea>
+                                    <textarea class="form-control mt-4" v-model="propsParamsPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropName { get; set; }'" rows="3"></textarea>
                                     <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Params')">Process properties</button>
                                 </div>
 
                                 <div class="tab-pane fade" id="classes-result" role="tabpanel">
+                                    <div class="mb-3">
+                                        REST Verb
+                                        <div class="radio">
+                                            <input type="radio" name="rest-verb" v-model="RestVerb" label="GET" id="Get" value="Get">
+                                            <input type="radio" name="rest-verb" v-model="RestVerb" label="POST" id="Post" value="Post">
+                                            <input type="radio" name="rest-verb" v-model="RestVerb" label="PUT" id="Put" value="Put">
+                                            <input type="radio" name="rest-verb" v-model="RestVerb" label="DELETE" id="Delete" value="Delete">
+                                            <input type="radio" name="rest-verb" v-model="RestVerb" label="PATCH" id="Patch" value="Patch">
+                                        </div>
+                                    </div>
+
                                     <div>
                                         Properties
                                         <button type="button" class="btn btn-primary btn-sm" @click="addProp('Result')" style="float: right; padding-top: 1px;">Add new</button>
@@ -210,7 +284,7 @@
                                         </button>
                                     </div>
                                     <button type="button" class="btn btn-primary btn-block btn-sm" @click="copyEntityPropsTo('Result')">Copy all properties from Entity</button>
-                                    <textarea class="form-control mt-4" v-model="propsResultPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropertyName { get; set; }'" rows="3"></textarea>
+                                    <textarea class="form-control mt-4" v-model="propsResultPraProcessamento" placeholder="Please use the fields above or paste here all the properties in the format 'public Type PropName { get; set; }'" rows="3"></textarea>
                                     <button type="button" class="btn btn-primary btn-block btn-sm" @click="processarProps('Result')">Process properties</button>
                                 </div>
                             </div>
@@ -255,128 +329,151 @@
 
 
                                 <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ entityName }.cs`"></file-title>
-                                <div id="CodeDomainEntity" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.Common;
+                                <div id="CodeDomainEntity" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
 
-namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
-public class {{ entityName }} : BaseEntity
-{
-{{ propsEntity.map((prop) => `    public ${prop.tipo} ${prop.nome} { get; set; }\n`).join('') }}}
-</div>                          <pre><code class="language-csharp" id="prismCodeDomainEntity"></code></pre>
+                                    public class {{ entityName }} : BaseEntity
+                                    {
+                                    {{ propsEntity.map((prop) => `    public ${prop.tipo} ${prop.nome} { get; set; }\n`).join('') }}}
+                                </div>                          <pre><code class="language-csharp" id="prismCodeDomainEntity"></code></pre>
+
+
+
+
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/_I${ useCase }.cs`"></file-title>
+                                <div id="CodeDomainUseCaseInterface" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
+
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+                                    public interface I{{ useCase }} : IUseCase&lt;{{ useCase }}Params, {{ useCase }}Result&gt;
+                                    {
+                                    }
+                                </div><pre><code class="language-csharp" id="prismCodeDomainUseCaseInterface"></code></pre>
 
 
 
 
                                 <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.cs`"></file-title>
-                                <div id="CodeDomainUseCase" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
-using {{ namespaceOrBlank }}Domain.Entities.Common;
-using {{ namespaceOrBlank }}Domain.Misc;
+                                <div id="CodeDomainUseCase" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
+                                    using {{ namespaceOrBlank }}Domain.Misc;
 
-namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
-public class {{ useCase }}
-{
-    private readonly I{{ entityName }}Repository _{{ entityName.toLowerCase() }}Repository;
+                                    public class {{ useCase }}: I{{ useCase }}
+                                    {
+                                    private readonly I{{ entityName }}Repository _{{ entityName.toLowerCase() }}Repository;
 
-    public {{ useCase }}(I{{ entityName }}Repository {{ entityName.toLowerCase() }}Repository)
-        => (_{{ entityName.toLowerCase() }}Repository) = ({{ entityName.toLowerCase() }}Repository);
+                                    public {{ useCase }}(I{{ entityName }}Repository {{ entityName.toLowerCase() }}Repository)
+                                    => (_{{ entityName.toLowerCase() }}Repository) = ({{ entityName.toLowerCase() }}Repository);
 
-    public async Task&lt;IDomainActionResult&lt;{{ typeResult }}&gt;&gt; Execute({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
-    {
-        var paramsValidationResult = new {{ useCase }}ParamsValidator().Validate({{ firstLetterToLower(useCase) }}Params);
-        var {{ firstLetterToLower(useCase) }}Result = new DomainActionResult&lt;{{ typeResult }}&gt;(paramsValidationResult.Errors);
+                                    public async Task&lt;IDomainActionResult&lt;{{ typeResult }}&gt;&gt; Execute({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
+                                    {
+                                    var paramsValidationResult = new {{ useCase }}ParamsValidator().Validate({{ firstLetterToLower(useCase) }}Params);
+                                    var {{ firstLetterToLower(useCase) }}Result = new DomainActionResult&lt;{{ typeResult }}&gt;(paramsValidationResult.Errors);
 
-        if (paramsValidationResult.HasErrors())
-            return {{ firstLetterToLower(useCase) }}Result;
+                                    if (paramsValidationResult.HasErrors())
+                                    return {{ firstLetterToLower(useCase) }}Result;
 
-        var {{ firstLetterToLower(useCase) }}RespositoryResult = await _{{ firstLetterToLower(entityName) }}Repository.{{ useCase }}Async({{ firstLetterToLower(useCase) }}Params);
+                                    var {{ firstLetterToLower(useCase) }}RespositoryResult = await _{{ firstLetterToLower(entityName) }}Repository.{{ useCase }}Async({{ firstLetterToLower(useCase) }}Params);
 
-        if ({{ firstLetterToLower(useCase) }}RespositoryResult.HasErrors())
-            return {{ firstLetterToLower(useCase) }}Result.AddErrors({{ firstLetterToLower(useCase) }}RespositoryResult.Errors);
+                                    if ({{ firstLetterToLower(useCase) }}RespositoryResult.HasErrors())
+                                    return {{ firstLetterToLower(useCase) }}Result.AddErrors({{ firstLetterToLower(useCase) }}RespositoryResult.Errors);
 
-        return {{ firstLetterToLower(useCase) }}RespositoryResult.Value is not null
-            ? {{ firstLetterToLower(useCase) }}Result.SetValue({{ firstLetterToLower(useCase) }}RespositoryResult.Value)
-            : {{ firstLetterToLower(useCase) }}Result;
-    }
-}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCase"></code></pre>
-
-
-
-
-                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Params.cs`" ></file-title>
-                                <div id="CodeDomainUseCaseParams" style="display: none;">namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-
-public record {{ useCase }}Params(
-{{ propsParams.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
-</div>                          <pre><code class="language-csharp" id="prismCodeDomainUseCaseParams"></code></pre>
+                                    return {{ firstLetterToLower(useCase) }}RespositoryResult.Value is not null
+                                    ? {{ firstLetterToLower(useCase) }}Result.SetValue({{ firstLetterToLower(useCase) }}RespositoryResult.Value)
+                                    : {{ firstLetterToLower(useCase) }}Result;
+                                    }
+                                    }
+                                </div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCase"></code></pre>
 
 
 
 
-                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Params.Validator.cs`" ></file-title>
-                                <div id="CodeDomainUseCaseParamsValidator" style="display: none;">using {{ namespaceOrBlank }}Domain.Misc;
-using FluentValidation;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Params.cs`"></file-title>
+                                <div id="CodeDomainUseCaseParams" style="display: none;">
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
-namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-
-internal class {{ useCase }}ParamsValidator : AbstractValidator&lt;{{ useCase }}Params&gt;
-{
-    public {{ useCase }}ParamsValidator()
-    {
-{{ propsParams.map((prop) => `        RuleFor(p => p.${prop.nome}); //.Length(2, 9);`).join('\n') }}
-
-        /** SOME VALIDATIONS EXAMPLES **********************************************************************************
-
-        RuleFor(p => p.Matricula).NotEmpty().MaximumLength(9).WithName("Matrícula com 9 dígitos");
-
-        RuleFor(p => p.SomeStringToCastToEnum)
-            .IsEnumName(typeof(SomeEnum), caseSensitive: false)
-            .WithMessage(p => $"SomeEnum '{p.SomeStringToCastToEnum}' inválida. Os valores possíveis são: {string.Join(", ", Enum.GetValues(typeof(SomeEnum)).Cast&lt;SomeEnum&gt;())}");
-
-        RuleFor(p => new { p.Nome, p.Codigo })
-            .Must(x => x.Codigo.IsNotNullOrNotEmpty() || x.Nome.IsNotNullOrNotEmpty())
-            .WithMessage(z => $"É necessário informar pelo menos um parâmetro para busca do Distrito [ Nome | Código ]");
-
-        var beAValidLongitude = (double longitude) => longitude is >= -90 and <= 90;
-        RuleFor(p => p.Longitude).Must(beAValidLongitude)
-            .WithMessage(p =>
-                $"Longitude inválida. O valor deve estar compreendido entre -180 e 180." +
-                $"O valor informado foi: {p.Longitude}");
-
-        RuleFor(p => p.NumeroRegistro).Matches("[0-9]{4}[-][0-9]")
-            .WithMessage(p =>
-                $"O número do registro da feira deve ser informado no formato ####-#. " +
-                $"O valor informado foi: {p.NumeroRegistro}");
-
-        For more examples go to: https://docs.fluentvalidation.net/en/latest/built-in-validators.html
-        ************************************************************************************************************* */
-    }
-}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseParamsValidator"></code></pre>
+                                    public record {{ useCase }}Params(
+                                    {{ propsParams.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
+                                </div>                          <pre><code class="language-csharp" id="prismCodeDomainUseCaseParams"></code></pre>
 
 
 
 
-                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Result.cs`" ></file-title>
-                                <div id="CodeDomainUseCaseResult" style="display: none;">namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Params.Validator.cs`"></file-title>
+                                <div id="CodeDomainUseCaseParamsValidator" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Misc;
+                                    using FluentValidation;
 
-public record {{ useCase }}Result(
-{{ propsResult.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
-</div>                          <pre><code class="language-csharp" id="prismCodeDomainUseCaseResult"></code></pre>
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+                                    internal class {{ useCase }}ParamsValidator : AbstractValidator&lt;{{ useCase }}Params&gt;
+                                    {
+                                    public {{ useCase }}ParamsValidator()
+                                    {
+                                    {{ propsParams.map((prop) => `        RuleFor(p => p.${prop.nome}); //.Length(2, 9);`).join('\n') }}
+
+                                    /** SOME VALIDATIONS EXAMPLES **********************************************************************************
+
+                                    RuleFor(p => p.Matricula).NotEmpty().MaximumLength(9).WithName("Matrícula com 9 dígitos");
+
+                                    RuleFor(p => p.SomeStringToCastToEnum)
+                                    .IsEnumName(typeof(SomeEnum), caseSensitive: false)
+                                    .WithMessage(p => $"SomeEnum '{p.SomeStringToCastToEnum}' inválida. Os valores possíveis são: {string.Join(", ", Enum.GetValues(typeof(SomeEnum)).Cast&lt;SomeEnum&gt;())}");
+
+                                    RuleFor(p => new { p.Nome, p.Codigo })
+                                    .Must(x => x.Codigo.IsNotNullOrNotEmpty() || x.Nome.IsNotNullOrNotEmpty())
+                                    .WithMessage(z => $"É necessário informar pelo menos um parâmetro para busca do Distrito [ Nome | Código ]");
+
+                                    var beAValidLongitude = (double longitude) => longitude is >= -90 and <= 90;
+                                    RuleFor(p => p.Longitude).Must(beAValidLongitude)
+                                    .WithMessage(p =>
+                                    $"Longitude inválida. O valor deve estar compreendido entre -180 e 180." +
+                                    $"O valor informado foi: {p.Longitude}");
+
+                                    RuleFor(p => p.NumeroRegistro).Matches("[0-9]{4}[-][0-9]")
+                                    .WithMessage(p =>
+                                    $"O número do registro da feira deve ser informado no formato ####-#. " +
+                                    $"O valor informado foi: {p.NumeroRegistro}");
+
+                                    For more examples go to: https://docs.fluentvalidation.net/en/latest/built-in-validators.html
+                                    ************************************************************************************************************* */
+                                    }
+                                    }
+                                </div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseParamsValidator"></code></pre>
 
 
 
 
-                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Errors.cs`" ></file-title>
-                                <div id="CodeDomainUseCaseErrors" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Result.cs`"></file-title>
+                                <div id="CodeDomainUseCaseResult" style="display: none;">
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
-namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                    public record {{ useCase }}Result(
+                                    {{ propsResult.map((prop) => `    ${prop.tipo} ${prop.nome}`).join(',\n') }});
+                                </div>                          <pre><code class="language-csharp" id="prismCodeDomainUseCaseResult"></code></pre>
 
-public sealed class {{ useCase }}Errors
-{
-    private static string className = nameof({{ useCase }}Errors).Replace("Errors", "");
 
-    // public static Error SomeUseCaseError() => ErrorHelpers.GetError(ErrorType.NotFound, "The related {{ entityName }} was not found", codeError: $"{{ useCase }}.SomeUseCaseError");
-}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseErrors"></code></pre>
+
+
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/${ useCase }UseCase/${ useCase }.Errors.cs`"></file-title>
+                                <div id="CodeDomainUseCaseErrors" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Common;
+
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+                                    public sealed class {{ useCase }}Errors
+                                    {
+                                    private static string className = nameof({{ useCase }}Errors).Replace("Errors", "");
+
+                                    // public static Error SomeUseCaseError() => ErrorHelpers.GetError(ErrorType.NotFound, "The related {{ entityName }} was not found", codeError: $"{{ useCase }}.SomeUseCaseError");
+                                    }
+                                </div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseErrors"></code></pre>
 
 
 
@@ -387,63 +484,67 @@ public sealed class {{ useCase }}Errors
 
 
 
-                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/_I${ entityName }Repository.cs`" ></file-title>
-                                <div id="CodeDomainUseCaseEntityRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.Common;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                <file-title :path="`${ namespaceOrBlank }Domain/Entities/${ entityName }Entity/_I${ entityName }Repository.cs`"></file-title>
+                                <div id="CodeDomainUseCaseEntityRepository" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
-namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                    namespace {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
-public interface I{{ entityName }}Repository :
-    IBaseEntityRepositoryGetById&lt;{{ entityName }}&gt;,
-    IBaseEntityRepositoryAdd&lt;{{ entityName }}&gt;,
-    IBaseEntityRepositoryUpdate&lt;{{ entityName }}&gt;,
-    IBaseEntityRepositoryDelete&lt;{{ entityName }}&gt;,
-    IBaseEntityRepositoryGetAll&lt;{{ entityName }}&gt;/*,
-    IBaseEntityRepositoryAllCrudOperations&lt;{{ entityName }}&gt;*/
-{/*
-    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; ExampleOfAnExistingMethodAsync();
-    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; ExampleOfAnotherExistingMethodAsync(string loremParameter);
-    Task&lt;IDomainActionResult&lt;List&lt;{{ entityName }}&gt;&gt;&gt; LastExampleOfAPreExistingMethodAsync(int ipsumParameter);*/
-    // 👆 Other pre-existing methods. It's just an example
-    // 👇 Method for your use case.
-    Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params);
-}</div>                         <div class="append-to-file"><pre data-line="2,19"><code class="language-csharp" id="prismCodeDomainUseCaseEntityRepository"></code></pre></div>
-
-
-
-
-                                <file-title :path="`${ namespaceOrBlank }Domain/DependencyInjection.cs`" ></file-title>
-                                <div id="CodeDomainDependencyInjection" style="display: none;">using Microsoft.Extensions.DependencyInjection;
-// 👇 Other pre-defined use cases (it's just an example)
-using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.AddNewAnotherEntityUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.EditAnotherEntityUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.FindAnotherEntityUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.RemoveAnotherEntityUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity.FindSecondAnotherEntityUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity.GetSubSecondAnotherEntityByCodigoUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.AnotherUseCase;
-// 👇 your new use case
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                    public interface I{{ entityName }}Repository :
+                                    IBaseEntityRepositoryGetById&lt;{{ entityName }}&gt;,
+                                    IBaseEntityRepositoryAdd&lt;{{ entityName }}&gt;,
+                                    IBaseEntityRepositoryUpdate&lt;{{ entityName }}&gt;,
+                                    IBaseEntityRepositoryDelete&lt;{{ entityName }}&gt;,
+                                    IBaseEntityRepositoryGetAll&lt;{{ entityName }}&gt;/*,
+                                    IBaseEntityRepositoryAllCrudOperations&lt;{{ entityName }}&gt;*/
+                                    {/*
+                                    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; ExampleOfAnExistingMethodAsync();
+                                    Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; ExampleOfAnotherExistingMethodAsync(string loremParameter);
+                                    Task&lt;IDomainActionResult&lt;List&lt;{{ entityName }}&gt;&gt;&gt; LastExampleOfAPreExistingMethodAsync(int ipsumParameter);*/
+                                    // 👆 Other pre-existing methods. It's just an example
+                                    // 👇 Method for your use case.
+                                    Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params);
+                                    }
+                                </div>                         <div class="append-to-file"><pre data-line="2,19"><code class="language-csharp" id="prismCodeDomainUseCaseEntityRepository"></code></pre></div>
 
 
-namespace {{ namespaceOrBlank }}Domain;
 
-public static class DependencyInjection
-{
-    public static IServiceCollection AddDomain(this IServiceCollection services)
-    {
-        return services/*
-            .AddScoped&lt;EditAnotherEntityUseCase                &gt;()
-            .AddScoped&lt;FindAnotherEntityUseCase                &gt;()
-            .AddScoped&lt;AddNewAnotherEntityUseCase              &gt;()
-            .AddScoped&lt;RemoveAnotherEntityUseCase              &gt;()
-            .AddScoped&lt;FindSecondAnotherEntityUseCase          &gt;()
-            .AddScoped&lt;GetSubSecondAnotherEntityByCodigoUseCase&gt;()
-            // 👆 Already existing use cases. It's just an example
-            // 👇 Your new use case
-            .AddScoped&lt;{{ useCase }}&gt;();
-    }
-}</div>                       <div class="append-to-file"><pre data-line="11,29"><code class="language-csharp" id="prismCodeDomainDependencyInjection"></code></pre></div>
+
+                                <file-title :path="`${ namespaceOrBlank }Domain/DependencyInjection.cs`"></file-title>
+                                <div id="CodeDomainDependencyInjection" style="display: none;">
+                                    using Microsoft.Extensions.DependencyInjection;
+                                    // 👇 Other pre-defined use cases (it's just an example)
+                                    using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.AddNewAnotherEntityUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.EditAnotherEntityUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.FindAnotherEntityUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity.RemoveAnotherEntityUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity.FindSecondAnotherEntityUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity.GetSubSecondAnotherEntityByCodigoUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.AnotherUseCase;
+                                    // 👇 your new use case
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+
+
+                                    namespace {{ namespaceOrBlank }}Domain;
+
+                                    public static class DependencyInjection
+                                    {
+                                    public static IServiceCollection AddDomain(this IServiceCollection services)
+                                    {
+                                    return services/*
+                                    .AddScoped&lt;EditAnotherEntityUseCase                &gt;()
+                                    .AddScoped&lt;FindAnotherEntityUseCase                &gt;()
+                                    .AddScoped&lt;AddNewAnotherEntityUseCase              &gt;()
+                                    .AddScoped&lt;RemoveAnotherEntityUseCase              &gt;()
+                                    .AddScoped&lt;FindSecondAnotherEntityUseCase          &gt;()
+                                    .AddScoped&lt;GetSubSecondAnotherEntityByCodigoUseCase&gt;()
+                                    // 👆 Already existing use cases. It's just an example
+                                    // 👇 Your new use case
+                                    .AddScoped&lt;I{{ useCase }}, {{ useCase }}&gt;();
+                                    }
+                                    }
+                                </div>                       <div class="append-to-file"><pre data-line="11,29"><code class="language-csharp" id="prismCodeDomainDependencyInjection"></code></pre></div>
                             </div>
 
 
@@ -459,28 +560,30 @@ public static class DependencyInjection
 
 
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure/Data/DbCtx/DbMap/${ entityName }.DbMap.cs`"></file-title>
-                                <div id="CodeInfrastructureDbMap" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+                                <div id="CodeInfrastructureDbMap" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                    using Microsoft.EntityFrameworkCore;
+                                    using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace {{ namespaceOrBlank }}Infrastructure.Data.DbCtx.DbMap;
+                                    namespace {{ namespaceOrBlank }}Infrastructure.Data.DbCtx.DbMap;
 
-internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName }}&gt;
-{
-    public void Configure(EntityTypeBuilder&lt;{{ entityName }}&gt; builder)
-    {
-        builder.ToTable("T?##_{{ entityName }}").HasKey(p => p.Id);
-        builder.Property(p => p.Id).HasColumnName("T?##_id_{{ entityName }}").HasColumnOrder(1);/*
-        builder.HasIndex(b => b.Cod).IsUnique(true);*/
-{{ propsEntity.map((prop) => `        builder.Property(p => p.${ prop.nome }).HasColumnName("??_${ prop.nome }").HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasComment("Lorem ipsum dollor");\n`).join('') }}
-        // Relationships
-        /*
-        builder
-            .HasOne       (thisEntity  => thisEntity .NavigationProperty)
-            .WithMany     (otherEntity => otherEntity.ListPropertyOfThisEntity)
-            .HasForeignKey(thisEntity  => thisEntity .IdFromNavigationProperty);*/
-    }
-}</div>                         <pre><code class="language-csharp" id="prismCodeInfrastructureDbMap"></code></pre>
+                                    internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName }}&gt;
+                                    {
+                                    public void Configure(EntityTypeBuilder&lt;{{ entityName }}&gt; builder)
+                                    {
+                                    builder.ToTable("T?##_{{ entityName }}").HasKey(p => p.Id);
+                                    builder.Property(p => p.Id).HasColumnName("T?##_id_{{ entityName }}").HasColumnOrder(1);/*
+                                    builder.HasIndex(b => b.Cod).IsUnique(true);*/
+                                    {{ propsEntity.map((prop) => `        builder.Property(p => p.${ prop.nome }).HasColumnName("??_${ prop.nome }").HasMaxLength(255).IsRequired().IsFixedLength().HasColumnType("char").HasComment("Lorem ipsum dollor");\n`).join('') }}
+                                    // Relationships
+                                    /*
+                                    builder
+                                    .HasOne       (thisEntity  => thisEntity .NavigationProperty)
+                                    .WithMany     (otherEntity => otherEntity.ListPropertyOfThisEntity)
+                                    .HasForeignKey(thisEntity  => thisEntity .IdFromNavigationProperty);*/
+                                    }
+                                    }
+                                </div>                         <pre><code class="language-csharp" id="prismCodeInfrastructureDbMap"></code></pre>
 
 
 
@@ -492,142 +595,148 @@ internal class {{ entityName }}DbMap : IEntityTypeConfiguration&lt;{{ entityName
 
 
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure/Data/DbCtx/${ namespace }DbContext.cs`"></file-title>
-                                <div id="CodeInfrastructureDbContext" style="display: none;">using Microsoft.EntityFrameworkCore;
-// 👇 Other entities pre-defined in the context file (it's just an example)
-using {{ namespaceOrBlank }}Domain.Entities.LoremEntity;
-using {{ namespaceOrBlank }}Domain.Entities.IpsumEntity;
-using {{ namespaceOrBlank }}Domain.Entities.DolorEntity;
-// 👇 your new Entity
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                <div id="CodeInfrastructureDbContext" style="display: none;">
+                                    using Microsoft.EntityFrameworkCore;
+                                    // 👇 Other entities pre-defined in the context file (it's just an example)
+                                    using {{ namespaceOrBlank }}Domain.Entities.LoremEntity;
+                                    using {{ namespaceOrBlank }}Domain.Entities.IpsumEntity;
+                                    using {{ namespaceOrBlank }}Domain.Entities.DolorEntity;
+                                    // 👇 your new Entity
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
-namespace {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
+                                    namespace {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
 
-public class {{ namespaceOrExampleProjectName }}DbContext : DbContext
-{
-    public {{ namespaceOrExampleProjectName }}DbContext(DbContextOptions&lt;{{ namespaceOrExampleProjectName }}DbContext&gt; options) : base(options) { }
+                                    public class {{ namespaceOrExampleProjectName }}DbContext : DbContext
+                                    {
+                                    public {{ namespaceOrExampleProjectName }}DbContext(DbContextOptions&lt;{{ namespaceOrExampleProjectName }}DbContext&gt; options) : base(options) { }
 
-    public DbSet&lt;Lorem&gt; Lorem { get; set; } = null!;
-    public DbSet&lt;Ipsum&gt; Ipsum { get; set; } = null!;
-    public DbSet&lt;Dolor&gt; Dolor { get; set; } = null!;
-    // 👆 other DbSet's pre-defined in the context file
-    // 👇 your new DbSet
-    public DbSet&lt;{{ entityName }}&gt; {{ entityName }} { get; set; } = null!;
+                                    public DbSet&lt;Lorem&gt; Lorem { get; set; } = null!;
+                                    public DbSet&lt;Ipsum&gt; Ipsum { get; set; } = null!;
+                                    public DbSet&lt;Dolor&gt; Dolor { get; set; } = null!;
+                                    // 👆 other DbSet's pre-defined in the context file
+                                    // 👇 your new DbSet
+                                    public DbSet&lt;{{ entityName }}&gt; {{ entityName }} { get; set; } = null!;
 
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        #if DEBUG
-        optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
-        #endif
+                                    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+                                    {
+                                    #if DEBUG
+                                    optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+                                    #endif
 
-        base.OnConfiguring(optionsBuilder);
-    }
+                                    base.OnConfiguring(optionsBuilder);
+                                    }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder
-            .RemovePluralizeConvention()
-            .RemoveOneToManyCascadeConvention()
-            .ApplyEntitiesTypeConfigurations&lt;{{ namespaceOrExampleProjectName }}DbContext&gt;(); // DbMaps
+                                    protected override void OnModelCreating(ModelBuilder modelBuilder)
+                                    {
+                                    modelBuilder
+                                    .RemovePluralizeConvention()
+                                    .RemoveOneToManyCascadeConvention()
+                                    .ApplyEntitiesTypeConfigurations&lt;{{ namespaceOrExampleProjectName }}DbContext&gt;(); // DbMaps
 
-        base.OnModelCreating(modelBuilder);
-    }
+                                    base.OnModelCreating(modelBuilder);
+                                    }
 
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-        configurationBuilder.Properties<string>().HaveColumnType("varchar").HaveMaxLength(100);
+                                    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+                                    {
+                                    configurationBuilder.Properties&lt;string&gt;().HaveColumnType("varchar").HaveMaxLength(100);
 
-        base.ConfigureConventions(configurationBuilder);
-    }
-}</div>                         <div class="append-to-file"><pre data-line="7,20"><code class="language-csharp" id="prismCodeInfrastructureDbContext"></code></pre></div>
+                                    base.ConfigureConventions(configurationBuilder);
+                                    }
+                                    }
+                                </div>                         <div class="append-to-file"><pre data-line="7,20"><code class="language-csharp" id="prismCodeInfrastructureDbContext"></code></pre></div>
 
 
 
 
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure/Data/Repository/${ entityName }Repository.cs`"></file-title>
-                                <div id="CodeInfrastructureRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
-using {{ namespaceOrBlank }}Domain.Entities.Common;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespaceOrBlank }}Domain.Misc;
-using {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
-using Microsoft.EntityFrameworkCore;
+                                <div id="CodeInfrastructureRepository" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                    using {{ namespaceOrBlank }}Domain.Misc;
+                                    using {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
+                                    using Microsoft.EntityFrameworkCore;
 
-namespace {{ namespaceOrBlank }}Infrastructure.Data.Repository;
+                                    namespace {{ namespaceOrBlank }}Infrastructure.Data.Repository;
 
-public class {{ entityName }}Repository : BaseRepository&lt;{{ namespace }}DbContext, {{ entityName }}&gt;, I{{ entityName }}Repository
-{
-    public {{ entityName }}Repository({{ namespace }}DbContext dbCtx) : base(dbCtx) { }/*
+                                    public class {{ entityName }}Repository : BaseRepository&lt;{{ namespace }}DbContext, {{ entityName }}&gt;, I{{ entityName }}Repository
+                                    {
+                                    public {{ entityName }}Repository({{ namespace }}DbContext dbCtx) : base(dbCtx) { }/*
 
-    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; JUST_AN_EXAMPLE_GetByCodigoAsync(string codigo)
-    {
-        var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
-        try
-        {
-            var {{ firstLetterToLower(entityName) }} = await _dbSet.FirstOrDefaultAsync(d => d.Cod == codigo.Trim());
+                                    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; JUST_AN_EXAMPLE_GetByCodigoAsync(string codigo)
+                                    {
+                                    var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
+                                    try
+                                    {
+                                    var {{ firstLetterToLower(entityName) }} = await _dbSet.FirstOrDefaultAsync(d => d.Cod == codigo.Trim());
 
-            return {{ firstLetterToLower(entityName) }} is not null
-                ? domainRepositoryResult.SetValue({{ firstLetterToLower(entityName) }})
-                : domainRepositoryResult.NotFound();
-        }
-        catch (Exception ex)
-        {
-            return domainRepositoryResult.ReturnRepositoryError(ex);
-        }
-    }*/
-    // 👆 Other methods pre-defined in the {{ entityName }} repository file
-    // 👇 Your new method in the repository to match the use case
-    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
-    {
-        var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
-        try
-        {
-            // repository logic
+                                    return {{ firstLetterToLower(entityName) }} is not null
+                                    ? domainRepositoryResult.SetValue({{ firstLetterToLower(entityName) }})
+                                    : domainRepositoryResult.NotFound();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    return domainRepositoryResult.ReturnRepositoryError(ex);
+                                    }
+                                    }*/
+                                    // 👆 Other methods pre-defined in the {{ entityName }} repository file
+                                    // 👇 Your new method in the repository to match the use case
+                                    public async Task&lt;IDomainActionResult&lt;{{ useCase }}Result&gt;&gt; {{ useCase }}Async({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
+                                    {
+                                    var domainRepositoryResult = new DomainActionResult&lt;{{ useCase }}Result&gt;();
+                                    try
+                                    {
+                                    // repository logic
 
-            return domainRepositoryResult;
-        }
-        catch (Exception ex)
-        {
-            return domainRepositoryResult.ReturnRepositoryError(ex);
-        }
-    }
-}</div>                         <div class="append-to-file"><pre data-line="4,33-46"><code class="language-csharp" id="prismCodeInfrastructureRepository"></code></pre></div>
+                                    return domainRepositoryResult;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                    return domainRepositoryResult.ReturnRepositoryError(ex);
+                                    }
+                                    }
+                                    }
+                                </div>                         <div class="append-to-file"><pre data-line="4,33-46"><code class="language-csharp" id="prismCodeInfrastructureRepository"></code></pre></div>
 
 
 
 
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure/DependencyInjection.cs`"></file-title>
-                                <div id="CodeInfrastructureDependencyInjection" style="display: none;">using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
-using {{ namespaceOrBlank }}Infrastructure.Data.Repository;
-// 👇 Other pre-defined use cases (it's just an example)
-using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity;
-using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity;
-// 👇 your new entity
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                <div id="CodeInfrastructureDependencyInjection" style="display: none;">
+                                    using Microsoft.EntityFrameworkCore;
+                                    using Microsoft.Extensions.Configuration;
+                                    using Microsoft.Extensions.DependencyInjection;
+                                    using {{ namespaceOrBlank }}Infrastructure.Data.DbCtx;
+                                    using {{ namespaceOrBlank }}Infrastructure.Data.Repository;
+                                    // 👇 Other pre-defined use cases (it's just an example)
+                                    using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity;
+                                    using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity;
+                                    // 👇 your new entity
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
 
-namespace {{ namespaceOrBlank }}Infrastructure
-{
-    public static class DependencyInjection
-    {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddDbContext&lt;{{ namespace }}DbContext&gt;(options =>
-                options.UseSqlite(configuration.GetConnectionString("{{ namespace }}Connection")));
+                                    namespace {{ namespaceOrBlank }}Infrastructure
+                                    {
+                                    public static class DependencyInjection
+                                    {
+                                    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+                                    {
+                                    services.AddDbContext&lt;{{ namespace }}DbContext&gt;(options =>
+                                    options.UseSqlite(configuration.GetConnectionString("{{ namespace }}Connection")));
 
-            services.AddScoped&lt;IAnotherEntityRepository      , AnotherEntityRepository      &gt;();
-            services.AddScoped&lt;ISecondAnotherEntityRepository, SecondAnotherEntityRepository&gt;();
-            // 👆 Already existing repositories map
-            // 👇 Your new repository
-            services.AddScoped&lt;I{{ entityName }}Repository, {{ entityName }}Repository&gt;();
+                                    services.AddScoped&lt;IAnotherEntityRepository      , AnotherEntityRepository      &gt;();
+                                    services.AddScoped&lt;ISecondAnotherEntityRepository, SecondAnotherEntityRepository&gt;();
+                                    // 👆 Already existing repositories map
+                                    // 👇 Your new repository
+                                    services.AddScoped&lt;I{{ entityName }}Repository, {{ entityName }}Repository&gt;();
 
-            return services;
-        }
-    }
-}</div>                         <div class="append-to-file"><pre data-line="10,26"><code class="language-csharp" id="prismCodeInfrastructureDependencyInjection"></code></pre></div>
+                                    return services;
+                                    }
+                                    }
+                                    }
+                                </div>                         <div class="append-to-file"><pre data-line="10,26"><code class="language-csharp" id="prismCodeInfrastructureDependencyInjection"></code></pre></div>
                             </div>
 
 
@@ -637,49 +746,43 @@ namespace {{ namespaceOrBlank }}Infrastructure
                             <!-- TAB API ----------------------------------------------------------------------------------------------------------- -->
                             <div class="tab-pane fade" id="codes-api" role="tabpanel">
                                 <file-title :path="`${ namespaceOrBlank }Api/Controllers/${ entityName }Controller.cs`"></file-title>
-                                <div id="CodeApiController" style="display: none;">using Microsoft.AspNetCore.Mvc;
-// 👇 Other pre-defined use cases in the {{ entityName }} controller file (it's just an example)
-using {{ namespaceOrBlank }}Domain.Entities.LoremUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.IpsumUseCase;
-using {{ namespaceOrBlank }}Domain.Entities.DolorUseCase;
-// 👇 your new use case
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                <div id="CodeApiController" style="display: none;">
+                                    using Microsoft.AspNetCore.Mvc;
+                                    // 👇 Other pre-defined use cases in the {{ entityName }} controller file (it's just an example)
+                                    using {{ namespaceOrBlank }}Domain.Entities.LoremUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.IpsumUseCase;
+                                    using {{ namespaceOrBlank }}Domain.Entities.DolorUseCase;
+                                    // 👇 your new use case
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
 
-namespace {{ namespaceOrBlank }}Api.Controllers;
+                                    namespace {{ namespaceOrBlank }}Api.Controllers;
 
-public class {{ entityName }}Controller : BaseController&lt;{{ entityName }}Controller&gt;
-{
-    private readonly Get{{ entityName }}ByCodigo _get{{ entityName }}ByCodigoUseCase; // it's just an example
-    private readonly {{ useCase }} _{{ firstLetterToLower(useCase) }}UseCase;
+                                    public class {{ entityName }}Controller : BaseController&lt;{{ entityName }}Controller&gt;
+                                    {
+                                    private readonly IGet{{ entityName }}ByCodigo _get{{ entityName }}ByCodigoUseCase; // it's just an example
+                                    private readonly I{{ useCase }} _{{ firstLetterToLower(useCase) }}UseCase;
 
-    public {{ entityName }}Controller(
-        ILogger&lt;{{ entityName }}Controller&gt; logger,
-        Get{{ entityName }}ByCodigo get{{ entityName }}ByCodigoUseCase, // it's just an example
-        {{ useCase }} {{ firstLetterToLower(useCase) }}UseCase)
-        : base(logger)
-    {
-        _get{{ entityName }}ByCodigoUseCase = get{{ entityName }}ByCodigoUseCase; // it's just an example
-        _{{ firstLetterToLower(useCase) }}UseCase = {{ firstLetterToLower(useCase) }}UseCase;
-    }
+                                    public {{ entityName }}Controller(
+                                    ILogger&lt;{{ entityName }}Controller&gt; logger,
+                                    IGet{{ entityName }}ByCodigo get{{ entityName }}ByCodigoUseCase, // it's just an example
+                                    I{{ useCase }} {{ firstLetterToLower(useCase) }}UseCase)
+                                    : base(logger)
+                                    {
+                                    _get{{ entityName }}ByCodigoUseCase = get{{ entityName }}ByCodigoUseCase; // it's just an example
+                                    _{{ firstLetterToLower(useCase) }}UseCase = {{ firstLetterToLower(useCase) }}UseCase;
+                                    }
 
-    [HttpGet("JUST_AN_EXAMPLE_GetByCodigo/{codigo}")]
-    public async Task&lt;ActionResult&gt; JUST_AN_EXAMPLE_GetByCodigo(string codigo)
-    {
-        var domainResult = await _get{{ entityName }}ByCodigoUseCase.Execute(new(codigo));
+                                    [HttpGet("JUST_AN_EXAMPLE_GetByCodigo/{codigo}")]
+                                    public async Task&lt;ActionResult&gt; JUST_AN_EXAMPLE_GetByCodigo([FromQuery] string codigo)
+                                    => DomainResult(await _get{{ entityName }}ByCodigoUseCase.Execute(new(codigo)));
+                                    // 👆 Already existing api endpoint (it's just an example)
 
-        return DomainResult(domainResult);
-    }
-    // 👆 Already existing api endpoint (it's just an example)
-
-    // 👇 Your new endpoint to expose use case
-    [HttpPost("{{ useCase }}")]
-    public async Task&lt;ActionResult&gt; {{ useCase }}({{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
-    {
-        var domainResult = await _{{ firstLetterToLower(useCase) }}UseCase.Execute({{ firstLetterToLower(useCase) }}Params);
-
-        return DomainResult(domainResult);
-    }
-}</div>                         <div class="append-to-file"><pre data-line="7,14,19,36-42"><code class="language-csharp" id="prismCodeApiController"></code></pre></div>
+                                    // 👇 Your new endpoint to expose use case
+                                    [Http{{ RestVerb }}("{{ useCase }}")]
+                                    public async Task&lt;ActionResult&gt; {{ useCase }}({{ RestVerb === 'Get' ? '[FromQuery] ' : '' }}{{ useCase }}Params {{ firstLetterToLower(useCase) }}Params)
+                                    => DomainResult(await _{{ firstLetterToLower(useCase) }}UseCase.Execute({{ firstLetterToLower(useCase) }}Params));
+                                    }
+                                </div>                         <div class="append-to-file"><pre data-line="7,14,19,36-42"><code class="language-csharp" id="prismCodeApiController"></code></pre></div>
                             </div>
 
 
@@ -695,17 +798,19 @@ public class {{ entityName }}Controller : BaseController&lt;{{ entityName }}Cont
 
 
                                 <file-title :path="`${ namespaceOrBlank }Domain.Test/UseCases/${ entityName }Entity/${ useCase }UseCaseTest.cs`"></file-title>
-                                <div id="CodeDomainUseCaseTest" style="display: none;">using {{ namespaceOrBlank }}Domain.Entities.Common;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespaceOrBlank }}Domain.Misc;
+                                <div id="CodeDomainUseCaseTest" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                    using {{ namespaceOrBlank }}Domain.Misc;
 
-namespace {{ namespaceOrBlank }}Domain.Test.UseCases.DistritoEntity;
+                                    namespace {{ namespaceOrBlank }}Domain.Test.UseCases.DistritoEntity;
 
-public class {{ useCase }}UseCaseTest
-{
-    private {{ useCase }} _useCaseTestTarget;
-    private {{ useCase }}Params _useCaseCommonParamObj = new {{ useCase }}Params(
-{{ propsParams.map((prop) => {
+                                    public class {{ useCase }}UseCaseTest
+                                    {
+                                    private {{ useCase }} _useCaseTestTarget;
+                                    private {{ useCase }}Params _useCaseCommonParamObj = new {{ useCase }}Params(
+                                    {{
+ propsParams.map((prop) => {
     switch (prop.tipo.toLowerCase()){
         case 'guid'    : return `        ${prop.nome}: new Guid()`;
         case 'bool'    : return `        ${prop.nome}: ${getRandomBool()}`;
@@ -718,54 +823,58 @@ public class {{ useCase }}UseCaseTest
         case 'long'    : return `        ${prop.nome}: ${getRandomDecimal(0, 100, 4)}`;
         default        : return `        ${prop.nome}: "some valid domain value"`;
     }
-}).join(',\n') }});
+}).join(',\n')
+                                    }});
 
-    public {{ useCase }}UseCaseTest({{ useCase }} {{ firstLetterToLower(useCase) }}UseCase)
-    {
-        _useCaseTestTarget = {{ firstLetterToLower(useCase) }}UseCase;
-    }
+                                    public {{ useCase }}UseCaseTest({{ useCase }} {{ firstLetterToLower(useCase) }}UseCase)
+                                    {
+                                    _useCaseTestTarget = {{ firstLetterToLower(useCase) }}UseCase;
+                                    }
 
-    [Fact]
-    public async Task MustReturnErrorWhenTryingToExecuteWithoutAnyInformation()
-    {
-        // var useCaseSpecificParamObj = new {{ useCase }}Params(null, null);
+                                    [Fact]
+                                    public async Task MustReturnErrorWhenTryingToExecuteWithoutAnyInformation()
+                                    {
+                                    // var useCaseSpecificParamObj = new {{ useCase }}Params(null, null);
 
-        var {{ useCase }}ParamsResult = await _useCaseTestTarget.Execute(_useCaseCommonParamObj);
+                                    var {{ useCase }}ParamsResult = await _useCaseTestTarget.Execute(_useCaseCommonParamObj);
 
-        Assert.True({{ useCase }}ParamsResult.HasErrors());
-    }
-}</div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseTest"></code></pre>
+                                    Assert.True({{ useCase }}ParamsResult.HasErrors());
+                                    }
+                                    }
+                                </div>                         <pre><code class="language-csharp" id="prismCodeDomainUseCaseTest"></code></pre>
 
 
 
 
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure.FakeInMemory/Data/${ entityName }RepositoryMemory.cs`"></file-title>
-                                <div id="CodeInfrastructureFakeInMemoryEntityRepository" style="display: none;">using {{ namespaceOrBlank }}Domain.Common;
-using {{ namespaceOrBlank }}Domain.Entities.Common;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
-using {{ namespaceOrBlank }}Domain.Misc;
+                                <div id="CodeInfrastructureFakeInMemoryEntityRepository" style="display: none;">
+                                    using {{ namespaceOrBlank }}Domain.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.Common;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity.{{ useCase }}UseCase;
+                                    using {{ namespaceOrBlank }}Domain.Misc;
 
-namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
+                                    namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
 
-public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
-{
-    public static List&lt;{{ entityName }}&gt; List{{ entityName }}Mock { get; } = new List&lt;{{ entityName }}&gt;{
-{{ getStringNewRandomEntitiesInstances() }}
-        };/*
+                                    public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
+                                    {
+                                    public static List&lt;{{ entityName }}&gt; List{{ entityName }}Mock { get; } = new List&lt;{{ entityName }}&gt;{
+                                    {{ getStringNewRandomEntitiesInstances() }}
+                                    };/*
 
-    // 👇 Just a generic example of IRepository method
-    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; USE_CASE_EXEMPLE_GetByCodigoAsync(string codigo)
-    {
-        var {{ firstLetterToLower(entityName) }} = List{{ entityName }}Mock.SingleOrDefault(f =&gt; f.Codigo == codigo.Trim());
+                                    // 👇 Just a generic test example
+                                    public async Task&lt;IDomainActionResult&lt;{{ entityName }}&gt;&gt; USE_CASE_EXEMPLE_GetByCodigoAsync(string codigo)
+                                    {
+                                    var {{ firstLetterToLower(entityName) }} = List{{ entityName }}Mock.SingleOrDefault(f =&gt; f.Codigo == codigo.Trim());
 
-        var domainRepositoryResult = new DomainActionResult&lt;{{ entityName }}&gt;({{ firstLetterToLower(entityName) }});
+                                    var domainRepositoryResult = new DomainActionResult&lt;{{ entityName }}&gt;({{ firstLetterToLower(entityName) }});
 
-        return {{ firstLetterToLower(entityName) }} is not null
-            ? domainRepositoryResult
-            : domainRepositoryResult.AddNotFoundError($"{nameof({{ entityName }}RepositoryMemory)}.{nameof(GetByIdAsync)}", "{{ entityName }} não encontrado");
-    }*/
-}</div>                         <pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre>
+                                    return {{ firstLetterToLower(entityName) }} is not null
+                                    ? domainRepositoryResult
+                                    : domainRepositoryResult.AddNotFoundError($"{nameof({{ entityName }}RepositoryMemory)}.{nameof(GetByIdAsync)}", "{{ entityName }} não encontrado");
+                                    }*/
+                                    }
+                                </div>                         <pre><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryEntityRepository"></code></pre>
 
 
 
@@ -777,29 +886,31 @@ public class {{ entityName }}RepositoryMemory : I{{ entityName }}Repository
 
 
                                 <file-title :path="`${ namespaceOrBlank }Infrastructure.FakeInMemory/DependencyInjection.cs`"></file-title>
-                                <div id="CodeInfrastructureFakeInMemoryDependencyInjection" style="display: none;">using {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
-using Microsoft.Extensions.DependencyInjection;/*
-// 👇 Other pre-defined use cases (it's just an example)
-using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity;
-using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity;*/
-// 👇 your new entity
-using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
+                                <div id="CodeInfrastructureFakeInMemoryDependencyInjection" style="display: none;">
+                                    using {{ namespaceOrBlank }}Infrastructure.FakeInMemory.Data;
+                                    using Microsoft.Extensions.DependencyInjection;/*
+                                    // 👇 Other pre-defined use cases (it's just an example)
+                                    using {{ namespaceOrBlank }}Domain.Entities.AnotherEntity;
+                                    using {{ namespaceOrBlank }}Domain.Entities.SecondAnotherEntity;*/
+                                    // 👇 your new entity
+                                    using {{ namespaceOrBlank }}Domain.Entities.{{ entityName }}Entity;
 
-namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory;
+                                    namespace {{ namespaceOrBlank }}Infrastructure.FakeInMemory;
 
-public static class DependencyInjection
-{
-    public static IServiceCollection AddInfrastructureFakeInMemory(this IServiceCollection services)
-    {
-        services.AddScoped&lt;IAnotherEntityRepository      , AnotherEntityRepositoryMemory      &gt;();
-        services.AddScoped&lt;ISecondAnotherEntityRepository, SecondAnotherEntityRepositoryMemory&gt;();
-        // 👆 Already existing repositories map
-        // 👇 Your new repository
-        services.AddScoped&lt;I{{ entityName }}Repository, {{ entityName }}RepositoryMemory&gt;();
+                                    public static class DependencyInjection
+                                    {
+                                    public static IServiceCollection AddInfrastructureFakeInMemory(this IServiceCollection services)
+                                    {
+                                    services.AddScoped&lt;IAnotherEntityRepository      , AnotherEntityRepositoryMemory      &gt;();
+                                    services.AddScoped&lt;ISecondAnotherEntityRepository, SecondAnotherEntityRepositoryMemory&gt;();
+                                    // 👆 Already existing repositories map
+                                    // 👇 Your new repository
+                                    services.AddScoped&lt;I{{ entityName }}Repository, {{ entityName }}RepositoryMemory&gt;();
 
-        return services;
-    }
-}</div>                         <div class="append-to-file"><pre data-line="7,19"><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryDependencyInjection"></code></pre></div>
+                                    return services;
+                                    }
+                                    }
+                                </div>                         <div class="append-to-file"><pre data-line="7,19"><code class="language-csharp" id="prismCodeInfrastructureFakeInMemoryDependencyInjection"></code></pre></div>
                             </div>
 
 
@@ -809,135 +920,121 @@ public static class DependencyInjection
                             <!-- TAB REST CLIENT -------------------------------------------------------------------------------------------------- -->
                             <div class="tab-pane fade" id="codes-rest-client" role="tabpanel">
                                 <file-title :path="`Requests/${ entityName }/${ useCase }.http`"></file-title>
-                                <div id="CodeRestClientEndPoints" style="display: none;">@hostname = localhost
-@port = 7257
-@host = https://{{'{'}}{{'{hostname}'}}{{'}'}}:{{'{'}}{{'{port}'}}{{'}'}}
-@contentType = application/json
+                                <div id="CodeRestClientEndPoints" style="display: none;">
+                                    @hostname = localhost
+                                    @port = 7257
+                                    @host = https://{{'{'}}{{'{hostname}'}}{{'}'}}:{{'{'}}{{'{port}'}}{{'}'}}
+                                    @contentType = application/json
 
 
-### 👇 YOUR NEW USE CASE - REGULAR USE TEST SCENARIO  👇 ##############################################################
-### {{ useCase }} {{ `${ '#'.repeat( 120 ) }`.substr(0, 115 - useCase.length) }}
+                                    ### 👇 YOUR NEW USE CASE - REGULAR USE TEST SCENARIO  👇 ##############################################################
+                                    ### ({{ RestVerb.toUpperCase() }}) {{ useCase }} {{ `${ '#'.repeat( 120 ) }`.substr(0, 112 - useCase.length - RestVerb.length) }}
 
-### Regular use --------------------------------------------------------------------------------------------------------
-POST {{'{'}}{{'{host}'}}{{'}'}}/api/{{ entityName }}/{{ useCase }}
-Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
-
-{
-{{ propsParams.map((prop) => {
-    switch (prop.tipo.toLowerCase()){
-        case 'guid'    : return `	${firstLetterToLower(prop.nome)}: "${arrGuids[getRandomInt(0, arrGuids.length-1)]}"`;
-        case 'bool'    : return `	${firstLetterToLower(prop.nome)}: ${getRandomBool()}`;
-        case 'byte'    : return `	${firstLetterToLower(prop.nome)}: ${getRandomInt(0, 7)}`;
-        case 'bit'     : return `	${firstLetterToLower(prop.nome)}: ${getRandomInt(0, 1)}`;
-        case 'double'  : return `	${firstLetterToLower(prop.nome)}: ${getRandomDecimal()}`;
-        case 'short'   :
-        case 'int'     : return `	${firstLetterToLower(prop.nome)}: ${getRandomInt(100)}`;
-        case 'datetime': return `	${firstLetterToLower(prop.nome)}: ${getRandomNewJsDateObject()}`;
-        case 'long'    : return `	${firstLetterToLower(prop.nome)}: ${getRandomDecimal(0, 100, 4)}`;
-        default        : return `	${firstLetterToLower(prop.nome)}: "some valid domain value"`;
-    }
-}).join(',\n') }}
-}
-
-
-
-### 👇 FIND EXEMPLE - ALL TESTS SCENARIOS 👇 ##########################################################################
-### (GET) FIND #########################################################################################################
-
-### Empty result -------------------------------------------------------------------------------------------------------
-GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=feira+inexistente{{ '&' }}regiao5=leste
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
-
-### One result ---------------------------------------------------------------------------------------------------------
-GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=AGUA+BRANCA
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
-
-### Many results -------------------------------------------------------------------------------------------------------
-GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=VILA{{ '&' }}codDistrito=04
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
-
-### Error parameter ----------------------------------------------------------------------------------------------------
-GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=nome+muito+muuuito+muito+grande{{ '&' }}regiao5=sudoeste
+                                    ### Regular use --------------------------------------------------------------------------------------------------------
+                                    {{ RestVerb.toUpperCase() }} {{'{'}}{{'{host}'}}{{'}'}}/api/{{ entityName }}/{{ useCase }}{{ getRestClientUrl }}
+                                    Content-Type:{{'{'}}{{'{contentType}'}}{{'}'}}
+                                    {{ getRestClientBody }}
 
 
 
 
-### 👇 ADD  EXEMPLE - ALL TESTS SCENARIOS 👇 ##########################################################################
-### (POST) ADD New {{ entityName }} {{ `${ '#'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
+                                    ### 👇 FIND EXEMPLE - ALL TESTS SCENARIOS 👇 ##########################################################################
+                                    ### (GET) FIND #########################################################################################################
 
-### New {{ entityName }} {{ `${ '-'.repeat( 120 ) }`.substr(0, 111 - entityName.length) }}
-POST {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Add
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+                                    ### Empty result -------------------------------------------------------------------------------------------------------
+                                    GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=feira+inexistente{{ '&' }}regiao5=leste
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
 
-{
-	"nome"                 : "Nova Feira Teste",
-	"numeroRegistro"       : "9999-1",
-	"setorCensitarioIBGE"  : "355030801000054",
-	"areaDePonderacaoIBGE" : "3550308005039",
-	"codDistrito"          : "01",
-	"codSubPrefeitura"     : "25",
-	"regiao5"              : "LESTE",
-	"regiao8"              : "leste1",
-	"enderecoLogradouro"   : "Avenida Clark Kent",
-	"enderecoNumero"       : "5",
-	"enderecoBairro"       : "Metrópolis",
-	"enderecoReferencia"   : "Ao lado do Clarim Diário",
-	"latitude"             : -23.564711,
-	"longitude"            : -46.564711
-}
+                                    ### One result ---------------------------------------------------------------------------------------------------------
+                                    GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=AGUA+BRANCA
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
 
-### Find new {{ entityName }} added {{ `${ '-'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
-GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=Nova+Feira+Teste
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+                                    ### Many results -------------------------------------------------------------------------------------------------------
+                                    GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=VILA{{ '&' }}codDistrito=04
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
 
-### Edit new {{ entityName }} added {{ `${ '-'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
-PUT {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Edit
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+                                    ### Error parameter ----------------------------------------------------------------------------------------------------
+                                    GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=nome+muito+muuuito+muito+grande{{ '&' }}regiao5=sudoeste
 
-{
-	"nome"                 : "Feira dos Kent",
-	"numeroRegistro"       : "9999-1",
-	"regiao5"              : "oeste",
-	"regiao8"              : "oeste"
-}
 
-### Find agin new {{ entityName }} added (and edited) {{ `${ '-'.repeat( 120 ) }`.substr(0, 82 - entityName.length) }}
-GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=Feira+dos+Kent
 
-### Remove new {{ entityName }} edited {{ `${ '-'.repeat( 120 ) }`.substr(0, 97 - entityName.length) }}
-DELETE {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Remove/9999-1
 
-### Error parameter ----------------------------------------------------------------------------------------------------
-POST {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Add
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+                                    ### 👇 ADD  EXEMPLE - ALL TESTS SCENARIOS 👇 ##########################################################################
+                                    ### (POST) ADD New {{ entityName }} {{ `${ '#'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
 
-{
-	"nome"                 : "Nova Feira Teste",
-	"numeroRegistro"       : "9999-1",
-	"setorCensitarioIBGE"  : "355030801000054",
-	"areaDePonderacaoIBGE" : "3550308005039",
-	"codDistrito"          : "01",
-	"codSubPrefeitura"     : "25",
-	"regiao5"              : "Sudoeste",
-	"regiao8"              : "Noroeste",
-	"enderecoLogradouro"   : "Avenida Clark Kent",
-	"enderecoNumero"       : "123456",
-	"enderecoBairro"       : "Metrópolis",
-	"enderecoReferencia"   : "Ao lado do Clarim Diário",
-	"latitude"             : -23564711,
-	"longitude"            : -46.564711
-}
+                                    ### New {{ entityName }} {{ `${ '-'.repeat( 120 ) }`.substr(0, 111 - entityName.length) }}
+                                    POST {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Add
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
 
-### Error: Try edit without numeroRegistro -----------------------------------------------------------------------------
-PUT {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Edit
-Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+                                    {
+                                    "nome"                 : "Nova Feira Teste",
+                                    "numeroRegistro"       : "9999-1",
+                                    "setorCensitarioIBGE"  : "355030801000054",
+                                    "areaDePonderacaoIBGE" : "3550308005039",
+                                    "codDistrito"          : "01",
+                                    "codSubPrefeitura"     : "25",
+                                    "regiao5"              : "LESTE",
+                                    "regiao8"              : "leste1",
+                                    "enderecoLogradouro"   : "Avenida Clark Kent",
+                                    "enderecoNumero"       : "5",
+                                    "enderecoBairro"       : "Metrópolis",
+                                    "enderecoReferencia"   : "Ao lado do Clarim Diário",
+                                    "latitude"             : -23.564711,
+                                    "longitude"            : -46.564711
+                                    }
 
-{
-	"nome"    : "Feira dos Kent",
-	"regiao5" : "oeste",
-	"regiao8" : "oeste"
-}
-</div>                          <div class="append-to-file"><pre data-line="8-18"><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre></div>
+                                    ### Find new {{ entityName }} added {{ `${ '-'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
+                                    GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=Nova+Feira+Teste
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+                                    ### Edit new {{ entityName }} added {{ `${ '-'.repeat( 120 ) }`.substr(0, 100 - entityName.length) }}
+                                    PUT {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Edit
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+                                    {
+                                    "nome"                 : "Feira dos Kent",
+                                    "numeroRegistro"       : "9999-1",
+                                    "regiao5"              : "oeste",
+                                    "regiao8"              : "oeste"
+                                    }
+
+                                    ### Find agin new {{ entityName }} added (and edited) {{ `${ '-'.repeat( 120 ) }`.substr(0, 82 - entityName.length) }}
+                                    GET {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Find?nome=Feira+dos+Kent
+
+                                    ### Remove new {{ entityName }} edited {{ `${ '-'.repeat( 120 ) }`.substr(0, 97 - entityName.length) }}
+                                    DELETE {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Remove/9999-1
+
+                                    ### Error parameter ----------------------------------------------------------------------------------------------------
+                                    POST {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Add
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+                                    {
+                                    "nome"                 : "Nova Feira Teste",
+                                    "numeroRegistro"       : "9999-1",
+                                    "setorCensitarioIBGE"  : "355030801000054",
+                                    "areaDePonderacaoIBGE" : "3550308005039",
+                                    "codDistrito"          : "01",
+                                    "codSubPrefeitura"     : "25",
+                                    "regiao5"              : "Sudoeste",
+                                    "regiao8"              : "Noroeste",
+                                    "enderecoLogradouro"   : "Avenida Clark Kent",
+                                    "enderecoNumero"       : "123456",
+                                    "enderecoBairro"       : "Metrópolis",
+                                    "enderecoReferencia"   : "Ao lado do Clarim Diário",
+                                    "latitude"             : -23564711,
+                                    "longitude"            : -46.564711
+                                    }
+
+                                    ### Error: Try edit without numeroRegistro -----------------------------------------------------------------------------
+                                    PUT {{'{'}}{{'{'}}host{{'}'}}{{'}'}}/api/{{ entityName }}/Edit
+                                    Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
+
+                                    {
+                                    "nome"    : "Feira dos Kent",
+                                    "regiao5" : "oeste",
+                                    "regiao8" : "oeste"
+                                    }
+                                </div>                          <div class="append-to-file"><pre :data-line="`7-${RestVerb === 'Get' ? 12 : 15 + propsParams.length}`"><code class="language-csharp" id="prismCodeRestClientEndPoints"></code></pre></div>
                             </div>
 
 
@@ -946,7 +1043,8 @@ Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
 
                             <!-- TAB POWERSHELL SCRIPT -------------------------------------------------------------------------------------------- -->
                             <div class="tab-pane fade" id="codes-powershell-script" role="tabpanel">
-                                <span class="filePath"><i class="ms-Icon ms-Icon--PowerShell fixPosition" aria-hidden="true" style="top: 4px;"></i>
+                                <span class="filePath">
+                                    <i class="ms-Icon ms-Icon--PowerShell fixPosition" aria-hidden="true" style="top: 4px;"></i>
                                     PowerShell script generator
                                 </span>
 
@@ -968,250 +1066,259 @@ Content-Type: {{'{'}}{{'{'}}contentType{{'}'}}{{'}'}}
                                     <input class="form-control" type="text" readonly :value="`powershell -ExecutionPolicy Bypass -File GenerateUseCaseFiles_${ this.entityName }.${ this.useCase }.ps1`">
                                 </div>
 
-                                <div id="CodePs1" style="display: none;"># Helper functions -----------------------------------------------------------------------------------------------------
-function CreateDirectoryIfItDoesntExist([string]$path) {
-    if ( ! (Test-Path $path) ) {
-        New-Item $path -ItemType Directory
-    } else {
-        Write-Output "The folder already existed. "
-        Write-Output "  👉 $path`n"
-    }
-}
+                                <div id="CodePs1" style="display: none;">
+                                    # Helper functions -----------------------------------------------------------------------------------------------------
+                                    function CreateDirectoryIfItDoesntExist([string]$path) {
+                                    if ( ! (Test-Path $path) ) {
+                                    New-Item $path -ItemType Directory
+                                    } else {
+                                    Write-Output "The folder already existed. "
+                                    Write-Output "  👉 $path`n"
+                                    }
+                                    }
 
-function CreateNewFileReplacingTheOldOneIfItExists([string]$filePath, [string]$fileContent) {
-    if ( Test-Path $filePath ) {
-        Remove-Item $filePath -Recurse
-    }
-    New-Item $filePath -ItemType file -value $fileContent
-}
+                                    function CreateNewFileReplacingTheOldOneIfItExists([string]$filePath, [string]$fileContent) {
+                                    if ( Test-Path $filePath ) {
+                                    Remove-Item $filePath -Recurse
+                                    }
+                                    New-Item $filePath -ItemType file -value $fileContent
+                                    }
 
-function CreateNewFileIfItDoesntExists([string]$filePath, [string]$fileContent) {
-    if ( -not (Test-Path $filePath) ) {
-        New-Item $filePath -ItemType file -value $fileContent
-    } else {
-        $fileName = Split-Path -Path $filePath -Leaf
-        $fileName = $fileName.ToUpper()
-        Write-Output "WARNING: The $fileName file already existed, and to avoid breaking anything that is already referencing this FILE, IT WAS NOT REPLACED.`nIf the new code generated by this process causes any errors, it may be due to the difference between the $fileName file defined here and the existing one, since the original was not altered.`n"
-    }
-}
+                                    function CreateNewFileIfItDoesntExists([string]$filePath, [string]$fileContent) {
+                                    if ( -not (Test-Path $filePath) ) {
+                                    New-Item $filePath -ItemType file -value $fileContent
+                                    } else {
+                                    $fileName = Split-Path -Path $filePath -Leaf
+                                    $fileName = $fileName.ToUpper()
+                                    Write-Output "WARNING: The $fileName file already existed, and to avoid breaking anything that is already referencing this FILE, IT WAS NOT REPLACED.`nIf the new code generated by this process causes any errors, it may be due to the difference between the $fileName file defined here and the existing one, since the original was not altered.`n"
+                                    }
+                                    }
 
-function AppendContentToFile([string]$filePath, [string]$fileContent) {
-    if ( Test-Path $filePath ) {
-        $preCodeComment = @'
+                                    function AppendContentToFile([string]$filePath, [string]$fileContent) {
+                                    if ( Test-Path $filePath ) {
+                                    $preCodeComment = @'
 
 
 
-/*** Content automatically added via Code Generator ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                    /*** Content automatically added via Code Generator ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-'@
-        $posCodeComment = @'
+                                    '@
+                                    $posCodeComment = @'
 
-***********************************************************************************************************************/
-'@
-        Add-Content $filePath $preCodeComment
-        Add-Content $filePath $fileContent
-        Add-Content $filePath $posCodeComment
-    } else {
-        CreateNewFileReplacingTheOldOneIfItExists $filePath $fileContent
-    }
-}
+                                    ***********************************************************************************************************************/
+                                    '@
+                                    Add-Content $filePath $preCodeComment
+                                    Add-Content $filePath $fileContent
+                                    Add-Content $filePath $posCodeComment
+                                    } else {
+                                    CreateNewFileReplacingTheOldOneIfItExists $filePath $fileContent
+                                    }
+                                    }
 
 
 
 
-# Creating folder structure --------------------------------------------------------------------------------------------
-$DomainRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\"
+                                    # Creating folder structure --------------------------------------------------------------------------------------------
+                                    $DomainRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\"
 
-$DomainEntityFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\"
-CreateDirectoryIfItDoesntExist $DomainEntityFolder
+                                    $DomainEntityFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\"
+                                    CreateDirectoryIfItDoesntExist $DomainEntityFolder
 
-$DomainUseCaseFolder = $DomainEntityFolder + "{{ useCase }}UseCase\"
-CreateDirectoryIfItDoesntExist $DomainUseCaseFolder
+                                    $DomainUseCaseFolder = $DomainEntityFolder + "{{ useCase }}UseCase\"
+                                    CreateDirectoryIfItDoesntExist $DomainUseCaseFolder
 
-$DomainUseCaseTestFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\{{ entityName }}Entity\"
-CreateDirectoryIfItDoesntExist $DomainUseCaseTestFolder
+                                    $DomainUseCaseTestFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\{{ entityName }}Entity\"
+                                    CreateDirectoryIfItDoesntExist $DomainUseCaseTestFolder
 
-$InfrastructureFakeRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\"
-CreateDirectoryIfItDoesntExist $InfrastructureFakeRootFolder
-CreateDirectoryIfItDoesntExist $InfrastructureFakeRootFolder + "Data\"
+                                    $InfrastructureFakeRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\"
+                                    CreateDirectoryIfItDoesntExist $InfrastructureFakeRootFolder
+                                    CreateDirectoryIfItDoesntExist $InfrastructureFakeRootFolder + "Data\"
 
-$InfrastructureRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\"
-CreateDirectoryIfItDoesntExist $InfrastructureRootFolder
-CreateDirectoryIfItDoesntExist $InfrastructureRootFolder + "Data\"
+                                    $InfrastructureRootFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\"
+                                    CreateDirectoryIfItDoesntExist $InfrastructureRootFolder
+                                    CreateDirectoryIfItDoesntExist $InfrastructureRootFolder + "Data\"
 
-$InfrastructureDbContextFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\"
-CreateDirectoryIfItDoesntExist $InfrastructureDbContextFolder
+                                    $InfrastructureDbContextFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\"
+                                    CreateDirectoryIfItDoesntExist $InfrastructureDbContextFolder
 
-$InfrastructureDbContextMapsFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\DbMap\"
-CreateDirectoryIfItDoesntExist $InfrastructureDbContextMapsFolder
+                                    $InfrastructureDbContextMapsFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\DbMap\"
+                                    CreateDirectoryIfItDoesntExist $InfrastructureDbContextMapsFolder
 
-$InfrastructureRepositoriesFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\Repository\"
-CreateDirectoryIfItDoesntExist $InfrastructureRepositoriesFolder
+                                    $InfrastructureRepositoriesFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\Repository\"
+                                    CreateDirectoryIfItDoesntExist $InfrastructureRepositoriesFolder
 
-$ApiControllersFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Api\Controllers\"
+                                    $ApiControllersFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Api\Controllers\"
 
-$DomainUseCasesTestsFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\"
+                                    $DomainUseCasesTestsFolder = "{{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\"
 
-$RestClientEntitiesFolder = "{{ vsProjectsLocalPath }}\_Requests\"
-CreateDirectoryIfItDoesntExist $RestClientEntitiesFolder
-$RestClientEntityFolder = $RestClientEntitiesFolder + "{{ entityName }}\"
-CreateDirectoryIfItDoesntExist $RestClientEntityFolder
+                                    $RestClientEntitiesFolder = "{{ vsProjectsLocalPath }}\_Requests\"
+                                    CreateDirectoryIfItDoesntExist $RestClientEntitiesFolder
+                                    $RestClientEntityFolder = $RestClientEntitiesFolder + "{{ entityName }}\"
+                                    CreateDirectoryIfItDoesntExist $RestClientEntityFolder
 
 
 
 
 
-# ---- Domain files ----------------------------------------------------------------------------------------------------
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ `${ entityName }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$EntityFileName = $DomainEntityFolder + "{{ entityName }}.cs"
-$EntityFileContentFile = @'
-{{ $('#CodeDomainEntity').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileIfItDoesntExists $EntityFileName $EntityFileContentFile
+                                    # ---- Domain files ----------------------------------------------------------------------------------------------------
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ `${ entityName }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $EntityFileName = $DomainEntityFolder + "{{ entityName }}.cs"
+                                    $EntityFileContentFile = @'
+                                    {{ $('#CodeDomainEntity').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileIfItDoesntExists $EntityFileName $EntityFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\_I{{ `${ entityName }Repository.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$EntityRepositoryFileName = $DomainEntityFolder + "_I{{ entityName }}Repository.cs"
-$EntityRepositoryFileContentFile = @'
-{{ $('#CodeDomainUseCaseEntityRepository').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileIfItDoesntExists $EntityRepositoryFileName $EntityRepositoryFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\_I{{ `${ entityName }Repository.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $EntityRepositoryFileName = $DomainEntityFolder + "_I{{ entityName }}Repository.cs"
+                                    $EntityRepositoryFileContentFile = @'
+                                    {{ $('#CodeDomainUseCaseEntityRepository').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileIfItDoesntExists $EntityRepositoryFileName $EntityRepositoryFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$UseCaseFileName = $DomainUseCaseFolder + "{{ useCase }}.cs"
-$UseCaseFileContentFile = @'
-{{ $('#CodeDomainUseCase').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileReplacingTheOldOneIfItExists $UseCaseFileName $UseCaseFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\_I{{ `${ useCase }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $UseCaseInterfaceFileName = $DomainUseCaseFolder + "_I{{ useCase }}.cs"
+                                    $UseCaseInterfaceFileContentFile = @'
+                                    {{ $('#CodeDomainUseCaseInterface').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileReplacingTheOldOneIfItExists $UseCaseInterfaceFileName $UseCaseInterfaceFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Params.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$UseCaseParamsFileName = $DomainUseCaseFolder + "{{ useCase }}.Params.cs"
-$UseCaseParamsFileContentFile = @'
-{{ $('#CodeDomainUseCaseParams').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileReplacingTheOldOneIfItExists $UseCaseParamsFileName $UseCaseParamsFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $UseCaseFileName = $DomainUseCaseFolder + "{{ useCase }}.cs"
+                                    $UseCaseFileContentFile = @'
+                                    {{ $('#CodeDomainUseCase').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileReplacingTheOldOneIfItExists $UseCaseFileName $UseCaseFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Params.Validator.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$UseCaseParamsValidatorFileName = $DomainUseCaseFolder + "{{ useCase }}.Params.Validator.cs"
-$UseCaseParamsValidatorFileContentFile = @'
-{{ $('#CodeDomainUseCaseParamsValidator').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileReplacingTheOldOneIfItExists $UseCaseParamsValidatorFileName $UseCaseParamsValidatorFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Params.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $UseCaseParamsFileName = $DomainUseCaseFolder + "{{ useCase }}.Params.cs"
+                                    $UseCaseParamsFileContentFile = @'
+                                    {{ $('#CodeDomainUseCaseParams').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileReplacingTheOldOneIfItExists $UseCaseParamsFileName $UseCaseParamsFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Result.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$UseCaseResultFileName = $DomainUseCaseFolder + "{{ useCase }}.Result.cs"
-$UseCaseResultFileContentFile = @'
-{{ $('#CodeDomainUseCaseResult').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileReplacingTheOldOneIfItExists $UseCaseResultFileName $UseCaseResultFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Params.Validator.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $UseCaseParamsValidatorFileName = $DomainUseCaseFolder + "{{ useCase }}.Params.Validator.cs"
+                                    $UseCaseParamsValidatorFileContentFile = @'
+                                    {{ $('#CodeDomainUseCaseParamsValidator').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileReplacingTheOldOneIfItExists $UseCaseParamsValidatorFileName $UseCaseParamsValidatorFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Errors.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$UseCaseErrorsFileName = $DomainUseCaseFolder + "{{ useCase }}.Errors.cs"
-$UseCaseErrorsFileContentFile = @'
-{{ $('#CodeDomainUseCaseErrors').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileReplacingTheOldOneIfItExists $UseCaseErrorsFileName $UseCaseErrorsFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Result.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $UseCaseResultFileName = $DomainUseCaseFolder + "{{ useCase }}.Result.cs"
+                                    $UseCaseResultFileContentFile = @'
+                                    {{ $('#CodeDomainUseCaseResult').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileReplacingTheOldOneIfItExists $UseCaseResultFileName $UseCaseResultFileContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$DomainDependencyInjectionFileName = $DomainRootFolder + "DependencyInjection.cs"
-$DomainDependencyInjectionFileContentFile = @'
-{{ $('#CodeDomainDependencyInjection').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $DomainDependencyInjectionFileName $DomainDependencyInjectionFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\Entities\{{ entityName }}Entity\{{ useCase }}UseCase\{{ `${ useCase }.Errors.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $UseCaseErrorsFileName = $DomainUseCaseFolder + "{{ useCase }}.Errors.cs"
+                                    $UseCaseErrorsFileContentFile = @'
+                                    {{ $('#CodeDomainUseCaseErrors').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileReplacingTheOldOneIfItExists $UseCaseErrorsFileName $UseCaseErrorsFileContentFile
 
 
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $DomainDependencyInjectionFileName = $DomainRootFolder + "DependencyInjection.cs"
+                                    $DomainDependencyInjectionFileContentFile = @'
+                                    {{ $('#CodeDomainDependencyInjection').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $DomainDependencyInjectionFileName $DomainDependencyInjectionFileContentFile
 
 
 
-# ---- Infrastructure classes ------------------------------------------------------------------------------------------
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\{{ namespaceOrExampleProjectName + `DbContext.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$DbContextFileName = $InfrastructureDbContextFolder + "{{ namespaceOrExampleProjectName }}DbContext.cs"
-$DbContextContentFile = @'
-{{ $('#CodeInfrastructureDbContext').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $DbContextFileName $DbContextContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\DbMaps\{{ entityName }}.{{ `DbMap.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$DbContextMapsFileName = $InfrastructureDbContextMapsFolder + "{{ entityName }}.DbMap.cs"
-$DbContextMapsContentFile = @'
-{{ $('#CodeInfrastructureDbMap').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileIfItDoesntExists $DbContextMapsFileName $DbContextMapsContentFile
+                                    # ---- Infrastructure classes ------------------------------------------------------------------------------------------
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\{{ namespaceOrExampleProjectName + `DbContext.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $DbContextFileName = $InfrastructureDbContextFolder + "{{ namespaceOrExampleProjectName }}DbContext.cs"
+                                    $DbContextContentFile = @'
+                                    {{ $('#CodeInfrastructureDbContext').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $DbContextFileName $DbContextContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\Repository\{{ entityName }}{{ `Repository.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$RepositoryFileName = $InfrastructureRepositoriesFolder + "{{ entityName }}Repository.cs"
-$RepositoryContentFile = @'
-{{ $('#CodeInfrastructureRepository').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileIfItDoesntExists $RepositoryFileName $RepositoryContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\DbCtx\DbMaps\{{ entityName }}.{{ `DbMap.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $DbContextMapsFileName = $InfrastructureDbContextMapsFolder + "{{ entityName }}.DbMap.cs"
+                                    $DbContextMapsContentFile = @'
+                                    {{ $('#CodeInfrastructureDbMap').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileIfItDoesntExists $DbContextMapsFileName $DbContextMapsContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$RepositoryDependencyInjectionFileName = $InfrastructureRootFolder + "DependencyInjection.cs"
-$RepositoryDependencyInjectionFileContentFile = @'
-{{ $('#CodeInfrastructureDependencyInjection').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $RepositoryDependencyInjectionFileName $RepositoryDependencyInjectionFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\Data\Repository\{{ entityName }}{{ `Repository.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $RepositoryFileName = $InfrastructureRepositoriesFolder + "{{ entityName }}Repository.cs"
+                                    $RepositoryContentFile = @'
+                                    {{ $('#CodeInfrastructureRepository').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileIfItDoesntExists $RepositoryFileName $RepositoryContentFile
 
 
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $RepositoryDependencyInjectionFileName = $InfrastructureRootFolder + "DependencyInjection.cs"
+                                    $RepositoryDependencyInjectionFileContentFile = @'
+                                    {{ $('#CodeInfrastructureDependencyInjection').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $RepositoryDependencyInjectionFileName $RepositoryDependencyInjectionFileContentFile
 
 
 
-# ---- API files -------------------------------------------------------------------------------------------------------
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Api\Controllers\{{ entityName }}{{ `Controller.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$ApiControllerFileName = $ApiControllersFolder + "{{ entityName }}Controller.cs"
-$ApiControllerContentFile = @'
-{{ $('#CodeApiController').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $ApiControllerFileName $ApiControllerContentFile
 
 
+                                    # ---- API files -------------------------------------------------------------------------------------------------------
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Api\Controllers\{{ entityName }}{{ `Controller.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $ApiControllerFileName = $ApiControllersFolder + "{{ entityName }}Controller.cs"
+                                    $ApiControllerContentFile = @'
+                                    {{ $('#CodeApiController').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $ApiControllerFileName $ApiControllerContentFile
 
 
 
-# ---- Tests files -----------------------------------------------------------------------------------------------------
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\{{ useCase }}{{ `UseCaseTest.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$DomainUseCaseTestFileName = $DomainUseCasesTestsFolder + "{{ entityName }}Entity\{{ useCase }}UseCaseTest.cs"
-$DomainUseCaseTestContentFile = @'
-{{ $('#CodeDomainUseCaseTest').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $DomainUseCaseTestFileName $DomainUseCaseTestContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\Data\{{ entityName }}{{ `RepositoryMemory.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$InfrastructureFakeRepositoryFileName = $InfrastructureFakeRootFolder + "Data\{{ entityName }}RepositoryMemory.cs"
-$InfrastructureFakeRepositoryContentFile = @'
-{{ $('#CodeInfrastructureFakeInMemoryEntityRepository').text().replaceAll("'", "`'") }}
-'@
-CreateNewFileIfItDoesntExists $InfrastructureFakeRepositoryFileName $InfrastructureFakeRepositoryContentFile
+                                    # ---- Tests files -----------------------------------------------------------------------------------------------------
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Domain.Test\UseCases\{{ useCase }}{{ `UseCaseTest.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $DomainUseCaseTestFileName = $DomainUseCasesTestsFolder + "{{ entityName }}Entity\{{ useCase }}UseCaseTest.cs"
+                                    $DomainUseCaseTestContentFile = @'
+                                    {{ $('#CodeDomainUseCaseTest').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $DomainUseCaseTestFileName $DomainUseCaseTestContentFile
 
 
-# ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$FakeRepositoryDependencyInjectionFileName = $InfrastructureFakeRootFolder + "DependencyInjection.cs"
-$FakeRepositoryDependencyInjectionFileContentFile = @'
-{{ $('#CodeInfrastructureFakeInMemoryDependencyInjection').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $FakeRepositoryDependencyInjectionFileName $FakeRepositoryDependencyInjectionFileContentFile
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\Data\{{ entityName }}{{ `RepositoryMemory.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $InfrastructureFakeRepositoryFileName = $InfrastructureFakeRootFolder + "Data\{{ entityName }}RepositoryMemory.cs"
+                                    $InfrastructureFakeRepositoryContentFile = @'
+                                    {{ $('#CodeInfrastructureFakeInMemoryEntityRepository').text().replaceAll("'", "`'") }}
+                                    '@
+                                    CreateNewFileIfItDoesntExists $InfrastructureFakeRepositoryFileName $InfrastructureFakeRepositoryContentFile
 
 
+                                    # ~~~~ {{ vsProjectsLocalPathAndNamespaceFolderPrefix }}Infrastructure.FakeInMemory\{{ `DependencyInjection.cs ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $FakeRepositoryDependencyInjectionFileName = $InfrastructureFakeRootFolder + "DependencyInjection.cs"
+                                    $FakeRepositoryDependencyInjectionFileContentFile = @'
+                                    {{ $('#CodeInfrastructureFakeInMemoryDependencyInjection').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $FakeRepositoryDependencyInjectionFileName $FakeRepositoryDependencyInjectionFileContentFile
 
 
 
-# ---- Rest client files -----------------------------------------------------------------------------------------------
-# ~~~~ {{ vsProjectsLocalPath }}\_Requests\{{ entityName }}\{{ useCase }}{{ `.http ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
-$RestClientEntityFileName = $RestClientEntitiesFolder + "{{ entityName }}\{{ useCase }}.http"
-$RestClientEntityContentFile = @'
-{{ $('#CodeRestClientEndPoints').text().replaceAll("'", "`'") }}
-'@
-AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
+
+
+                                    # ---- Rest client files -----------------------------------------------------------------------------------------------
+                                    # ~~~~ {{ vsProjectsLocalPath }}\_Requests\{{ entityName }}\{{ useCase }}{{ `.http ${ '~'.repeat( 120 ) }`.substr(0, 113) }}
+                                    $RestClientEntityFileName = $RestClientEntitiesFolder + "{{ entityName }}\{{ useCase }}.http"
+                                    $RestClientEntityContentFile = @'
+                                    {{ $('#CodeRestClientEndPoints').text().replaceAll("'", "`'") }}
+                                    '@
+                                    AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                                 </div><pre class="command-line" data-prompt="ps c:\>"><code class="language-PowerShell" id="prismCodePs1"></code></pre>
                             </div>
                         </div>
@@ -1296,6 +1403,7 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 propsEntityPraProcessamento : '',
                 propsParamsPraProcessamento : '',
                 propsResultPraProcessamento : '',
+                RestVerb                    : 'Get',
                 isResultTypeList            : false,
                 propsEntity                 : [ { tipo: '', nome: '' } ],
                 propsParams                 : [ { tipo: '', nome: '' } ],
@@ -1350,8 +1458,51 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                 typeResult(){
                     return this.isResultTypeList ? `List<${ this.useCase }Result>` : this.useCase+'Result'
                 },
+                getRestClientUrl(){
+                    const getRandomValue = (prop) => {
+                        switch (prop.tipo.toLowerCase()){
+                            case 'guid'    : return `${this.firstLetterToLower(prop.nome)}=${this.arrGuids[this.getRandomInt(0, this.arrGuids.length-1)]}`;
+                            case 'bool'    : return `${this.firstLetterToLower(prop.nome)}=${this.getRandomBool()}`;
+                            case 'byte'    : return `${this.firstLetterToLower(prop.nome)}=${this.getRandomInt(0, 7)}`;
+                            case 'bit'     : return `${this.firstLetterToLower(prop.nome)}=${this.getRandomInt(0, 1)}`;
+                            case 'double'  : return `${this.firstLetterToLower(prop.nome)}=${this.getRandomDecimal()}`;
+                            case 'short'   :
+                            case 'int'     : return `${this.firstLetterToLower(prop.nome)}=${this.getRandomInt(100)}`;
+                            case 'datetime': return `${this.firstLetterToLower(prop.nome)}=${this.getRandomNewJsDateObject()}`;
+                            case 'long'    : return `${this.firstLetterToLower(prop.nome)}=${this.getRandomDecimal(0, 100, 4)}`;
+                            default        : return `${this.firstLetterToLower(prop.nome)}=valid+value`;
+                        }
+                    };
+
+                    return this.RestVerb !== 'Get'
+                        ? ''
+                        : `?${   this.propsParams.map( getRandomValue ).join('&')   }`;
+                },
+                getRestClientBody(){
+                    const getRandomValue = (prop) => {
+                        switch (prop.tipo.toLowerCase()){
+                            case 'guid'    : return `"${this.firstLetterToLower(prop.nome)}": "${this.arrGuids[this.getRandomInt(0, this.arrGuids.length-1)]}"`;
+                            case 'bool'    : return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomBool()}`;
+                            case 'byte'    : return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomInt(0, 7)}`;
+                            case 'bit'     : return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomInt(0, 1)}`;
+                            case 'double'  : return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomDecimal()}`;
+                            case 'short'   :
+                            case 'int'     : return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomInt(100)}`;
+                            case 'datetime': return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomNewJsDateObject()}`;
+                            case 'long'    : return `"${this.firstLetterToLower(prop.nome)}": ${this.getRandomDecimal(0, 100, 4)}`;
+                            default        : return `"${this.firstLetterToLower(prop.nome)}": "some valid domain value"`;
+                        }
+                    };
+
+                    return this.RestVerb === 'Get'
+                        ? ''
+                        : `\n{\n    ${   this.propsParams.map( getRandomValue ).join(',\n    ')   }\n}\n`;
+                },
             },
             watch: {
+                RestVerb: function (newVal, oldVal) {
+                    this.reRenderPrismCodes();
+                },
                 isResultTypeList: function (newVal, oldVal) {
                     this.reRenderPrismCodes();
                 },
@@ -1402,6 +1553,7 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
                     await this.aguardarPor('500 milissegundos');
                     [
                         { element: 'CodeDomainEntity'                                 , language: 'csharp'     },
+                        { element: 'CodeDomainUseCaseInterface'                       , language: 'csharp'     },
                         { element: 'CodeDomainUseCase'                                , language: 'csharp'     },
                         { element: 'CodeDomainUseCaseErrors'                          , language: 'csharp'     },
                         { element: 'CodeDomainUseCaseParams'                          , language: 'csharp'     },
@@ -1612,5 +1764,5 @@ AppendContentToFile $RestClientEntityFileName $RestClientEntityContentFile
             }
         });
     </script>
-  </body>
+</body>
 </html>

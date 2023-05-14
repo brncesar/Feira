@@ -4,7 +4,7 @@ using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.SubPrefeituraEntity.FindSubPrefeituraUseCase;
 
-public class FindSubPrefeitura
+public class FindSubPrefeitura: IFindSubPrefeitura
 {
     private readonly ISubPrefeituraRepository _distritoRepository;
 

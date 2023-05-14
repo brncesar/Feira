@@ -7,13 +7,13 @@ namespace Feira.Api.Controllers;
 
 public class DistritoController : BaseController<DistritoController>
 {
-    private readonly FindDistrito        _findDistritoUseCase;
-    private readonly GetDistritoByCodigo _getDistritoByCodigo;
+    private readonly IFindDistrito        _findDistritoUseCase;
+    private readonly IGetDistritoByCodigo _getDistritoByCodigo;
 
     public DistritoController(
         ILogger<DistritoController> logger,
-        FindDistrito findDistritoUseCase,
-        GetDistritoByCodigo getDistritoByCodigo)
+        IFindDistrito findDistritoUseCase,
+        IGetDistritoByCodigo getDistritoByCodigo)
         : base(logger)
     {
         _findDistritoUseCase = findDistritoUseCase;
@@ -22,17 +22,9 @@ public class DistritoController : BaseController<DistritoController>
 
     [HttpGet("Find")]
     public async Task<ActionResult> Find([FromQuery] FindDistritoParams findParam)
-    {
-        var domainResult = await _findDistritoUseCase.Execute(findParam);
-
-        return DomainResult(domainResult);
-    }
+        => DomainResult(await _findDistritoUseCase.Execute(findParam));
 
     [HttpGet("GetByCodigo/{codigo}")]
     public async Task<ActionResult> GetByCodigo(string codigo)
-    {
-        var domainResult = await _getDistritoByCodigo.Execute(new(codigo));
-
-        return DomainResult(domainResult);
-    }
+        => DomainResult(await _getDistritoByCodigo.Execute(new(codigo)));
 }

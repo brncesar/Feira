@@ -9,7 +9,7 @@ using FluentValidation.Results;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.AddNewFeiraUseCase;
 
-public class AddNewFeira
+public class AddNewFeira : IAddNewFeira
 {
     private readonly IFeiraRepository         _feiraRepository;
     private readonly IDistritoRepository      _distritoRepository;

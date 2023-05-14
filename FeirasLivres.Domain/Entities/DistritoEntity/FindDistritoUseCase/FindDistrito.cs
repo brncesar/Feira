@@ -4,7 +4,7 @@ using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.DistritoEntity.FindDistritoUseCase;
 
-public class FindDistrito
+public class FindDistrito : IFindDistrito
 {
     private readonly IDistritoRepository _distritoRepository;
 

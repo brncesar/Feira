@@ -6,7 +6,7 @@ using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.FeiraEntity.FindFeiraUseCase;
 
-public class FindFeira
+public class FindFeira: IFindFeira
 {
     private readonly IFeiraRepository    _feiraRepository;
     private readonly IDistritoRepository _distritoRepository;

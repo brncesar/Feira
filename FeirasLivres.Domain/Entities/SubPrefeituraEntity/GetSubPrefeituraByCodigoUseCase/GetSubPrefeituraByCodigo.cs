@@ -4,7 +4,7 @@ using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.SubPrefeituraEntity.GetSubPrefeituraByCodigoUseCase;
 
-public class GetSubPrefeituraByCodigo
+public class GetSubPrefeituraByCodigo: IGetSubPrefeituraByCodigo
 {
     private readonly ISubPrefeituraRepository _distritoRepository;
 

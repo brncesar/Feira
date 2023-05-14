@@ -4,7 +4,7 @@ using FeirasLivres.Domain.Misc;
 
 namespace FeirasLivres.Domain.Entities.DistritoEntity.GetDistritoByCodigoUseCase;
 
-public class GetDistritoByCodigo
+public class GetDistritoByCodigo : IGetDistritoByCodigo
 {
     private readonly IDistritoRepository _distritoRepository;
 

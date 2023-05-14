@@ -15,13 +15,13 @@ public static class DependencyInjection
     public static IServiceCollection AddDomain(this IServiceCollection services)
     {
         return services
-            .AddScoped<FindDistrito            >()
-            .AddScoped<GetDistritoByCodigo     >()
-            .AddScoped<FindSubPrefeitura       >()
-            .AddScoped<GetSubPrefeituraByCodigo>()
-            .AddScoped<FindFeira               >()
-            .AddScoped<AddNewFeira             >()
-            .AddScoped<RemoveExistingFeira     >()
-            .AddScoped<EditExistingFeira       >();
+            .AddScoped<IFindDistrito            , FindDistrito            >()
+            .AddScoped<IGetDistritoByCodigo     , GetDistritoByCodigo     >()
+            .AddScoped<IFindSubPrefeitura       , FindSubPrefeitura       >()
+            .AddScoped<IGetSubPrefeituraByCodigo, GetSubPrefeituraByCodigo>()
+            .AddScoped<IFindFeira               , FindFeira               >()
+            .AddScoped<IAddNewFeira             , AddNewFeira             >()
+            .AddScoped<IRemoveExistingFeira     , RemoveExistingFeira     >()
+            .AddScoped<IEditExistingFeira       , EditExistingFeira       >();
     }
 }
